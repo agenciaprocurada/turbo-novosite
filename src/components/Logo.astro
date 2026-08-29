@@ -12,11 +12,16 @@ interface Props {
 }
 
 const { class: className = '', height = 28 } = Astro.props
+// viewBox 1093.7 × 200 → largura proporcional. Safari precisa de width E height explícitos
+// (o CSS base aplica height:auto em svg e, sem width, o Safari renderiza 0px).
+const width = Math.round((height * 1093.7) / 200)
 ---
 
 <svg
   viewBox="0 0 1093.7 200"
+  width={width}
   height={height}
+  style={`width:${width}px;height:${height}px`}
   class={className}
   role="img"
   aria-label="Turbo Cloud"

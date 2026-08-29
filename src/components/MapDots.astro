@@ -53,8 +53,11 @@ for (let y = STEP / 2; y < H; y += STEP) {
 }
 ---
 
-<div class="relative w-full" aria-hidden="true">
-  <svg viewBox={`0 0 ${W} ${H}`} class="w-full">
+<div class="w-full" aria-hidden="true">
+  {/* O wrapper relativo envolve SÓ o SVG: os % do marcador são em relação ao mapa.
+      (No celular a legenda abaixo entrava na conta e o marcador descia.) */}
+  <div class="relative">
+  <svg viewBox={`0 0 ${W} ${H}`} class="block h-auto w-full" style={`aspect-ratio:${W}/${H}`}>
     <g class="map-dots" fill="currentColor" opacity=".26">
       {pontos.map((p) => <circle cx={p.x} cy={p.y} r="2" />)}
     </g>
@@ -82,6 +85,8 @@ for (let y = STEP / 2; y < H; y += STEP) {
       </span>
     ))
   }
+
+  </div>
 
   {/* No mobile o rótulo não cabe sobre o mapa — vira legenda */}
   <ul class="mt-4 flex flex-wrap justify-center gap-2 sm:hidden">
