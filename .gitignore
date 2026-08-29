@@ -1,0 +1,20 @@
+# dependências e saída de build
+node_modules/
+dist/
+.astro/
+
+# matéria-prima de imagem (PNG/WebP originais, ~27 MB) — nunca entra no código,
+# ver regra 7 do CLAUDE.md. Os WebP tratados ficam em src/assets/imagens/
+_uploads-turbonovosite/
+
+# sistema / editor
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+.vscode/
+.idea/
+
+# ferramentas locais
+.impeccable/

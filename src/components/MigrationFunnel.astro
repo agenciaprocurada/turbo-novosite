@@ -1,0 +1,102 @@
+---
+import Logo from './Logo.astro'
+import { migracao } from '../data/site'
+
+// Origens distribuídas em 5 colunas iguais → centro de cada uma em 10%, 30%,
+// 50%, 70% e 90%. As curvas do funil saem exatamente desses pontos.
+const XS = [32, 96, 160, 224, 288]
+
+// No celular (5 colunas de ~65px) os nomes longos não cabem: usa a forma curta usual
+const curto: Record<string, string> = { WooCommerce: 'Woo', WordPress: 'WP' }
+---
+
+<div class="relative" aria-hidden="true">
+  <div class="stagger -mx-2 grid grid-cols-5 gap-1 sm:mx-0">
+    {
+      migracao.origens.map((origem) => (
+        <span class="truncate rounded-full border border-line bg-surface px-1 py-2 text-center text-[10px] font-semibold tracking-[-0.01em] text-ink-soft shadow-soft sm:px-2 sm:font-mono sm:text-[11px] sm:font-normal sm:tracking-[0.06em] sm:uppercase">
+          <span class="sm:hidden">{curto[origem] ?? origem}</span>
+          <span class="hidden sm:inline">{origem}</span>
+        </span>
+      ))
+    }
+  </div>
+
+  <svg viewBox="0 0 320 104" class="mt-1 w-full" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="funilGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#A7E57F" stop-opacity=".15"></stop>
+        <stop offset="1" stop-color="#6BDD12" stop-opacity=".85"></stop>
+      </linearGradient>
+    </defs>
+
+    {
+      XS.map((x) => (
+        <path
+          d={`M${x} 2 C ${x} 52, 160 54, 160 100`}
+          fill="none"
+          stroke="url(#funilGrad)"
+          stroke-width="1.4"
+          stroke-linecap="round"
+        />
+      ))
+    }
+
+    {/* Pulso que desce por cima da linha base */}
+    {
+      XS.map((x, i) => (
+        <path
+          class="funil-pulso"
+          style={`animation-delay:${i * 340}ms`}
+          d={`M${x} 2 C ${x} 52, 160 54, 160 100`}
+          fill="none"
+          stroke="#6BDD12"
+          stroke-width="2.2"
+          stroke-linecap="round"
+        />
+      ))
+    }
+  </svg>
+
+  <div class="-mt-2 flex justify-center">
+    <div class="rounded-full bg-purple-950 px-5 py-3 shadow-lift">
+      <Logo height={20} class="text-white" />
+    </div>
+  </div>
+
+  <div class="stagger mt-6 flex flex-col gap-2">
+    {
+      migracao.passos.map((passo, i) => (
+        <div class="flex items-start gap-3 rounded-[14px] border border-line bg-surface px-4 py-3">
+          <span class="grid size-6 shrink-0 place-items-center rounded-full bg-green/14 font-mono text-[11px] text-green-deep">
+            {i + 1}
+          </span>
+          <span class="min-w-0">
+            <span class="block text-[14px] font-medium text-ink">{passo.label}</span>
+            <span class="block text-[13px] text-ink-soft">{passo.desc}</span>
+          </span>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .funil-pulso {
+    stroke-dasharray: 22 200;
+    stroke-dashoffset: 22;
+    animation: funil-fluxo 3.2s linear infinite;
+  }
+
+  @keyframes funil-fluxo {
+    to {
+      stroke-dashoffset: -200;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .funil-pulso {
+      display: none;
+    }
+  }
+</style>

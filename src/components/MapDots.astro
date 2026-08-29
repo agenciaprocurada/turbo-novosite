@@ -1,0 +1,103 @@
+---
+import { regioes } from '../data/site'
+
+/**
+ * Mapa do Brasil pontilhado, gerado em build — grade de pontos recortada por um
+ * contorno simplificado do país (lon/lat). Custa ~5KB de SVG e nenhuma imagem.
+ * Aproximação intencional: é decoração, não cartografia.
+ */
+
+// Contorno aproximado do Brasil em [lon, lat], sentido horário a partir do Acre.
+const contorno: [number, number][] = [
+  [-73.9, -7.3], [-72.9, -9.4], [-70.6, -11.0], [-69.5, -10.9], [-68.7, -11.1],
+  [-66.7, -9.9], [-65.4, -9.7], [-65.3, -11.5], [-64.4, -12.5], [-60.5, -13.8],
+  [-60.2, -15.1], [-60.2, -16.3], [-58.4, -17.2], [-58.2, -19.8], [-57.8, -22.1],
+  [-55.7, -22.4], [-55.4, -24.0], [-54.6, -25.6], [-53.8, -27.2], [-55.8, -28.3],
+  [-57.6, -30.2], [-56.0, -31.1], [-53.4, -33.7], [-52.6, -32.9], [-50.6, -31.0],
+  [-48.6, -28.6], [-48.5, -26.0], [-46.3, -24.0], [-44.7, -23.1], [-41.9, -22.9],
+  [-40.9, -21.3], [-39.7, -19.7], [-39.0, -17.7], [-38.9, -15.7], [-38.5, -13.0],
+  [-37.0, -11.0], [-35.2, -8.9], [-34.8, -7.2], [-35.3, -5.5], [-37.3, -4.8],
+  [-39.5, -3.0], [-41.8, -2.9], [-44.3, -2.5], [-46.5, -1.0], [-48.3, -0.9],
+  [-49.5, 0.6], [-50.5, 1.5], [-51.6, 4.2], [-52.6, 2.3], [-54.5, 2.4],
+  [-56.5, 1.9], [-58.4, 1.5], [-59.9, 1.7], [-59.8, 3.5], [-60.6, 5.2],
+  [-61.4, 4.2], [-62.8, 3.7], [-64.0, 4.1], [-65.6, 0.9], [-66.9, 1.2],
+  [-69.4, 1.1], [-69.9, -4.2], [-72.9, -5.0],
+]
+
+const dentro = (x: number, y: number) => {
+  let ok = false
+  for (let i = 0, j = contorno.length - 1; i < contorno.length; j = i++) {
+    const [xi, yi] = contorno[i]
+    const [xj, yj] = contorno[j]
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) ok = !ok
+  }
+  return ok
+}
+
+// Projeção simples: 1° = ESCALA px. Brasil tem ~39° × 39°, então cabe num quadrado.
+const W = 560
+const H = 400
+const ESCALA = 9.6
+const LON0 = -74
+const LAT0 = 5.4
+const OFFSET_X = (W - 39.2 * ESCALA) / 2
+const STEP = 11
+
+const pontos: { x: number; y: number }[] = []
+for (let y = STEP / 2; y < H; y += STEP) {
+  for (let x = STEP / 2; x < W; x += STEP) {
+    const lon = (x - OFFSET_X) / ESCALA + LON0
+    const lat = LAT0 - y / ESCALA
+    if (dentro(lon, lat)) pontos.push({ x, y })
+  }
+}
+---
+
+<div class="relative w-full" aria-hidden="true">
+  <svg viewBox={`0 0 ${W} ${H}`} class="w-full">
+    <g class="map-dots" fill="currentColor" opacity=".26">
+      {pontos.map((p) => <circle cx={p.x} cy={p.y} r="2" />)}
+    </g>
+  </svg>
+
+  {
+    regioes.map((regiao) => (
+      <span
+        class="map-marker absolute -translate-x-1/2 -translate-y-1/2"
+        style={`left:${regiao.x}%;top:${regiao.y}%`}
+      >
+        <span
+          class:list={[
+            'block rounded-full',
+            regiao.principal ? 'size-3 bg-green' : 'size-2 bg-white/45',
+          ]}
+          style={regiao.principal ? 'animation: turbo-marker 2.4s ease-in-out infinite' : ''}
+        />
+        {regiao.principal && (
+          <span class="absolute bottom-full left-1/2 mb-2.5 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-white/12 bg-white/10 px-3 py-1.5 font-mono text-[10.5px] tracking-[0.08em] whitespace-nowrap text-white uppercase backdrop-blur-sm sm:inline-flex">
+            <span class="size-1.5 rounded-full bg-green" />
+            {regiao.nome} ({regiao.detalhe})
+          </span>
+        )}
+      </span>
+    ))
+  }
+
+  {/* No mobile o rótulo não cabe sobre o mapa — vira legenda */}
+  <ul class="mt-4 flex flex-wrap justify-center gap-2 sm:hidden">
+    {
+      regioes.map((regiao) => (
+        <li
+          class:list={[
+            'rounded-full border px-2.5 py-1.5 font-mono text-[11px] tracking-[0.08em] uppercase',
+            regiao.principal
+              ? 'border-green/30 bg-green/12 text-green'
+              : 'border-white/12 text-white/45',
+          ]}
+        >
+          {regiao.nome} ({regiao.detalhe})
+        </li>
+      ))
+    }
+  </ul>
+</div>

@@ -1,0 +1,189 @@
+---
+import MockupFrame from '../MockupFrame.astro'
+import { hero } from '../../data/site'
+
+// Arco do velocímetro: 240° de varredura, começando em 150°
+const R = 62
+const CIRC = 2 * Math.PI * R
+const SWEEP = CIRC * (240 / 360)
+---
+
+<MockupFrame titulo="painel turbo · desempenho" tone="dark" class="w-full" bodyClass="p-5 sm:p-6">
+  <div class="flex flex-col gap-5">
+    <!-- Velocímetro -->
+    <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
+      <div class="relative shrink-0">
+        <svg viewBox="0 0 160 160" class="size-[124px] -rotate-[210deg]" aria-hidden="true">
+          <circle
+            cx="80"
+            cy="80"
+            r={R}
+            fill="none"
+            stroke="rgba(255,255,255,.1)"
+            stroke-width="10"
+            stroke-linecap="round"
+            stroke-dasharray={`${SWEEP} ${CIRC}`}></circle>
+          <circle
+            id="gauge-arc"
+            cx="80"
+            cy="80"
+            r={R}
+            fill="none"
+            stroke="url(#gaugeGrad)"
+            stroke-width="10"
+            stroke-linecap="round"
+            stroke-dasharray={`${SWEEP} ${CIRC}`}
+            stroke-dashoffset={SWEEP}
+            style="transition: stroke-dashoffset 1.6s cubic-bezier(.16,1,.3,1)"
+            data-target={SWEEP * (1 - 0.88)}></circle>
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#A7E57F"></stop>
+              <stop offset="1" stop-color="#6BDD12"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="absolute inset-0 grid place-items-center">
+          <div class="text-center">
+            <span
+              id="gauge-num"
+              class="block font-mono text-[30px] leading-none font-medium tracking-[-0.03em] text-white tabular-nums"
+              >18</span
+            >
+            <span class="mt-1 block font-mono text-[10px] tracking-[0.14em] text-white/45"
+              >MS TTFB</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="min-w-0 flex-1">
+        <p class="font-mono text-[10.5px] tracking-[0.12em] text-white/45 uppercase">
+          Tempo até o 1º byte
+        </p>
+        <p class="mt-1.5 text-[15px] leading-snug text-white/80">
+          Medido nos servidores do Brasil. O visitante vê o site <span class="text-green"
+            >antes de perceber que clicou</span
+          >.
+        </p>
+        <div class="mt-3 flex items-center gap-2">
+          <span
+            class="inline-flex items-center gap-1.5 rounded-full border border-green/30 bg-green/12 px-2.5 py-1 font-mono text-[10.5px] tracking-[0.08em] text-green uppercase"
+          >
+            <svg viewBox="0 0 12 12" class="size-3" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M2.5 6.4L4.8 8.7L9.5 3.6" stroke-linecap="round" stroke-linejoin="round"
+              ></path>
+            </svg>
+            Grade A
+          </span>
+          <span class="font-mono text-[10.5px] tracking-[0.08em] text-white/35 uppercase"
+            >TIER III · BRASIL</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico de decolagem -->
+    <div class="rounded-[14px] border border-white/8 bg-white/4 p-4">
+      <div class="flex items-baseline justify-between">
+        <span class="font-mono text-[10.5px] tracking-[0.12em] text-white/45 uppercase"
+          >Carregamento · últimos 30 dias</span
+        >
+        <span class="font-mono text-[11px] text-green">↗ decolagem</span>
+      </div>
+      <svg viewBox="0 0 300 68" class="mt-3 w-full" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#6BDD12" stop-opacity=".35"></stop>
+            <stop offset="1" stop-color="#6BDD12" stop-opacity="0"></stop>
+          </linearGradient>
+        </defs>
+        <path
+          d="M0 58 L30 55 L60 56 L90 50 L120 46 L150 38 L180 30 L210 24 L240 16 L270 10 L300 4 L300 68 L0 68 Z"
+          fill="url(#areaGrad)"></path>
+        <path
+          class="spark-line"
+          d="M0 58 L30 55 L60 56 L90 50 L120 46 L150 38 L180 30 L210 24 L240 16 L270 10 L300 4"
+          fill="none"
+          stroke="#6BDD12"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </div>
+
+    <!-- Chips de tecnologia + status do domínio -->
+    <div class="flex flex-wrap items-center gap-1.5">
+      {
+        hero.chips.map((chip) => (
+          <span class="rounded-full border border-white/12 bg-white/5 px-2.5 py-1 font-mono text-[10.5px] tracking-[0.08em] text-white/60 uppercase">
+            {chip}
+          </span>
+        ))
+      }
+    </div>
+
+    <div
+      class="flex items-center justify-between rounded-[14px] border border-white/8 bg-white/4 px-4 py-3"
+    >
+      <span class="truncate font-mono text-[12.5px] text-white/70">seusite.com.br</span>
+      <span class="flex shrink-0 items-center gap-2 font-mono text-[11px] text-green">
+        <span class="pulse-dot"></span>
+        online
+      </span>
+    </div>
+  </div>
+</MockupFrame>
+
+<style>
+  .spark-line {
+    stroke-dasharray: 340;
+    stroke-dashoffset: 340;
+  }
+
+  .is-in .spark-line,
+  :global(.reveal.is-in) .spark-line {
+    animation: spark-draw 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes spark-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>
+
+<script>
+  const arc = document.getElementById('gauge-arc')
+  const num = document.getElementById('gauge-num')
+  const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  if (arc && num) {
+    const alvo = Number(arc.dataset.target ?? 0)
+
+    if (reduzido) {
+      arc.setAttribute('stroke-dashoffset', String(alvo))
+      num.textContent = '18'
+    } else {
+      num.textContent = '0'
+      const io = new IntersectionObserver(
+        (entradas) => {
+          if (!entradas[0]?.isIntersecting) return
+          io.disconnect()
+          arc.setAttribute('stroke-dashoffset', String(alvo))
+
+          const inicio = performance.now()
+          const passo = (agora: number) => {
+            const t = Math.min((agora - inicio) / 1400, 1)
+            const eased = 1 - Math.pow(1 - t, 3)
+            num.textContent = String(Math.round(eased * 18))
+            if (t < 1) requestAnimationFrame(passo)
+          }
+          requestAnimationFrame(passo)
+        },
+        { threshold: 0.4 },
+      )
+      io.observe(arc)
+    }
+  }
+</script>

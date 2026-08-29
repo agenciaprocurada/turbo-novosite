@@ -1,0 +1,177 @@
+---
+/**
+ * Card de plano no padrão do print: ícone em quadrado, nome, persona, preço
+ * grande, botão e três grupos de itens com check. O plano em destaque vira
+ * roxo com brilho e selo "MAIS ESCOLHIDO".
+ */
+import Button from './Button.astro'
+import type { Plano } from '../data/site'
+
+interface Props {
+  plano: Plano
+  icone?: 'foguete' | 'coroa' | 'camadas' | 'grupo' | 'servidor'
+}
+
+const { plano, icone = 'servidor' } = Astro.props
+const d = plano.destaque === true
+
+const brl = (v: number) =>
+  v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+const [inteiroMes, centavosMes] = brl(plano.precoMensal).split(',')
+const [inteiroAno, centavosAno] = plano.precoAnualMes
+  ? brl(plano.precoAnualMes).split(',')
+  : [null, null]
+
+const icones = {
+  foguete:
+    'M5 15c-1.5 1.5-2 4-2 6 2 0 4.5-.5 6-2M14 4c2-1.5 5-2 7-1 1 2 .5 5-1 7l-6 6-6-6 6-6Zm-4 8 2 2M15 8a1 1 0 1 0 0 .01',
+  coroa: 'M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5L3 8Zm2 11h14',
+  camadas: 'M12 3 3 8l9 5 9-5-9-5ZM3 12l9 5 9-5M3 16l9 5 9-5',
+  grupo:
+    'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm7 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3 20a6 6 0 0 1 12 0M15 20a5 5 0 0 1 6-4.9',
+  servidor: 'M4 5h16v6H4zM4 13h16v6H4zM7 8h.01M7 16h.01',
+} as const
+
+const preco = (inteiro: string, centavos: string) => ({ inteiro, centavos })
+const mensal = preco(inteiroMes!, centavosMes!)
+const anual = inteiroAno ? preco(inteiroAno, centavosAno!) : mensal
+---
+
+<article
+  class:list={[
+    'plan-card relative flex h-full flex-col rounded-card border p-5 hover:-translate-y-1',
+    d
+      ? 'block-dark border-[#7A3F9C]/70 bg-[#300C51] text-white shadow-[0_0_0_4px_rgba(122,63,156,.18),0_20px_50px_rgba(48,12,81,.35)]'
+      : 'border-line bg-surface hover:shadow-soft',
+  ]}
+>
+  <header class="flex items-start gap-3.5">
+    <span
+      class:list={[
+        'grid size-12 shrink-0 place-items-center rounded-[14px]',
+        d ? 'bg-white/12 text-white' : 'bg-green/14 text-green-deep',
+      ]}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        class="size-6"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d={icones[icone]}></path>
+      </svg>
+    </span>
+    <div class="min-w-0 flex-1">
+      <h3 class:list={['text-[16px] font-bold tracking-[0.04em] uppercase', d ? 'text-white' : 'text-ink']}>
+        {plano.nome}
+      </h3>
+      <p class:list={['mt-1 text-[13px] leading-snug lg:min-h-[5.6em]', d ? 'text-white/65' : 'text-ink-soft']}>
+        {plano.persona}
+      </p>
+    </div>
+  </header>
+  {
+    plano.selo && (
+      <span class="plan-badge absolute top-4 right-4 inline-flex origin-center items-center gap-1 rounded-full bg-green px-2 py-0.5 font-mono text-[9.5px] tracking-[0.08em] text-purple-950 uppercase">
+        <span aria-hidden="true">★</span>
+        {plano.selo}
+      </span>
+    )
+  }
+
+  <div class="mt-6">
+    {
+      [
+        { ciclo: 'mensal', p: mensal },
+        { ciclo: 'anual', p: anual },
+      ].map(({ ciclo, p }) => (
+        <div data-ciclo-mensal={ciclo === 'mensal' ? '' : undefined} data-ciclo-anual={ciclo === 'anual' ? '' : undefined} hidden={ciclo === 'anual'}>
+          <p class="flex items-baseline gap-1">
+            <span class:list={['text-[16px] font-semibold', d ? 'text-white/70' : 'text-ink-soft']}>R$</span>
+            <span
+              class:list={[
+                'text-[48px] leading-none font-bold tracking-[-0.03em] tabular-nums',
+                d ? 'text-white' : 'text-ink',
+              ]}
+            >
+              <span data-count>{p.inteiro}</span>
+            </span>
+            <span class:list={['text-[18px] font-semibold tabular-nums', d ? 'text-white/80' : 'text-ink']}>
+              ,{p.centavos}
+            </span>
+            <span class:list={['text-[14px]', d ? 'text-white/50' : 'text-ink-soft']}>/mês</span>
+          </p>
+          <p class:list={['mt-1.5 text-[12.5px]', d ? 'text-white/45' : 'text-ink-soft']}>
+            {ciclo === 'mensal'
+              ? 'cobrança mensal'
+              : inteiroAno
+                ? `1× de R$ ${brl(plano.precoAnualTotal ?? 0)} no ano`
+                : 'sem desconto anual nesta linha'}
+          </p>
+        </div>
+      ))
+    }
+  </div>
+
+  <Button
+    href={plano.href}
+    variant={d ? 'green' : 'outline-purple'}
+    fullWidth
+    class="mt-5">Quero contratar</Button
+  >
+
+  {/* No celular só o primeiro grupo aparece; os outros abrem no botão "Ver tudo que inclui".
+      No desktop (lg) tudo fica aberto e o botão some. */}
+  <div class:list={['mt-5 flex flex-col gap-4 border-t pt-5', d ? 'border-white/12' : 'border-line']}>
+    {
+      plano.grupos.map((grupo, gi) => (
+        <div class:list={[gi > 0 && 'max-lg:hidden']} data-recursos-extra={gi > 0 ? '' : undefined}>
+          <p class:list={['eyebrow', d ? 'text-white/45' : 'text-ink-soft']}>{grupo.titulo}</p>
+          <ul class="stagger mt-2 flex flex-col gap-1.5">
+            {grupo.itens.map((item) => (
+              <li class="flex items-start gap-2">
+                <svg
+                  viewBox="0 0 16 16"
+                  class:list={['mt-[3px] size-3.5 shrink-0', d ? 'text-green' : 'text-green-deep']}
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3.5 8.5L6.5 11.5L12.5 4.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span class:list={['text-[13.5px] leading-snug', d ? 'text-white/85' : 'text-ink']}>
+                  {item}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+    {plano.grupos.length > 1 && (
+      <button
+        type="button"
+        data-toggle-recursos
+        aria-expanded="false"
+        class:list={[
+          'inline-flex min-h-[44px] items-center gap-1.5 self-start text-[14px] font-bold underline underline-offset-4 lg:hidden',
+          d ? 'text-green decoration-green/40' : 'text-green-deep decoration-green-deep/40',
+        ]}
+      >
+        <span data-label-fechado>Ver tudo que inclui (+{plano.grupos.slice(1).reduce((n, g) => n + g.itens.length, 0)})</span>
+        <span data-label-aberto hidden>Mostrar menos</span>
+        <span aria-hidden="true" class="transition-transform duration-200 aria-expanded:rotate-180">↓</span>
+      </button>
+    )}
+  </div>
+</article>

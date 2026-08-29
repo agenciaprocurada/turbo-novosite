@@ -1,0 +1,35 @@
+---
+/**
+ * Card horizontal da S6 ("Por que escolher a Turbo Cloud?"): ícone 3D em
+ * círculo lavanda à esquerda, título e uma linha de texto à direita.
+ * Os ícones são WebP salvos em 2× (60px) e exibidos em 30px, para ficarem
+ * nítidos em tela retina.
+ */
+import { Image } from 'astro:assets'
+import velocidade from '../assets/imagens/empresa-de-hospedagem-de-site-icone-velocidade.webp'
+import suporte from '../assets/imagens/empresa-de-hospedagem-de-site-icone-suporte.webp'
+import preco from '../assets/imagens/empresa-de-hospedagem-de-site-icone-preco.webp'
+
+interface Props {
+  icone: 'velocidade' | 'suporte' | 'preco'
+  titulo: string
+  texto: string
+}
+
+const { icone, titulo, texto } = Astro.props
+const icones = { velocidade, suporte, preco } as const
+---
+
+<article class="group flex h-full items-start gap-4 rounded-card border border-line bg-surface p-5 shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift sm:p-6">
+  <span
+    class="grid size-12 shrink-0 place-items-center rounded-full bg-purple-950/6 transition-transform duration-300 group-hover:scale-110"
+    aria-hidden="true"
+  >
+    <Image src={icones[icone]} alt="" class="h-auto w-[30px] max-h-[30px] object-contain" loading="lazy" />
+  </span>
+
+  <div class="min-w-0">
+    <h3 class="text-[16.5px] leading-snug font-bold text-ink">{titulo}</h3>
+    <p class="mt-1.5 text-[14px] leading-relaxed text-ink-soft">{texto}</p>
+  </div>
+</article>

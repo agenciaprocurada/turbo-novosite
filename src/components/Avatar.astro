@@ -1,0 +1,37 @@
+---
+/**
+ * Monograma em vez de foto. Não temos foto autorizada de cliente nem do time,
+ * e stock photo genérica destruiria a credibilidade de uma seção que fala
+ * justamente sobre "é gente de verdade".
+ */
+interface Props {
+  nome: string
+  size?: number
+  tone?: 'light' | 'dark'
+  class?: string
+}
+
+const { nome, size = 44, tone = 'light', class: className = '' } = Astro.props
+
+const iniciais = nome
+  .split(' ')
+  .filter((p) => p.length > 2)
+  .slice(0, 2)
+  .map((p) => p[0])
+  .join('')
+  .toUpperCase()
+
+// Matiz derivado do nome — cada pessoa ganha um monograma estável e distinto
+const hash = [...nome].reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
+const rot = hash % 90
+---
+
+<span
+  class:list={[
+    'inline-grid shrink-0 place-items-center rounded-full font-medium',
+    tone === 'dark' ? 'text-purple-950' : 'text-purple-950',
+    className,
+  ]}
+  style={`width:${size}px;height:${size}px;font-size:${Math.round(size * 0.36)}px;background:linear-gradient(${135 + rot}deg,var(--color-green-soft),var(--color-green));`}
+  aria-hidden="true">{iniciais}</span
+>

@@ -1,0 +1,28 @@
+---
+interface Props {
+  variant?: 'green' | 'outline-dark' | 'outline-light' | 'soft' | 'status'
+  class?: string
+  mono?: boolean
+}
+
+const { variant = 'green', class: className = '', mono = true } = Astro.props
+
+const variants = {
+  green: 'bg-green text-purple-950',
+  soft: 'bg-green/12 text-green-deep',
+  'outline-dark': 'border border-line bg-surface text-ink-soft',
+  'outline-light': 'border border-white/20 bg-white/8 text-white/85',
+  status: 'border border-green/30 bg-green/10 text-green',
+}
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] leading-none font-medium',
+    mono && 'font-mono tracking-[0.08em] uppercase',
+    variants[variant],
+    className,
+  ]}
+>
+  <slot />
+</span>

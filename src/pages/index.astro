@@ -1,0 +1,894 @@
+---
+import Base from '../layouts/Base.astro'
+import TopBar from '../components/TopBar.astro'
+import HeaderPill from '../components/HeaderPill.astro'
+import FooterMega from '../components/FooterMega.astro'
+
+import Button from '../components/Button.astro'
+import Badge from '../components/Badge.astro'
+import SectionEyebrow from '../components/SectionEyebrow.astro'
+import HeadingDuo from '../components/HeadingDuo.astro'
+import StatBlock from '../components/StatBlock.astro'
+import PorqueCard from '../components/PorqueCard.astro'
+import PricingCard from '../components/PricingCard.astro'
+import TestimonialCarousel from '../components/TestimonialCarousel.astro'
+import ChatMockup from '../components/ChatMockup.astro'
+import MigrationFunnel from '../components/MigrationFunnel.astro'
+import MapDots from '../components/MapDots.astro'
+
+import fundoHero from '../assets/fundo-topo-hero.webp'
+import fundoInfra from '../assets/fundo-site-01.webp'
+import InfraStatusCard from '../components/InfraStatusCard.astro'
+import ServiceCard from '../components/ServiceCard.astro'
+import { Image } from 'astro:assets'
+import foguete from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-caminho-turbo.webp'
+import planeta from '../assets/imagens/empresa-de-hospedagem-de-site-planeta-anel.webp'
+import fundoCta from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-fundo.webp'
+import astronautaFaq from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-lua-notebook.webp'
+import heroMobile from '../assets/imagens/empresa-de-hospedagem-de-site-hero-astronauta-mobile.webp'
+import racksMobile from '../assets/imagens/empresa-de-hospedagem-de-site-datacenter-racks-mobile.webp'
+import fundoCtaMobile from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-mobile.webp'
+import iconeCaminho from '../assets/imagens/empresa-de-hospedagem-de-site-icone-caminho-turbo.webp'
+
+import {
+  hero,
+  provas,
+  servicos,
+  infraLista,
+  porque,
+  bannerTurbo,
+  migracao,
+  suporte,
+  stats,
+  brasil,
+  abasPlanos,
+  notaPlanos,
+  planosCabecalho,
+  garantiasPlanos,
+  ctaFinal,
+  faq,
+  links,
+  atendimento,
+  marca,
+} from '../data/site'
+
+const SECAO = 'py-[clamp(72px,9vw,132px)]'
+
+const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar, rápido e seguro.'
+
+// Ícones dos 4 planos de hospedagem (One, Three, Duo, Revenda) e da faixa de garantias
+const ICONES_PLANOS = ['foguete', 'coroa', 'camadas', 'grupo'] as const
+const ICONES_GARANTIAS = {
+  migracao: 'M7 18a4 4 0 0 1-.6-7.95A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5H7Zm5-6v6m-2.5-3.5L12 12l2.5 2.5',
+  uptime: 'M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3Zm-3 9 2 2 4-4',
+  backup: 'M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4M12 8v4l3 2',
+  ssl: 'M6 11V8a6 6 0 0 1 12 0v3M5 11h14v10H5zM12 15v3',
+  suporte: 'M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2v-2Zm16 0a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2v-2Zm-3 5a3 3 0 0 1-3 2',
+} as const
+
+// Fundo do hero: WebP já otimizado (1698×1006, ~38 KB), servido como está.
+---
+
+<Base
+  titulo="Turbo Cloud — hospedagem de alta performance no Brasil"
+  descricao="Hospedagem WordPress e WooCommerce com CPU e memória dedicadas, TTFB de 18 ms, backup a cada 12 horas e suporte humano no WhatsApp. Servidores em datacenter TIER III no Brasil. Migração grátis."
+>
+  <TopBar />
+  <HeaderPill />
+
+  <main id="conteudo">
+    {/* ============================== S2 · HERO ============================== */}
+    <section class="relative -mt-[76px] overflow-x-clip bg-[#F6F1FA] pt-[76px] sm:-mt-[84px] sm:pt-[84px]">
+      {/* Fundo do topo (astronauta + cartões já vêm na arte). No desktop cobre a
+          altura toda, encostado à direita; a esquerda funde com a cor da arte. */}
+      <div
+        class="hero-art pointer-events-none absolute inset-0 hidden bg-no-repeat lg:block"
+        data-parallax
+        style={`background-image:url(${fundoHero.src});background-size:auto;background-position:calc(50% + 120px) center`}
+        aria-hidden="true"
+      >
+      </div>
+      {/* Em telas mais largas que a arte (1698px), suaviza a emenda das bordas com a cor de fundo */}
+      <div
+        class="pointer-events-none absolute inset-0 hidden min-[1720px]:block"
+        style="background:linear-gradient(90deg,#F6F1FA 0,rgba(246,241,250,0) 12%,rgba(246,241,250,0) 88%,#F6F1FA 100%)"
+        aria-hidden="true"
+      >
+      </div>
+
+      {/* Degradê no pé do hero: a arte lilás some para a cor de fundo da página, sem linha dura */}
+      <div
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-[160px]"
+        style="background:linear-gradient(180deg, rgba(251,251,250,0) 0%, rgba(251,251,250,.7) 55%, #FBFBFA 100%)"
+        aria-hidden="true"
+      >
+      </div>
+
+      {/* No celular a ordem é: imagem → título → texto e botões. No desktop os dois blocos de
+          texto ficam empilhados na coluna da esquerda (lg:col-start-1) e a imagem some. */}
+      <div
+        class="relative container-page grid gap-y-7 py-[clamp(40px,7vw,88px)] lg:min-h-[720px] lg:grid-cols-[minmax(0,616px)_1fr] lg:content-center lg:gap-x-6 lg:gap-y-0"
+      >
+        {/* Recorte dedicado da arte (astronauta + painéis), 780px = 2× da tela. Entra antes
+            do título no celular; é lazy + display:none no desktop, então o desktop não baixa. */}
+        <div class="reveal relative -mx-5 -mt-6 -mb-2 lg:hidden">
+          <Image
+            src={heroMobile}
+            alt=""
+            loading="lazy"
+            fetchpriority="high"
+            class="h-auto w-full"
+            style="mask-image:linear-gradient(180deg,transparent,#000 10%,#000 88%,transparent);-webkit-mask-image:linear-gradient(180deg,transparent,#000 10%,#000 88%,transparent)"
+          />
+        </div>
+
+        <div class="reveal stagger">
+          <SectionEyebrow>{hero.eyebrow}</SectionEyebrow>
+
+          <h1
+            class="mt-4 text-[clamp(2.3rem,5.2vw,2.9rem)] leading-[1.08] font-bold tracking-[-0.024em] text-ink lg:mt-5"
+          >
+            <span>{hero.titulo1}</span><br /><span class="text-green-ink">{hero.titulo2}</span>
+          </h1>
+        </div>
+
+
+        <div class="reveal stagger lg:col-start-1" data-delay="2">
+          <p class="max-w-[50ch] lg:mt-5 text-[clamp(1rem,1.6vw,1.125rem)] leading-relaxed text-ink-soft">
+            <strong class="font-bold text-ink">{hero.subLead}</strong>
+            {' '}{hero.sub}
+          </p>
+
+          <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button href={hero.ctaPrimario.href} variant="green" size="lg" fullWidth class="sm:w-auto"
+              >{hero.ctaPrimario.label}</Button
+            >
+            <Button href={hero.ctaSecundario.href} variant="white" size="lg" fullWidth class="sm:w-auto"
+              >{hero.ctaSecundario.label}</Button
+            >
+          </div>
+
+          <ul class="mt-8 flex flex-wrap gap-1.5">
+            {
+              hero.beneficios.map((item) => (
+                <li class="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 py-1.5 pr-3 pl-1.5 text-[12.5px] font-semibold whitespace-nowrap text-ink shadow-soft">
+                  <span
+                    class="grid size-5 place-items-center rounded-full bg-green-deep text-white"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 12 12" class="size-3" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M2.5 6.4L4.8 8.7L9.5 3.6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+
+          <p class="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11.5px] tracking-[0.06em] text-ink-soft uppercase">
+            <span class="text-[14px] tracking-[0.08em] text-green-deep" aria-hidden="true">★★★★★</span>
+            <span>
+              {provas.notaGoogle} no Google · {provas.avaliacoesGoogle.toLocaleString('pt-BR')} avaliações · desde {marca.desde}
+            </span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* ========================= S3 · PROVA SOCIAL ========================== */}
+    <section class="pt-[clamp(48px,6vw,80px)] pb-[clamp(40px,5vw,64px)]">
+      <div class="container-page">
+        <div class="reveal grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-16">
+          <div>
+            <p class="text-[17px] tracking-[0.12em] text-star" aria-label="Nota 5 de 5 estrelas">
+              ★★★★★
+            </p>
+            <h2
+              class="mt-3 text-[clamp(1.6rem,3vw,2rem)] leading-[1.15] font-bold tracking-[-0.018em] text-ink"
+            >
+              <span data-count>{provas.avaliacoesGoogle.toLocaleString('pt-BR')}</span> avaliações<br />e nota {provas.notaGoogle} no
+              Google.
+            </h2>
+            <p class="mt-4 max-w-[36ch] text-[14.5px] leading-relaxed text-ink-soft">
+              {provasTexto}
+            </p>
+            <a
+              href={links.avaliacoes}
+              rel="noopener"
+              target="_blank"
+              class="mt-5 inline-block py-2 -my-2 text-[14px] font-semibold text-ink underline decoration-line underline-offset-4 transition-colors hover:text-green-deep hover:decoration-green-deep"
+              >Ver todas as avaliações →</a
+            >
+          </div>
+
+          <TestimonialCarousel />
+        </div>
+      </div>
+    </section>
+
+    {/* ============================ S4 · SERVIÇOS =========================== */}
+    <section class="pt-[clamp(40px,5vw,64px)] pb-[clamp(72px,9vw,132px)]" id="servicos">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[680px] text-center">
+          <SectionEyebrow class="justify-center">Recursos</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.9rem,4.2vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.018em] text-ink"
+          >
+            Um único lugar para tudo<br class="hidden sm:block" /> o que <span class="text-green-ink">você precisa no ar.</span>
+          </h2>
+        </div>
+
+        <div
+          class="mt-10 -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4"
+        >
+          {
+            servicos.map((servico, i) => (
+              <div class="reveal flex w-[82vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none" data-delay={String(i + 1)}>
+                <ServiceCard
+                  icone={servico.icone}
+                  titulo={servico.titulo}
+                  texto={servico.texto}
+                  itens={servico.itens}
+                  rodape={servico.rodape}
+                  href={servico.href}
+                  class="w-full"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ========================= S5 · INFRAESTRUTURA ======================== */}
+    <section class="block-dark relative overflow-hidden bg-purple-950 text-white" id="estrutura">
+      {/* Racks: a arte cobre o bloco inteiro no desktop; no mobile fica só o roxo */}
+      <img
+        src={fundoInfra.src}
+        width={fundoInfra.width}
+        height={fundoInfra.height}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        class="pointer-events-none absolute top-1/2 left-1/2 hidden h-[70%] w-auto max-w-none -translate-x-1/2 -translate-y-1/2 lg:block"
+        style="mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent),linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);mask-composite:intersect;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent),linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);-webkit-mask-composite:source-in"
+      />
+      <div
+        class="pointer-events-none absolute inset-0"
+        style="background:linear-gradient(90deg,#300C51 0%,rgba(48,12,81,.85) 22%,rgba(48,12,81,0) 46%),linear-gradient(180deg,rgba(48,12,81,.35) 0%,rgba(48,12,81,0) 30%,rgba(48,12,81,0) 70%,rgba(48,12,81,.45) 100%)"
+        aria-hidden="true"
+      >
+      </div>
+
+      {/* Celular: título → racks → lista → card. Desktop: título e lista empilhados na
+          coluna 1, card na coluna 3 ocupando as duas linhas. */}
+      <div
+        class="relative container-page grid gap-y-8 py-[clamp(56px,7vw,96px)] lg:min-h-[560px] lg:grid-cols-[minmax(0,440px)_1fr_minmax(0,320px)] lg:content-center lg:gap-x-8 lg:gap-y-0"
+      >
+        <div class="reveal">
+          <SectionEyebrow tone="dark">Infraestrutura</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.7rem,3vw,2.1rem)] leading-[1.15] font-bold tracking-[-0.018em] text-white"
+          >
+            Infraestrutura otimizada,<br /><span class="text-green">do jeito que deveria ser.</span>
+          </h2>
+        </div>
+
+        {/* No celular os racks entram como recorte dedicado, com bordas fundindo no roxo */}
+        <div class="relative -mx-5 -my-4 lg:hidden" aria-hidden="true">
+          <Image
+            src={racksMobile}
+            alt=""
+            loading="lazy"
+            class="h-auto w-full"
+            style="mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent),linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);mask-composite:intersect;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent),linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);-webkit-mask-composite:source-in"
+          />
+        </div>
+
+        <div class="reveal lg:col-start-1" data-delay="1">
+          <ul class="stagger flex flex-col gap-3 lg:mt-8">
+            {
+              infraLista.map((item) => (
+                <li class="flex items-center gap-3 text-[14.5px] text-white/85">
+                  <span
+                    class="grid size-6 shrink-0 place-items-center rounded-full border border-white/20 bg-white/6"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 12 12" class="size-3 text-green" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M2.5 6.4L4.8 8.7L9.5 3.6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        {/* Card de status só no desktop — no celular os racks + a lista já contam a história */}
+        <div class="reveal hidden lg:col-start-3 lg:row-start-1 lg:row-span-2 lg:block lg:self-center" data-delay="2">
+          <InfraStatusCard />
+        </div>
+      </div>
+    </section>
+
+    {/* ==================== S6 · POR QUE ESCOLHER + O CAMINHO TURBO ============ */}
+    <section class={`relative overflow-x-clip ${SECAO}`}>
+      {/* Planetas decorativos ao fundo — mesma imagem, a da esquerda espelhada e menor. Só no desktop. */}
+      <Image
+        src={planeta}
+        alt=""
+        loading="lazy"
+        class="pointer-events-none absolute top-[8%] right-[max(12px,calc(50%-720px))] planet-float hidden h-auto w-[190px] opacity-60 lg:block"
+        aria-hidden="true"
+      />
+      <Image
+        src={planeta}
+        alt=""
+        loading="lazy"
+        class="pointer-events-none absolute top-[24%] left-[max(12px,calc(50%-720px))] planet-float-slow hidden h-auto w-[150px] -scale-x-100 opacity-50 lg:block"
+        aria-hidden="true"
+      />
+
+      <div class="relative container-page">
+        <div class="reveal mx-auto max-w-[680px] text-center">
+          <SectionEyebrow class="justify-center">Por que escolher a Turbo Cloud?</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.9rem,4.2vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.018em] text-ink"
+          >
+            Cansado de escolher entre<br class="hidden sm:block" /> barato, <span class="text-green-ink">simples</span>{' '}ou{' '}<span class="text-green-ink">rápido?</span>
+          </h2>
+        </div>
+
+        <div class="mt-10 grid gap-4 md:grid-cols-3">
+          {
+            porque.map((item, i) => (
+              <div class="reveal" data-delay={String(i + 1)}>
+                <PorqueCard icone={item.icone} titulo={item.titulo} texto={item.texto} />
+              </div>
+            ))
+          }
+        </div>
+
+        {/* Banner "O caminho Turbo": card branco, ícone, texto, CTA e o foguete à direita */}
+        <div
+          class="group reveal relative mt-4 overflow-hidden rounded-card border border-line bg-surface p-5 shadow-soft sm:p-7 sm:pr-[130px] lg:min-h-[180px] lg:pr-[210px]"
+        >
+          <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6 lg:min-h-[124px]">
+            <span
+              class="grid size-16 shrink-0 place-items-center rounded-full bg-purple-950/6"
+              aria-hidden="true"
+            >
+              <Image src={iconeCaminho} alt="" loading="lazy" class="h-auto w-[40px] max-h-[44px] object-contain" />
+            </span>
+
+            <div class="min-w-0 flex-1">
+              <h3 class="text-[clamp(1.35rem,2.4vw,1.6rem)] font-bold tracking-[-0.018em] text-ink">
+                {bannerTurbo.titulo}
+              </h3>
+              <p class="mt-1.5 text-[15px] leading-relaxed font-bold text-ink">{bannerTurbo.destaque}</p>
+              <p class="text-[14.5px] leading-relaxed text-ink-soft">{bannerTurbo.texto}</p>
+            </div>
+
+            <div class="shrink-0">
+              <Button href={bannerTurbo.cta.href} variant="green" size="lg">{bannerTurbo.cta.label}</Button>
+            </div>
+          </div>
+
+          {/* Foguete 3D (WebP 2×, exibido em 170px de altura) */}
+          <Image
+            src={foguete}
+            alt=""
+            loading="lazy"
+            class="rocket-float pointer-events-none absolute top-4 right-4 h-[96px] w-auto transition-transform duration-500 group-hover:-translate-y-2 group-hover:-rotate-3 sm:top-auto sm:right-5 sm:bottom-0 sm:h-[112px] lg:right-7 lg:h-[152px]"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+    </section>
+
+    {/* ============================ S7 · MIGRAÇÃO =========================== */}
+    <section class={SECAO}>
+      <div class="container-page">
+        {/* Celular: título → funil → texto e CTA. Desktop: texto empilhado à esquerda, funil à direita. */}
+        <div class="grid gap-y-8 lg:grid-cols-2 lg:content-center lg:gap-x-16 lg:gap-y-0">
+          <div class="reveal lg:self-end">
+            <SectionEyebrow>{migracao.eyebrow}</SectionEyebrow>
+            <HeadingDuo parte1={migracao.titulo1} parte2={migracao.titulo2} class="mt-4" />
+          </div>
+
+          <div class="reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" data-delay="1">
+            <MigrationFunnel />
+          </div>
+
+          <div class="reveal lg:col-start-1 lg:self-start" data-delay="2">
+            <p class="max-w-[46ch] text-[16px] leading-relaxed text-ink-soft lg:mt-4">
+              {migracao.texto}
+            </p>
+            <div class="mt-7">
+              <Button href={migracao.cta.href} variant="green" size="lg">{migracao.cta.label}</Button>
+            </div>
+            <p class="mt-4 font-mono text-[12px] tracking-[0.06em] text-ink-soft uppercase">
+              Seu site, nossa nuvem.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ============================ S8 · SUPORTE ============================ */}
+    <section class="py-2" id="suporte">
+      <div class="block-section block-dark bg-purple-950 py-[clamp(56px,7vw,104px)] text-white">
+        {/* Celular: título → conversa → texto e CTAs. Desktop: texto à esquerda, conversa à direita. */}
+        <div class="container-page grid gap-y-8 lg:grid-cols-2 lg:content-center lg:gap-x-16 lg:gap-y-0">
+          <div class="reveal lg:self-end">
+            <SectionEyebrow tone="dark">{suporte.eyebrow}</SectionEyebrow>
+            <HeadingDuo
+              parte1={suporte.titulo1}
+              parte2={suporte.titulo2}
+              tone="dark"
+              class="mt-4"
+            />
+          </div>
+
+          <div class="reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" data-delay="1">
+            <ChatMockup />
+            <p class="mt-3 text-center font-mono text-[11px] text-white/35">
+              Conversa ilustrativa do fluxo de atendimento.
+            </p>
+          </div>
+
+          <div class="reveal lg:col-start-1 lg:self-start" data-delay="2">
+            <p class="max-w-[46ch] text-[16px] leading-relaxed text-white/70 lg:mt-4">
+              {suporte.texto}
+            </p>
+
+            <dl class="mt-7 flex flex-col gap-2 border-t border-white/10 pt-6 font-mono text-[12.5px]">
+              <div class="flex flex-wrap gap-x-2">
+                <dt class="text-white/40 uppercase">WhatsApp</dt>
+                <dd class="text-white/75">{atendimento.whatsapp}</dd>
+              </div>
+              <div class="flex flex-wrap gap-x-2">
+                <dt class="text-white/40 uppercase">Ticket</dt>
+                <dd class="text-white/75">{atendimento.ticket}</dd>
+              </div>
+            </dl>
+
+            <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button href={suporte.ctaWhats.href} variant="green" size="lg" fullWidth class="sm:w-auto"
+                >{suporte.ctaWhats.label}</Button
+              >
+              <Button href={suporte.ctaTicket.href} variant="outline-light" size="lg" fullWidth class="sm:w-auto"
+                >{suporte.ctaTicket.label}</Button
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ========================= S9 · BRASIL / STATS ======================== */}
+    <section class={SECAO}>
+      <div class="container-page">
+        {/* Celular: título → mapa → texto e link. Desktop: texto à esquerda, mapa à direita. */}
+        <div class="grid gap-y-8 lg:grid-cols-[0.85fr_1.15fr] lg:content-center lg:gap-x-16 lg:gap-y-0">
+          <div class="reveal lg:self-end">
+            <SectionEyebrow>{brasil.eyebrow}</SectionEyebrow>
+            <HeadingDuo parte1={brasil.titulo1} parte2={brasil.titulo2} class="mt-4" />
+          </div>
+
+          <div class="reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" data-delay="1">
+            <div class="rounded-block bg-purple-950 p-5 text-white sm:p-9">
+              <MapDots />
+            </div>
+          </div>
+
+          <div class="reveal lg:col-start-1 lg:self-start" data-delay="2">
+            <p class="max-w-[42ch] text-[16px] leading-relaxed text-ink-soft lg:mt-4">{brasil.texto}</p>
+            <a
+              href={brasil.link.href}
+              class="mt-5 inline-flex items-center gap-1.5 py-2 -my-2 text-[14.5px] font-bold text-green-deep underline decoration-green-deep/40 underline-offset-4 transition-colors hover:decoration-green-deep"
+              >{brasil.link.label} <span aria-hidden="true">→</span></a
+            >
+          </div>
+        </div>
+
+        <div
+          class="reveal stagger mt-10 grid grid-cols-2 gap-x-3 gap-y-6 rounded-card border border-line bg-surface p-5 shadow-soft sm:gap-y-8 sm:p-6 lg:grid-cols-4 lg:gap-4 lg:p-7"
+        >
+          {
+            stats.map((stat, i) => (
+              <StatBlock
+                icone={stat.icone}
+                valor={stat.valor}
+                sufixo={'sufixo' in stat ? stat.sufixo : undefined}
+                label={stat.label}
+                class={i > 0 ? 'lg:border-l lg:border-line lg:pl-6' : ''}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ============================= S10 · PLANOS =========================== */}
+    <section class={SECAO} id="planos">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[760px] text-center">
+          <p
+            class="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-center text-[13px] text-ink shadow-soft sm:text-[14px]"
+          >
+            <svg viewBox="0 0 24 24" class="size-4 text-green-deep" fill="currentColor" aria-hidden="true">
+              <path d="M12 21s-7.5-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2 4.4-9.5 9-9.5 9Z"></path>
+            </svg>
+            <span>
+              Você foca no seu negócio. <strong class="font-bold">A gente cuida do resto.</strong>
+            </span>
+          </p>
+          <h2
+            class="mt-5 text-[clamp(1.9rem,4.2vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.018em] text-ink"
+          >
+            {planosCabecalho.titulo1}<br />{planosCabecalho.titulo2a}{' '}<span class="text-green-ink"
+              >{planosCabecalho.titulo2b}</span
+            >
+          </h2>
+          <p class="mx-auto mt-4 max-w-[64ch] text-[16px] leading-relaxed text-ink-soft">
+            {planosCabecalho.texto}
+          </p>
+        </div>
+
+        <div
+          class="reveal mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
+          data-planos
+        >
+          <div
+            class="flex w-full gap-1 rounded-full border border-line bg-surface p-1 sm:w-auto"
+            role="tablist"
+            aria-label="Categorias de plano"
+          >
+            {
+              abasPlanos.map((aba, i) => (
+                <button
+                  type="button"
+                  role="tab"
+                  data-aba-plano={aba.id}
+                  aria-selected={i === 0 ? 'true' : 'false'}
+                  aria-controls={`planos-${aba.id}`}
+                  class="flex-1 rounded-full px-2 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink-soft transition-colors aria-selected:bg-purple-950 aria-selected:text-white sm:flex-none sm:px-4 sm:text-[14px]"
+                >
+                  <span class="sm:hidden">{aba.labelCurto ?? aba.label}</span>
+                  <span class="hidden sm:inline">{aba.label}</span>
+                </button>
+              ))
+            }
+          </div>
+
+          <div
+            class="flex gap-1 self-start rounded-full border border-line bg-surface p-1 sm:ml-auto sm:self-auto"
+            role="group"
+            aria-label="Ciclo de cobrança"
+          >
+            <button
+              type="button"
+              data-ciclo="mensal"
+              aria-pressed="true"
+              class="rounded-full px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-950 aria-pressed:text-white"
+              >Mensal</button
+            >
+            <button
+              type="button"
+              data-ciclo="anual"
+              aria-pressed="false"
+              class="group flex items-center gap-2 rounded-full px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-950 aria-pressed:text-white"
+            >
+              Anual
+              <span class="rounded-full bg-green/15 px-2 py-0.5 text-[10.5px] text-green-deep group-aria-pressed:bg-green group-aria-pressed:text-purple-950">8% off</span>
+            </button>
+          </div>
+        </div>
+
+        {
+          abasPlanos.map((aba, i) => (
+            <div id={`planos-${aba.id}`} data-painel-plano={aba.id} hidden={i !== 0}>
+              {aba.nota && (
+                <p class="mt-6 flex items-start gap-2 rounded-[14px] border border-line bg-surface px-4 py-3 text-[13.5px] leading-snug text-ink-soft">
+                  <span aria-hidden="true" class="text-green-deep">
+                    ⚠
+                  </span>
+                  {aba.nota}
+                </p>
+              )}
+              <div class="reveal plans-grid mt-6 -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pt-3 pb-5 lg:mx-0 lg:grid lg:grid-cols-4 lg:px-0 lg:pb-2">
+                {aba.planos.map((plano, j) => (
+                  <div class:list={['w-[85vw] max-w-[330px] shrink-0 snap-start lg:w-auto lg:max-w-none', plano.destaque === true && 'plan-glow']}>
+                    <PricingCard
+                      plano={plano}
+                      icone={aba.id === 'hospedagem' ? ICONES_PLANOS[j] : 'servidor'}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+
+        {/* Garantias comuns a todos os planos */}
+        <ul
+          class="reveal mt-8 grid gap-4 rounded-card border border-line bg-surface px-5 py-5 shadow-soft sm:grid-cols-2 lg:grid-cols-5 lg:gap-0 lg:divide-x lg:divide-line lg:px-2"
+        >
+          {
+            garantiasPlanos.map((g) => (
+              <li class="flex items-center gap-3 lg:px-5">
+                <svg
+                  viewBox="0 0 24 24"
+                  class="size-7 shrink-0 text-green-deep"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d={ICONES_GARANTIAS[g.icone]} />
+                </svg>
+                <span class="text-[13px] leading-snug text-ink">
+                  <span class="block font-bold">{g.linha1}</span>
+                  <span class="block text-ink-soft">{g.linha2}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="mx-auto mt-6 max-w-[80ch] text-center text-[13px] leading-relaxed text-ink-soft">
+          {notaPlanos}
+        </p>
+      </div>
+    </section>
+
+    {/* ============================== FAQ ================================== */}
+    <section class="relative overflow-clip pt-[clamp(16px,2vw,32px)] pb-[clamp(56px,7vw,100px)]">
+      {/* Astronauta com notebook: alinhado à borda esquerda do container e cortado pela base da seção. Só no desktop. */}
+      <div
+        class="pointer-events-none absolute bottom-[-6%] left-[max(20px,calc(50%-600px))] hidden w-[340px] lg:block"
+        aria-hidden="true"
+      >
+        <Image src={astronautaFaq} alt="" loading="lazy" class="h-auto w-full" />
+      </div>
+
+      <div class="relative container-page">
+        <div
+          class="reveal grid gap-10 lg:grid-cols-[minmax(0,330px)_minmax(0,220px)_1fr] lg:items-start lg:gap-8"
+        >
+          <div class="hidden lg:block" aria-hidden="true"></div>
+
+          <div class="lg:pt-2">
+            <SectionEyebrow>Dúvidas frequentes</SectionEyebrow>
+            <h2
+              class="mt-3 text-[clamp(1.5rem,2.6vw,1.85rem)] leading-[1.15] font-bold tracking-[-0.015em] text-ink"
+            >
+              Perguntas<br />frequentes
+            </h2>
+            <a
+              href={links.ajuda}
+              rel="noopener"
+              target="_blank"
+              class="mt-8 inline-flex items-center gap-1.5 py-2 -my-2 text-[14px] font-bold text-green-deep underline decoration-green-deep/40 underline-offset-4 transition-colors hover:decoration-green-deep"
+              >Ver todas as perguntas <span aria-hidden="true">→</span></a
+            >
+          </div>
+
+          <div class="divide-y divide-line rounded-card border border-line bg-surface px-5 shadow-soft sm:px-6">
+            {
+              faq.map((item) => (
+                <details class="group">
+                  <summary class="flex cursor-pointer list-none items-center gap-4 py-4 text-[15px] font-semibold text-ink">
+                    <span class="flex-1">{item.p}</span>
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="size-4 shrink-0 text-ink-soft transition-transform duration-200 group-open:rotate-180"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </summary>
+                  <p class="max-w-[62ch] pb-5 text-[14.5px] leading-relaxed text-ink-soft">{item.r}</p>
+                </details>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* =========================== S11 · CTA FINAL ========================== */}
+    <section
+      class="block-dark relative overflow-hidden bg-purple-950 py-[clamp(56px,7vw,88px)] text-center text-white"
+    >
+      {/* Arte de fundo: lua à esquerda, foguete decolando à direita, centro livre para o texto.
+          No mobile só a nebulosa do centro fica atrás do texto. */}
+      <Image
+        src={fundoCta}
+        alt=""
+        loading="lazy"
+        class="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[center_12%] lg:block"
+        aria-hidden="true"
+      />
+      {/* Celular/tablet: recorte só com o foguete, ancorado à direita */}
+      <Image
+        src={fundoCtaMobile}
+        alt=""
+        loading="lazy"
+        class="pointer-events-none absolute inset-0 h-full w-full object-cover object-[right_center] lg:hidden"
+        aria-hidden="true"
+      />
+      <div
+        class="pointer-events-none absolute inset-0 lg:hidden"
+        style="background:linear-gradient(180deg, rgba(48,12,81,.45) 0%, rgba(48,12,81,.7) 100%)"
+        aria-hidden="true"
+      >
+      </div>
+      {/* Escurece de leve o miolo para o texto manter contraste sobre a nebulosa */}
+      <div
+        class="pointer-events-none absolute inset-0"
+        style="background:radial-gradient(48% 80% at 50% 50%, rgba(48,12,81,.6), rgba(48,12,81,0) 100%)"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="relative container-page reveal lg:px-[260px]">
+        <h2 class="text-[clamp(1.9rem,4.4vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.02em]">
+          <span class="text-white">{ctaFinal.titulo1}</span>{' '}<span class="text-white/60"
+            >{ctaFinal.titulo2}</span
+          >
+        </h2>
+        <p class="mx-auto mt-3 max-w-[52ch] text-[15px] leading-relaxed text-white/65">
+          {ctaFinal.texto}
+        </p>
+        <div class="mt-7 flex flex-wrap justify-center gap-3">
+          <Button href={ctaFinal.primario.href} variant="green" size="lg"
+            >{ctaFinal.primario.label}</Button
+          >
+          <Button href={ctaFinal.secundario.href} variant="outline-light" size="lg"
+            >{ctaFinal.secundario.label}</Button
+          >
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <FooterMega />
+</Base>
+
+<script>
+  const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  // Números contam do zero até o valor real quando entram na tela (99,982%, 18 ms, 1.366…)
+  const contadores = document.querySelectorAll<HTMLElement>('[data-count]')
+  if (contadores.length && !reduzido && 'IntersectionObserver' in window) {
+    const anima = (el: HTMLElement) => {
+      const original = el.textContent ?? ''
+      const m = original.match(/^([\d.]+)(,(\d+))?/)
+      if (!m) return
+      const inteiro = Number(m[1].replace(/\./g, ''))
+      const dec = m[3] ?? ''
+      const alvo = Number(`${inteiro}.${dec || 0}`)
+      const resto = original.slice(m[0].length)
+      const casas = dec.length
+      const ini = performance.now()
+      const dur = 1400
+      const tick = (t: number) => {
+        const p = Math.min(1, (t - ini) / dur)
+        const e = 1 - Math.pow(2, -10 * p) // ease-out expo
+        const v = alvo * (p === 1 ? 1 : e)
+        el.textContent =
+          v.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas }) + resto
+        if (p < 1) requestAnimationFrame(tick)
+        else el.textContent = original
+      }
+      requestAnimationFrame(tick)
+    }
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => { if (e.isIntersecting) { anima(e.target as HTMLElement); io.unobserve(e.target) } }),
+      { threshold: 0.6 },
+    )
+    contadores.forEach((el) => io.observe(el))
+  }
+
+  // Hero (desktop, mouse): a arte acompanha o ponteiro com um deslocamento leve
+  const arte = document.querySelector<HTMLElement>('[data-parallax]')
+  const heroSec = arte?.closest('section')
+  if (arte && heroSec && !reduzido && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    heroSec.addEventListener('pointermove', (e) => {
+      const r = heroSec.getBoundingClientRect()
+      const x = (e.clientX - r.left) / r.width - 0.5
+      const y = (e.clientY - r.top) / r.height - 0.5
+      arte.style.setProperty('--px', `${(-x * 14).toFixed(1)}px`)
+      arte.style.setProperty('--py', `${(-y * 10).toFixed(1)}px`)
+    })
+    heroSec.addEventListener('pointerleave', () => {
+      arte.style.setProperty('--px', '0px')
+      arte.style.setProperty('--py', '0px')
+    })
+  }
+
+  // Planos (desktop com mouse): o card inclina na direção do ponteiro e o brilho o acompanha
+  if (!reduzido && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('.plan-card').forEach((card) => {
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect()
+        const x = (e.clientX - r.left) / r.width
+        const y = (e.clientY - r.top) / r.height
+        card.style.setProperty('--ry', `${((x - 0.5) * 10).toFixed(2)}deg`)
+        card.style.setProperty('--rx', `${((0.5 - y) * 8).toFixed(2)}deg`)
+        card.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`)
+        card.style.setProperty('--my', `${(y * 100).toFixed(1)}%`)
+      })
+      card.addEventListener('pointerleave', () => {
+        card.style.setProperty('--rx', '0deg')
+        card.style.setProperty('--ry', '0deg')
+      })
+    })
+  }
+
+  // Celular: "Ver tudo que inclui" abre os grupos extras do card de plano
+  document.querySelectorAll<HTMLButtonElement>('[data-toggle-recursos]').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      const card = botao.closest('article')
+      const aberto = botao.getAttribute('aria-expanded') === 'true'
+      botao.setAttribute('aria-expanded', String(!aberto))
+      card?.querySelectorAll<HTMLElement>('[data-recursos-extra]').forEach((g) => g.classList.toggle('max-lg:hidden', aberto))
+      const fechado = botao.querySelector<HTMLElement>('[data-label-fechado]')
+      const abertoEl = botao.querySelector<HTMLElement>('[data-label-aberto]')
+      if (fechado) fechado.hidden = !aberto
+      if (abertoEl) abertoEl.hidden = aberto
+      const seta = botao.querySelector<HTMLElement>('[aria-hidden]')
+      if (seta) seta.style.transform = aberto ? '' : 'rotate(180deg)'
+    })
+  })
+
+  // Abas de categoria e ciclo de cobrança dos planos
+  const barra = document.querySelector<HTMLElement>('[data-planos]')
+
+  if (barra) {
+    const abas = [...barra.querySelectorAll<HTMLButtonElement>('[data-aba-plano]')]
+    const paineis = [...document.querySelectorAll<HTMLElement>('[data-painel-plano]')]
+
+    abas.forEach((aba) => {
+      aba.addEventListener('click', () => {
+        const id = aba.dataset.abaPlano
+        abas.forEach((a) => a.setAttribute('aria-selected', String(a === aba)))
+        paineis.forEach((p) => {
+          p.hidden = p.dataset.painelPlano !== id
+          if (!p.hidden) {
+            const grade = p.querySelector<HTMLElement>('.plans-grid')
+            if (grade) {
+              grade.classList.remove('is-in')
+              void grade.offsetWidth
+              grade.classList.add('is-in')
+            }
+          }
+        })
+      })
+    })
+
+    const botoesCiclo = [...barra.querySelectorAll<HTMLButtonElement>('[data-ciclo]')]
+
+    botoesCiclo.forEach((botao) => {
+      botao.addEventListener('click', () => {
+        const anual = botao.dataset.ciclo === 'anual'
+        botoesCiclo.forEach((b) => b.setAttribute('aria-pressed', String(b === botao)))
+        document
+          .querySelectorAll<HTMLElement>('[data-ciclo-mensal]')
+          .forEach((el) => (el.hidden = anual))
+        document
+          .querySelectorAll<HTMLElement>('[data-ciclo-anual]')
+          .forEach((el) => (el.hidden = !anual))
+      })
+    })
+  }
+</script>

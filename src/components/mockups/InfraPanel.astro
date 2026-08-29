@@ -1,0 +1,172 @@
+---
+import MockupFrame from '../MockupFrame.astro'
+
+interface Props {
+  tipo: 'isolamento' | 'backup' | 'seguranca' | 'datacenter'
+}
+
+const { tipo } = Astro.props
+
+const titulos = {
+  isolamento: 'cloudlinux · limites por conta',
+  backup: 'turbobackup · restauração',
+  seguranca: 'malwareexpert · varredura',
+  datacenter: 'ascenty são paulo · tier iii',
+}
+
+const sites = [
+  { dominio: 'lojadamaria.com.br', cpu: 41 },
+  { dominio: 'agenciaquatro.com', cpu: 68 },
+  { dominio: 'seusite.com.br', cpu: 34, meu: true },
+]
+
+const backups = [
+  { hora: '06:00', data: 'hoje', label: 'completo' },
+  { hora: '18:00', data: 'ontem', label: 'completo' },
+  { hora: '06:00', data: 'ontem', label: 'completo' },
+]
+
+const escudos = [
+  { nome: 'AntiBrute Force', detalhe: '14 tentativas bloqueadas hoje' },
+  { nome: 'AntiVírus MalwareExpert', detalhe: 'varredura em tempo real' },
+  { nome: 'Certificado SSL', detalhe: 'renovado automaticamente' },
+]
+
+const selos = ['TIER III', 'NVMe 4.0 · RAID10', 'LGPD', 'DDoS', 'CO₂ NEUTRO']
+---
+
+<MockupFrame titulo={titulos[tipo]} tone="dark" bodyClass="p-4 sm:p-5">
+  {
+    tipo === 'isolamento' && (
+      <ul class="flex flex-col gap-2">
+        {sites.map((s) => (
+          <li
+            class:list={[
+              'rounded-[14px] border px-3.5 py-3',
+              s.meu ? 'border-green/35 bg-green/8' : 'border-white/8 bg-white/4',
+            ]}
+          >
+            <div class="flex items-center justify-between gap-3">
+              <span
+                class:list={[
+                  'min-w-0 truncate font-mono text-[12.5px]',
+                  s.meu ? 'text-green' : 'text-white/55',
+                ]}
+              >
+                {s.dominio}
+              </span>
+              <span
+                class:list={[
+                  'shrink-0 rounded-full px-2 py-0.5 font-mono text-[10px] tracking-[0.06em] uppercase',
+                  s.meu ? 'bg-green text-purple-950' : 'bg-white/10 text-white/50',
+                ]}
+              >
+                isolado
+              </span>
+            </div>
+            <div class="mt-2 h-1 overflow-hidden rounded-full bg-white/10">
+              <span
+                class:list={['block h-full rounded-full', s.meu ? 'bg-green' : 'bg-white/25']}
+                style={`width:${s.cpu}%`}
+              />
+            </div>
+          </li>
+        ))}
+        <li class="pt-1 text-center font-mono text-[11px] text-white/40">
+          o pico do vizinho não encosta na sua CPU
+        </li>
+      </ul>
+    )
+  }
+
+  {
+    tipo === 'backup' && (
+      <div class="flex flex-col gap-2">
+        {backups.map((b, i) => (
+          <div class="flex items-center gap-3 rounded-[14px] border border-white/8 bg-white/4 px-3.5 py-3">
+            <span class="grid size-8 shrink-0 place-items-center rounded-full bg-green/14 font-mono text-[11px] text-green">
+              {b.hora.slice(0, 2)}
+            </span>
+            <span class="min-w-0 flex-1">
+              <span class="block font-mono text-[12.5px] text-white/80">
+                {b.hora} · {b.data}
+              </span>
+              <span class="block font-mono text-[10.5px] tracking-[0.06em] text-white/40 uppercase">
+                backup {b.label}
+              </span>
+            </span>
+            <span
+              class:list={[
+                'shrink-0 rounded-full px-2.5 py-1 font-mono text-[10px] tracking-[0.06em] uppercase',
+                i === 0 ? 'bg-green text-purple-950' : 'border border-white/15 text-white/50',
+              ]}
+            >
+              restaurar
+            </span>
+          </div>
+        ))}
+        <p class="pt-1 text-center font-mono text-[11px] text-white/40">
+          dois pontos de restauração por dia, sem plugin
+        </p>
+      </div>
+    )
+  }
+
+  {
+    tipo === 'seguranca' && (
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between rounded-[14px] border border-green/30 bg-green/8 px-3.5 py-3">
+          <span class="font-mono text-[11px] tracking-[0.1em] text-white/60 uppercase">
+            Última varredura
+          </span>
+          <span class="flex items-center gap-2 font-mono text-[12.5px] text-green">
+            <span class="pulse-dot" />0 ameaças
+          </span>
+        </div>
+        {escudos.map((e) => (
+          <div class="flex items-start gap-2.5 rounded-[14px] border border-white/8 bg-white/4 px-3.5 py-3">
+            <svg
+              viewBox="0 0 16 16"
+              class="mt-0.5 size-4 shrink-0 text-green"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="min-w-0">
+              <span class="block text-[13.5px] text-white/85">{e.nome}</span>
+              <span class="block font-mono text-[11px] text-white/40">{e.detalhe}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    tipo === 'datacenter' && (
+      <div class="flex flex-col gap-3">
+        <div class="rounded-[14px] border border-white/8 bg-white/4 px-4 py-4">
+          <span class="font-mono text-[10.5px] tracking-[0.12em] text-white/45 uppercase">
+            Disponibilidade certificada
+          </span>
+          <p class="mt-1 font-mono text-[34px] leading-none font-medium tracking-[-0.03em] text-green">
+            99,982%
+          </p>
+          <p class="mt-2 text-[13px] leading-snug text-white/55">
+            Ascenty, São Paulo — o mesmo datacenter usado por grandes players como o Microsoft
+            Azure.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          {selos.map((s) => (
+            <span class="rounded-full border border-white/12 bg-white/5 px-2.5 py-1 font-mono text-[10.5px] tracking-[0.08em] text-white/60 uppercase">
+              {s}
+            </span>
+          ))}
+        </div>
+      </div>
+    )
+  }
+</MockupFrame>

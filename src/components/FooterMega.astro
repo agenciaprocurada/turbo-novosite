@@ -1,0 +1,101 @@
+---
+import Logo from './Logo.astro'
+import { marca, links, footer, provas, atendimento } from '../data/site'
+
+const ano = new Date().getFullYear()
+---
+
+<footer class="border-t border-line bg-bg pt-14 pb-[max(2.5rem,env(safe-area-inset-bottom))]">
+  <div class="container-page">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+      <div class="col-span-2 lg:col-span-1">
+        <Logo height={26} class="text-ink" />
+        <p class="mt-4 max-w-[30ch] text-[14.5px] leading-relaxed text-ink-soft">
+          Hospedagem de alta performance com servidores no Brasil. Desde {marca.desde}.
+        </p>
+
+        <a
+          href={links.status}
+          rel="noopener"
+          class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 font-mono text-[11.5px] text-ink-soft transition-colors hover:border-ink/20 hover:text-ink"
+        >
+          <span class="pulse-dot"></span>
+          todos os sistemas operacionais
+        </a>
+
+        <dl class="mt-5 flex flex-col gap-0.5 text-[14px]">
+          <div class="flex gap-2">
+            <dt class="sr-only">E-mail</dt>
+            <dd>
+              <a href={`mailto:${marca.email}`} class="inline-block py-1.5 text-ink-soft hover:text-ink"
+                >{marca.email}</a
+              >
+            </dd>
+          </div>
+          <div class="flex gap-2">
+            <dt class="sr-only">Telefone</dt>
+            <dd>
+              <a href={links.whatsapp} rel="noopener" class="inline-block py-1.5 text-ink-soft hover:text-ink"
+                >{marca.telefone}</a
+              >
+            </dd>
+          </div>
+        </dl>
+        <p class="mt-2 font-mono text-[11.5px] text-ink-soft">{atendimento.resumo}</p>
+      </div>
+
+      {
+        footer.colunas.map((coluna) => (
+          <nav aria-label={coluna.titulo}>
+            <h2 class="text-[14px] font-bold text-ink">{coluna.titulo}</h2>
+            <ul class="mt-3 flex flex-col gap-0.5">
+              {coluna.itens.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    rel="noopener"
+                    class="block py-1.5 text-[14px] text-ink-soft transition-colors hover:text-ink"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+
+    <!-- Selos de reputação -->
+    <div class="mt-12 flex flex-wrap items-center gap-3 border-t border-line pt-8">
+      <div class="flex items-center gap-3 rounded-card border border-line bg-surface px-4 py-3">
+        <span class="text-[15px] tracking-[0.08em] text-star" aria-hidden="true">★★★★★</span>
+        <span>
+          <span class="block text-[14px] font-medium text-ink"
+            >{provas.notaGoogle} no Google</span
+          >
+          <span class="block font-mono text-[11.5px] text-ink-soft"
+            >{provas.avaliacoesGoogle.toLocaleString('pt-BR')} avaliações · Trustindex</span
+          >
+        </span>
+      </div>
+      <div class="flex items-center gap-3 rounded-card border border-line bg-surface px-4 py-3">
+        <span class="font-mono text-[13px] text-green-deep">TIER III</span>
+        <span class="block font-mono text-[11.5px] text-ink-soft">datacenter certificado</span>
+      </div>
+      <div class="flex items-center gap-3 rounded-card border border-line bg-surface px-4 py-3">
+        <span class="font-mono text-[13px] text-green-deep">{provas.anosDeCasa} anos</span>
+        <span class="block font-mono text-[11.5px] text-ink-soft">de mercado</span>
+      </div>
+    </div>
+
+    <!-- Versículo — marca da casa, mantido -->
+    <p class="mt-10 text-center text-[14px] text-ink-soft italic">
+      “{marca.versiculo.texto}” — <span class="not-italic">{marca.versiculo.referencia}</span>
+    </p>
+
+    <p class="mt-8 border-t border-line pt-6 text-center text-[12.5px] leading-relaxed text-ink-soft">
+      © Turbo Cloud {ano}. Todos os direitos reservados. CNPJ {marca.cnpj} · {marca.endereco}
+    </p>
+  </div>
+</footer>

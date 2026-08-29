@@ -1,0 +1,43 @@
+---
+/**
+ * Título em duas batidas e duas cores — a assinatura tipográfica da página.
+ *
+ * Contraste: green-ink (#3E8A00) sobre o fundo claro dá 4,24:1 — passa em AA
+ * apenas como texto grande (≥ 24px), então fica restrito a `hero` e `section`,
+ * que têm mínimo de 36px e 30px. O tamanho `sub` cai para green-deep (6,4:1),
+ * que passa em AA como texto normal. No escuro o verde puro dá 11:1.
+ */
+interface Props {
+  as?: 'h1' | 'h2' | 'h3'
+  parte1: string
+  parte2: string
+  tone?: 'light' | 'dark'
+  size?: 'hero' | 'section' | 'sub'
+  class?: string
+  /** quebra de linha entre as partes */
+  stacked?: boolean
+}
+
+const {
+  as: Tag = 'h2',
+  parte1,
+  parte2,
+  tone = 'light',
+  size = 'section',
+  class: className = '',
+  stacked = true,
+} = Astro.props as Props
+
+const sizes = {
+  hero: 'text-[clamp(2.25rem,6.2vw,3.85rem)] font-bold tracking-[-0.022em]',
+  section: 'text-[clamp(1.9rem,4.2vw,2.6rem)] font-bold tracking-[-0.018em]',
+  sub: 'text-[clamp(1.25rem,2.4vw,1.5rem)] font-bold tracking-[-0.01em]',
+}
+---
+
+<Tag class:list={[sizes[size], tone === 'dark' ? 'text-white' : 'text-ink', className]}>
+  <span>{parte1}</span>{stacked ? <br /> : ' '}<span
+    class={tone === 'dark' ? 'text-green' : size === 'sub' ? 'text-green-deep' : 'text-green-ink'}
+    >{parte2}</span
+  >
+</Tag>

@@ -1,0 +1,19 @@
+---
+interface Props {
+  /** claro = fundo branco da página; escuro = dentro dos blocos roxos */
+  tone?: 'light' | 'dark'
+  class?: string
+}
+
+const { tone = 'light', class: className = '' } = Astro.props
+---
+
+<p
+  class:list={[
+    'eyebrow flex items-center gap-2',
+    tone === 'dark' ? 'text-green' : 'text-green-deep',
+    className,
+  ]}
+>
+  <slot />
+</p>

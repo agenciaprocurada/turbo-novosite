@@ -1,0 +1,111 @@
+---
+import '../styles/global.css'
+import { marca, links, faq, abasPlanos } from '../data/site'
+
+interface Props {
+  titulo: string
+  descricao: string
+}
+
+const { titulo, descricao } = Astro.props
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://turbocloud.com.br').toString()
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://turbocloud.com.br/#organizacao',
+      name: 'Turbo Cloud',
+      url: 'https://turbocloud.com.br/',
+      email: marca.email,
+      telephone: '+5511948600000',
+      foundingDate: String(marca.desde),
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Av. Carlos Gomes, 700, 5º Andar, Bela Vista',
+        addressLocality: 'Porto Alegre',
+        addressRegion: 'RS',
+        addressCountry: 'BR',
+      },
+      sameAs: [links.status],
+    },
+    {
+      '@type': 'Product',
+      name: 'Hospedagem de sites Turbo Cloud',
+      description:
+        'Hospedagem WordPress e WooCommerce com recursos dedicados, servidores no Brasil, backup a cada 12 horas e suporte humano por WhatsApp.',
+      brand: { '@id': 'https://turbocloud.com.br/#organizacao' },
+      offers: abasPlanos[0]!.planos.map((plano) => ({
+        '@type': 'Offer',
+        name: `Plano ${plano.nome}`,
+        price: plano.precoMensal.toFixed(2),
+        priceCurrency: 'BRL',
+        url: plano.href,
+        availability: 'https://schema.org/InStock',
+      })),
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faq.map((item) => ({
+        '@type': 'Question',
+        name: item.p,
+        acceptedAnswer: { '@type': 'Answer', text: item.r },
+      })),
+    },
+  ],
+}
+---
+
+<!doctype html>
+<html lang="pt-BR" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js')</script>
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#300C51" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Turbo Cloud" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+  </head>
+  <body>
+    <a
+      href="#conteudo"
+      class="sr-only rounded-btn focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-green focus:px-4 focus:py-2 focus:text-purple-950"
+      >Ir para o conteúdo</a
+    >
+    <slot />
+
+    <script>
+      // Reveal on scroll — uma vez só, e desligado em prefers-reduced-motion
+      const alvos = document.querySelectorAll('.reveal')
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        alvos.forEach((el) => el.classList.add('is-in'))
+      } else {
+        const io = new IntersectionObserver(
+          (entradas) => {
+            entradas.forEach((entrada) => {
+              if (!entrada.isIntersecting) return
+              entrada.target.classList.add('is-in')
+              io.unobserve(entrada.target)
+            })
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        )
+        alvos.forEach((el) => io.observe(el))
+      }
+    </script>
+  </body>
+</html>

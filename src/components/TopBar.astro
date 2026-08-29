@@ -1,0 +1,45 @@
+---
+import { topbar } from '../data/site'
+---
+
+<div
+  id="topbar"
+  class="relative z-50 bg-purple-950 text-white/85 print:hidden"
+>
+  <div class="container-page flex items-center justify-center gap-3 py-2.5 pr-12 text-[13px] sm:pr-5">
+    <span
+      class="hidden shrink-0 rounded-full bg-green px-2 py-0.5 font-mono text-[10px] tracking-[0.1em] text-purple-950 uppercase sm:inline"
+      >{topbar.badge}</span
+    >
+    <a href={topbar.href} class="min-w-0 truncate underline-offset-2 hover:underline sm:hidden">{topbar.textoCurto} →</a>
+    <p class="hidden truncate sm:block">{topbar.texto}</p>
+    <a
+      href={topbar.href}
+      class="hidden shrink-0 rounded-full border border-white/25 px-3 py-1 text-[12.5px] whitespace-nowrap transition-colors hover:border-white/60 hover:bg-white/10 sm:inline-block"
+      >{topbar.cta} →</a
+    >
+  </div>
+  <button
+    type="button"
+    id="topbar-close"
+    aria-label="Fechar aviso"
+    class="absolute top-1/2 right-2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+  >
+    <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M3 3l10 10M13 3L3 13" stroke-linecap="round"></path>
+    </svg>
+  </button>
+</div>
+
+<script>
+  const bar = document.getElementById('topbar')
+  const btn = document.getElementById('topbar-close')
+  const KEY = 'tc-topbar-fechada'
+
+  if (bar && sessionStorage.getItem(KEY) === '1') bar.remove()
+
+  btn?.addEventListener('click', () => {
+    sessionStorage.setItem(KEY, '1')
+    bar?.remove()
+  })
+</script>

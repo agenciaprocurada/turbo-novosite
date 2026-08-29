@@ -1,0 +1,58 @@
+---
+/**
+ * Regra de contraste do projeto: botão verde SEMPRE com texto roxo-escuro
+ * (#6BDD12 sobre #300C51 dá 9,2:1). Verde nunca carrega texto branco.
+ */
+interface Props {
+  href: string
+  variant?: 'green' | 'white' | 'outline-light' | 'outline-dark' | 'outline-purple' | 'ghost'
+  size?: 'md' | 'lg'
+  class?: string
+  external?: boolean
+  fullWidth?: boolean
+}
+
+const {
+  href,
+  variant = 'green',
+  size = 'md',
+  class: className = '',
+  external,
+  fullWidth = false,
+} = Astro.props
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-btn font-bold whitespace-nowrap transition-[transform,background-color,border-color,box-shadow] duration-200 hover:-translate-y-0.5 active:translate-y-px'
+
+const sizes = {
+  md: 'h-11 px-5 text-[15px]',
+  lg: 'h-[52px] px-7 text-[16px]',
+}
+
+const variants = {
+  green:
+    'bg-green text-purple-950 shadow-soft hover:bg-green-soft hover:shadow-lift',
+  white:
+    'bg-surface text-purple-950 shadow-soft hover:bg-white hover:shadow-lift',
+  'outline-light':
+    'border border-white/30 text-white hover:border-white/60 hover:bg-white/10',
+  'outline-dark':
+    'border border-line bg-surface text-ink hover:border-ink/25 hover:shadow-soft',
+  'outline-purple':
+    'border border-purple-800/40 bg-surface text-purple-800 hover:border-purple-800 hover:bg-purple-800/5',
+  ghost: 'text-ink hover:bg-ink/5',
+}
+
+const isExternal = external ?? /^https?:\/\//.test(href)
+const rel = isExternal ? 'noopener' : undefined
+const target = isExternal && !href.startsWith('https://turbocloud.com.br') ? '_blank' : undefined
+---
+
+<a
+  href={href}
+  rel={rel}
+  target={target}
+  class:list={[base, sizes[size], variants[variant], fullWidth && 'w-full', className]}
+>
+  <slot />
+</a>

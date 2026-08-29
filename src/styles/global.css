@@ -1,0 +1,603 @@
+@import 'tailwindcss';
+
+/* Só o subset latin. O index.css do fontsource traz cirílico, grego e vietnamita
+   junto — centenas de KB de fonte que nenhum visitante em pt-BR vai usar. */
+@font-face {
+  font-family: 'Nunito Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 1000;
+  src: url('@fontsource-variable/nunito/files/nunito-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Nunito Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 1000;
+  src: url('@fontsource-variable/nunito/files/nunito-latin-ext-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ==========================================================================
+   Design tokens — "Clean SaaS com sangue Turbo"
+   Estrutura/respiro no padrão StayCloud, cor e voz no padrão TurboCloud.
+   ========================================================================== */
+@theme {
+  /* Marca */
+  --color-green: #6bdd12; /* CTA e acentos sobre fundo escuro */
+  --color-green-soft: #a7e57f; /* gradientes e ilustrações */
+  --color-green-ink: #3e8a00; /* verde para títulos grandes sobre claro (4.24:1 — só ≥24px) */
+  --color-green-deep: #2f6b00; /* verde para texto corrido e links sobre claro (6.4:1 — AA) */
+  --color-purple-950: #300c51; /* blocos escuros, texto sobre botão verde */
+  --color-purple-900: #3b1461;
+  --color-purple-800: #4b1f78; /* superfícies dentro dos blocos escuros, ícones sobre claro */
+
+  /* Estrelas de avaliação (só decorativo — nunca texto) */
+  --color-star: #f5b301;
+
+  /* Neutros */
+  --color-bg: #fbfbfa;
+  --color-surface: #ffffff;
+  --color-ink: #18121b;
+  --color-ink-soft: #6e6675;
+  --color-line: #e8e5ec;
+
+  /* Tipografia — Nunito é a fonte da marca. Por ser arredondada e de contraste
+     baixo, ela pede peso maior e letter-spacing menos negativo que uma grotesca:
+     títulos vão a 700, e o tracking fica em -0.02em em vez de -0.04em. */
+  --font-sans: 'Nunito Variable', ui-rounded, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* Raio */
+  --radius-btn: 10px;
+  --radius-card: 20px;
+  --radius-block: 28px;
+
+  /* Sombra */
+  --shadow-soft: 0 1px 2px rgb(48 12 81 / 0.06), 0 8px 24px rgb(48 12 81 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(48 12 81 / 0.05), 0 16px 40px rgb(48 12 81 / 0.1);
+  --shadow-pill: 0 1px 2px rgb(48 12 81 / 0.05), 0 6px 20px rgb(48 12 81 / 0.08);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-green);
+    color: var(--color-purple-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-green-deep);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Dentro dos blocos escuros o foco precisa do verde puro pra aparecer */
+  .block-dark :focus-visible {
+    outline-color: var(--color-green);
+  }
+
+  img,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Utilitários de layout
+   ========================================================================== */
+@utility container-page {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+/* Bloco de seção colorido que "flutua" com margem lateral, como a referência */
+@utility block-section {
+  margin-inline: 12px;
+  border-radius: var(--radius-block);
+  overflow: clip;
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   Animações — todas desligáveis por prefers-reduced-motion
+   ========================================================================== */
+@layer components {
+  /* Só esconde para animar quando há JS (html.js); sem JS o conteúdo já nasce visível */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  .reveal[data-delay='1'] {
+    transition-delay: 80ms;
+  }
+  .reveal[data-delay='2'] {
+    transition-delay: 160ms;
+  }
+  .reveal[data-delay='3'] {
+    transition-delay: 240ms;
+  }
+  .reveal[data-delay='4'] {
+    transition-delay: 320ms;
+  }
+
+  /* Ponto de status pulsante (● online agora) */
+  .pulse-dot {
+    position: relative;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-green);
+  }
+
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: var(--color-green);
+    animation: turbo-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes turbo-ping {
+    75%,
+    100% {
+      transform: scale(2.4);
+      opacity: 0;
+    }
+  }
+
+  /* Cartões flutuantes do hero */
+  @keyframes turbo-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  /* Planetas da S6: sobe/desce com leve giro. Usa translate/rotate (propriedades
+     separadas) para não brigar com o scaleX(-1) do planeta espelhado. */
+  .planet-float {
+    animation: turbo-planet 9s ease-in-out infinite;
+  }
+  .planet-float-slow {
+    animation: turbo-planet 13s ease-in-out -5s infinite;
+  }
+  @keyframes turbo-planet {
+    0%,
+    100% {
+      translate: 0 0;
+      rotate: 0deg;
+    }
+    50% {
+      translate: 0 -14px;
+      rotate: -4deg;
+    }
+  }
+
+  /* Marcador do mapa */
+  @keyframes turbo-marker {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.25);
+      opacity: 0.75;
+    }
+  }
+}
+
+/* ==========================================================================
+   Micro-interações — entram com o .is-in do reveal; sem JS tudo nasce visível
+   ========================================================================== */
+@property --map-r {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 160%;
+}
+
+@layer components {
+  /* Filhos de .stagger entram um a um (até 8; do 9º em diante entram juntos) */
+  .stagger > * {
+    --i: 8;
+  }
+  .stagger > :nth-child(1) { --i: 0; }
+  .stagger > :nth-child(2) { --i: 1; }
+  .stagger > :nth-child(3) { --i: 2; }
+  .stagger > :nth-child(4) { --i: 3; }
+  .stagger > :nth-child(5) { --i: 4; }
+  .stagger > :nth-child(6) { --i: 5; }
+  .stagger > :nth-child(7) { --i: 6; }
+  .stagger > :nth-child(8) { --i: 7; }
+
+  .js .stagger > * {
+    opacity: 0;
+  }
+  .js .is-in.stagger > *,
+  .js .is-in .stagger > * {
+    animation: stagger-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i) * 90ms);
+  }
+  @keyframes stagger-in {
+    from {
+      opacity: 0;
+      translate: 0 14px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  /* Conversa do suporte: as mensagens chegam uma por vez */
+  .js .chat-msg {
+    opacity: 0;
+  }
+  .js .is-in .chat-msg {
+    animation: msg-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(200ms + var(--i) * 480ms);
+  }
+  @keyframes msg-in {
+    from {
+      opacity: 0;
+      translate: 0 10px;
+      scale: 0.96;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+  }
+
+  /* Mapa do Brasil: os pontos se acendem em onda a partir de São Paulo */
+  .map-dots {
+    mask-image: radial-gradient(circle at 63.5% 70%, #000 calc(var(--map-r) - 14%), transparent var(--map-r));
+    -webkit-mask-image: radial-gradient(circle at 63.5% 70%, #000 calc(var(--map-r) - 14%), transparent var(--map-r));
+  }
+  .js .reveal:not(.is-in) .map-dots {
+    --map-r: 0%;
+  }
+  .js .is-in .map-dots {
+    animation: map-sweep 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes map-sweep {
+    from {
+      --map-r: 0%;
+    }
+    to {
+      --map-r: 160%;
+    }
+  }
+  .js .reveal:not(.is-in) .map-marker {
+    scale: 0;
+  }
+  .js .is-in .map-marker {
+    animation: marker-in 0.6s cubic-bezier(0.34, 1.4, 0.64, 1) 0.9s both;
+  }
+  @keyframes marker-in {
+    from {
+      scale: 0;
+    }
+    to {
+      scale: 1;
+    }
+  }
+
+  /* Foguete do banner "O caminho Turbo": flutua devagar */
+  .rocket-float {
+    animation: rocket-float 5s ease-in-out infinite;
+  }
+  @keyframes rocket-float {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 -8px;
+    }
+  }
+
+  /* Arte do hero (desktop): respira devagar; o JS soma um leve paralaxe com o mouse */
+  .hero-art {
+    transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(1.03);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: hero-breathe 16s ease-in-out infinite alternate;
+  }
+  @keyframes hero-breathe {
+    from {
+      scale: 1;
+    }
+    to {
+      scale: 1.03;
+    }
+  }
+
+  /* Preço troca com um fade curto ao mudar mensal/anual */
+  [data-ciclo-mensal]:not([hidden]),
+  [data-ciclo-anual]:not([hidden]) {
+    animation: fade-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      translate: 0 6px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  /* Números que contam até o valor real (o JS troca o texto; aqui só evita o pulo de largura) */
+  [data-count] {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ==========================================================================
+   Planos — entrada em 3D, aurora no destaque, tilt + brilho no hover
+   ========================================================================== */
+@property --ang {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@layer components {
+  .plans-grid {
+    perspective: 1400px;
+  }
+  .plans-grid > :nth-child(1) { --i: 0; }
+  .plans-grid > :nth-child(2) { --i: 1; }
+  .plans-grid > :nth-child(3) { --i: 2; }
+  .plans-grid > :nth-child(4) { --i: 3; }
+  .plans-grid > :nth-child(n + 5) { --i: 4; }
+
+  /* Cada card "levanta" do chão: sobe, endireita a inclinação e cresce até o tamanho real */
+  .js .plans-grid > * {
+    opacity: 0;
+    transform-style: preserve-3d;
+  }
+  .js .plans-grid.is-in > * {
+    animation: plan-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i) * 140ms);
+  }
+  @keyframes plan-in {
+    from {
+      opacity: 0;
+      translate: 0 64px;
+      scale: 0.92;
+      rotate: x 18deg;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      rotate: x 0deg;
+    }
+  }
+
+  /* Selo "mais escolhido" pula depois que o card pousa */
+  .js .plans-grid .plan-badge {
+    scale: 0;
+  }
+  .js .plans-grid.is-in .plan-badge {
+    animation: badge-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(var(--i) * 140ms + 700ms);
+  }
+  @keyframes badge-pop {
+    from {
+      scale: 0;
+      rotate: -12deg;
+    }
+    to {
+      scale: 1;
+      rotate: 0deg;
+    }
+  }
+
+  /* Aurora: borda de gradiente girando atrás do card em destaque */
+  .plan-glow {
+    position: relative;
+    isolation: isolate;
+  }
+  .plan-glow::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    z-index: -1;
+    border-radius: calc(var(--radius-card) + 3px);
+    background: conic-gradient(
+      from var(--ang),
+      var(--color-green) 0deg,
+      #7a3f9c 90deg,
+      var(--color-purple-950) 180deg,
+      #7a3f9c 270deg,
+      var(--color-green) 360deg
+    );
+    filter: blur(10px);
+    opacity: 0.75;
+    animation: aurora-spin 7s linear infinite;
+  }
+  @keyframes aurora-spin {
+    to {
+      --ang: 360deg;
+    }
+  }
+
+  /* Desktop com mouse: o card inclina na direção do ponteiro e um brilho o acompanha */
+  .plan-card {
+    --rx: 0deg;
+    --ry: 0deg;
+    --mx: 50%;
+    --my: 50%;
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s;
+    overflow: hidden;
+  }
+  .plan-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(360px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.16), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .plan-card:hover::after {
+      opacity: 1;
+    }
+  }
+}
+
+/* FAQ: abre/fecha com transição de altura (Chrome 131+; nos outros abre direto) */
+:root {
+  interpolate-size: allow-keywords;
+}
+details::details-content {
+  height: 0;
+  overflow: clip;
+  transition:
+    height 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    content-visibility 0.3s allow-discrete;
+}
+details[open]::details-content {
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+
+  .stagger > *,
+  .chat-msg,
+  .map-marker {
+    opacity: 1 !important;
+    scale: 1 !important;
+    translate: 0 0 !important;
+  }
+  .map-dots {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+  .hero-art {
+    transform: none !important;
+  }
+  .plans-grid > *,
+  .plan-badge {
+    opacity: 1 !important;
+    scale: 1 !important;
+    translate: 0 0 !important;
+    rotate: 0deg !important;
+  }
+  .plan-glow::before {
+    animation: none !important;
+  }
+  .plan-card {
+    transform: none !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

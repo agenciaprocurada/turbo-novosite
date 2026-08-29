@@ -1,0 +1,33 @@
+---
+interface Props {
+  numero: string
+  titulo: string
+  texto: string
+  erro: string
+}
+
+const { numero, titulo, texto, erro } = Astro.props
+---
+
+<article class="flex flex-col rounded-card border border-line bg-surface p-5 sm:p-6">
+  <p class="eyebrow text-ink-soft">Beco {numero}</p>
+  <h3 class="mt-2.5 text-[19px] font-bold text-ink">{titulo}</h3>
+  <p class="mt-2 text-[14.5px] leading-relaxed text-ink-soft">{texto}</p>
+
+  <div
+    class="mt-5 flex items-center gap-2.5 rounded-[14px] border border-[#E9C9C9] bg-[#FDF3F3] px-3.5 py-3"
+    aria-hidden="true"
+  >
+    <svg
+      viewBox="0 0 16 16"
+      class="size-4 shrink-0 text-[#C0392B]"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+    >
+      <circle cx="8" cy="8" r="6.2"></circle>
+      <path d="M8 5v3.6M8 11h.01" stroke-linecap="round"></path>
+    </svg>
+    <span class="truncate font-mono text-[12px] text-[#9B3025]">{erro}</span>
+  </div>
+</article>

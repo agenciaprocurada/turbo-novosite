@@ -1,0 +1,148 @@
+---
+import InfraPanel from './mockups/InfraPanel.astro'
+import { infraestrutura } from '../data/site'
+---
+
+<div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:gap-14" data-accordion>
+  <!-- Lista -->
+  <div class="flex flex-col" role="tablist" aria-label="Pilares da infraestrutura">
+    {
+      infraestrutura.map((item, i) => (
+        <div class="border-b border-white/10 last:border-b-0">
+          <h3>
+            <button
+              type="button"
+              role="tab"
+              id={`infra-aba-${item.id}`}
+              aria-controls={`infra-painel-${item.id}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              data-aba={i}
+              class="group flex w-full items-start gap-3.5 py-5 text-left"
+            >
+              <span
+                class="mt-1.5 block size-2 shrink-0 rounded-full bg-white/20 transition-colors duration-300 group-aria-selected:bg-green"
+                aria-hidden="true"
+              />
+              <span class="min-w-0 flex-1">
+                <span class="block text-[17px] font-bold text-white/55 transition-colors duration-300 group-aria-selected:text-white sm:text-[19px]">
+                  {item.titulo}
+                </span>
+                <span
+                  data-corpo
+                  hidden={i !== 0}
+                  class="mt-2 block max-w-[46ch] text-[14.5px] leading-relaxed text-white/60"
+                >
+                  {item.texto}
+                </span>
+              </span>
+            </button>
+          </h3>
+          <div
+            class="mb-4 h-0.5 w-full overflow-hidden rounded-full bg-white/8"
+            data-barra
+            hidden={i !== 0}
+          >
+            <span data-barra-preenche class="block h-full w-0 rounded-full bg-green/70" />
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Painéis -->
+  <div class="relative min-h-[330px]">
+    {
+      infraestrutura.map((item, i) => (
+        <div
+          id={`infra-painel-${item.id}`}
+          role="tabpanel"
+          aria-labelledby={`infra-aba-${item.id}`}
+          data-painel={i}
+          hidden={i !== 0}
+          class="lg:absolute lg:inset-x-0 lg:top-0"
+        >
+          <InfraPanel tipo={item.painel} />
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('[data-accordion]')
+  if (raiz) {
+    const abas = [...raiz.querySelectorAll<HTMLButtonElement>('[data-aba]')]
+    const paineis = [...raiz.querySelectorAll<HTMLElement>('[data-painel]')]
+    const corpos = [...raiz.querySelectorAll<HTMLElement>('[data-corpo]')]
+    const barras = [...raiz.querySelectorAll<HTMLElement>('[data-barra]')]
+    const preenches = [...raiz.querySelectorAll<HTMLElement>('[data-barra-preenche]')]
+    const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
+    const DURACAO = 7000
+
+    let atual = 0
+    let timer: number | undefined
+    let visivel = false
+
+    const mostrar = (i: number) => {
+      atual = i
+      abas.forEach((a, j) => a.setAttribute('aria-selected', String(j === i)))
+      paineis.forEach((p, j) => (p.hidden = j !== i))
+      corpos.forEach((c, j) => (c.hidden = j !== i))
+      barras.forEach((b, j) => (b.hidden = j !== i))
+      preenches.forEach((p, j) => {
+        p.style.transition = 'none'
+        p.style.width = '0'
+        if (j === i && !reduzido && visivel) {
+          // força reflow antes de animar
+          void p.offsetWidth
+          p.style.transition = `width ${DURACAO}ms linear`
+          p.style.width = '100%'
+        }
+      })
+    }
+
+    const agendar = () => {
+      window.clearTimeout(timer)
+      if (reduzido || !visivel) return
+      timer = window.setTimeout(() => {
+        mostrar((atual + 1) % abas.length)
+        agendar()
+      }, DURACAO)
+    }
+
+    abas.forEach((aba, i) => {
+      aba.addEventListener('click', () => {
+        mostrar(i)
+        agendar()
+      })
+    })
+
+    raiz.addEventListener('mouseenter', () => {
+      window.clearTimeout(timer)
+      preenches.forEach((p) => {
+        const largura = getComputedStyle(p).width
+        p.style.transition = 'none'
+        p.style.width = largura
+      })
+    })
+    raiz.addEventListener('mouseleave', () => {
+      mostrar(atual)
+      agendar()
+    })
+
+    // Só começa o autoplay quando a seção entra na tela
+    const io = new IntersectionObserver(
+      (entradas) => {
+        visivel = entradas[0]?.isIntersecting ?? false
+        if (visivel) {
+          mostrar(atual)
+          agendar()
+        } else {
+          window.clearTimeout(timer)
+        }
+      },
+      { threshold: 0.25 },
+    )
+    io.observe(raiz)
+  }
+</script>

@@ -1,0 +1,141 @@
+---
+/**
+ * Cartão de depoimento no padrão do print: avatar + nome + data, estrelas
+ * amarelas, citação, e no rodapé a pilha de avatares (que também são as abas
+ * para trocar de depoimento) e o selo "5,0 no Google".
+ *
+ * Sem rotação automática: a troca é só por clique, então não precisa de
+ * botão de pausa (WCAG 2.2.2).
+ */
+import Avatar from './Avatar.astro'
+import { depoimentos, provas } from '../data/site'
+
+const total = provas.avaliacoesGoogle.toLocaleString('pt-BR')
+---
+
+<div
+  class="rounded-card border border-line bg-surface p-5 shadow-lift sm:p-7"
+  data-carrossel
+  role="region"
+  aria-label="Depoimentos de clientes"
+>
+  <div class="flex items-start justify-between gap-4">
+    <div class="flex items-center gap-3.5">
+      <div data-slot="avatar"><Avatar nome={depoimentos[0]!.nome} size={52} /></div>
+      <div>
+        <p class="text-[15px] font-bold text-ink" data-slot="nome">{depoimentos[0]!.nome}</p>
+        <p class="font-mono text-[11.5px] text-ink-soft" data-slot="data">{depoimentos[0]!.data}</p>
+      </div>
+    </div>
+    <span class="shrink-0 text-[15px] tracking-[0.1em] text-star" aria-label="5 estrelas">★★★★★</span>
+  </div>
+
+  <blockquote
+    class="mt-5 text-[clamp(1.05rem,2vw,1.25rem)] leading-[1.55] font-semibold tracking-[-0.005em] text-ink"
+    aria-live="polite"
+  >
+    <span data-slot="texto"></span>
+  </blockquote>
+
+  <div class="mt-6 flex flex-wrap items-center gap-3 border-t border-line pt-5">
+    <div class="flex items-center" role="tablist" aria-label="Escolher depoimento">
+      {
+        depoimentos.map((dep, i) => (
+          <button
+            type="button"
+            role="tab"
+            data-indice={i}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            aria-label={`Depoimento de ${dep.nome}`}
+            class="-ml-2 rounded-full ring-2 ring-surface transition-transform duration-200 first:ml-0 hover:z-10 hover:scale-110 aria-selected:z-10 aria-selected:ring-green-deep"
+          >
+            <Avatar nome={dep.nome} size={34} />
+          </button>
+        ))
+      }
+      <span class="ml-2.5 font-mono text-[12px] font-medium text-ink">+{total}</span>
+    </div>
+
+    <p class="ml-auto flex items-center gap-1.5 text-[13px] font-semibold text-ink">
+      <svg viewBox="0 0 24 24" class="size-4" aria-hidden="true">
+        <path
+          fill="#4285F4"
+          d="M22.6 12.3c0-.8-.1-1.5-.2-2.2H12v4.3h6a5.1 5.1 0 0 1-2.2 3.3v2.8h3.6c2.1-1.9 3.2-4.8 3.2-8.2z"></path>
+        <path
+          fill="#34A853"
+          d="M12 23c3 0 5.5-1 7.3-2.6l-3.6-2.8c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.6H2.1v2.9A11 11 0 0 0 12 23z"></path>
+        <path
+          fill="#FBBC05"
+          d="M5.8 14.1a6.6 6.6 0 0 1 0-4.2V7H2.1a11 11 0 0 0 0 9.9l3.7-2.8z"></path>
+        <path
+          fill="#EA4335"
+          d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.2-3.2A11 11 0 0 0 2.1 7l3.7 2.9c.9-2.7 3.3-4.5 6.2-4.5z"></path>
+      </svg>
+      {provas.notaGoogle} no Google
+    </p>
+  </div>
+</div>
+
+<script>
+  type Dep = { nome: string; data: string; texto: string }
+
+  const raiz = document.querySelector<HTMLElement>('[data-carrossel]')
+  if (raiz) {
+    const dados: Dep[] = JSON.parse(
+      document.getElementById('depoimentos-json')?.textContent ?? '[]',
+    )
+    const slotTexto = raiz.querySelector<HTMLElement>('[data-slot="texto"]')!
+    const slotNome = raiz.querySelector<HTMLElement>('[data-slot="nome"]')!
+    const slotData = raiz.querySelector<HTMLElement>('[data-slot="data"]')!
+    const slotAvatar = raiz.querySelector<HTMLElement>('[data-slot="avatar"]')!
+    const abas = [...raiz.querySelectorAll<HTMLButtonElement>('[data-indice]')]
+    const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    /** Escreve a citação com as palavras acendendo uma a uma — o "highlight de
+     *  leitura" da referência, feito sem biblioteca. */
+    const render = (i: number) => {
+      const dep = dados[i]
+      if (!dep) return
+      slotNome.textContent = dep.nome
+      slotData.textContent = dep.data
+      slotTexto.textContent = ''
+
+      // O avatar grande é uma cópia do monograma da aba escolhida
+      const mono = abas[i]?.firstElementChild?.cloneNode(true) as HTMLElement | undefined
+      if (mono) {
+        mono.style.width = '52px'
+        mono.style.height = '52px'
+        mono.style.fontSize = '19px'
+        slotAvatar.replaceChildren(mono)
+      }
+
+      abas.forEach((aba, j) => aba.setAttribute('aria-selected', String(j === i)))
+
+      const palavras = dep.texto.split(' ')
+      palavras.forEach((palavra, j) => {
+        const span = document.createElement('span')
+        span.textContent = palavra + (j < palavras.length - 1 ? ' ' : '')
+        span.style.color = reduzido ? 'var(--color-ink)' : 'var(--color-ink-soft)'
+        span.style.transition = 'color .35s ease'
+        slotTexto.appendChild(span)
+        if (!reduzido) {
+          setTimeout(
+            () => {
+              span.style.color = 'var(--color-ink)'
+            },
+            120 + j * (2600 / Math.max(palavras.length, 1)),
+          )
+        }
+      })
+    }
+
+    abas.forEach((aba) =>
+      aba.addEventListener('click', () => render(Number(aba.dataset.indice))),
+    )
+
+    render(0)
+  }
+</script>
+
+<script id="depoimentos-json" type="application/json" is:inline set:html={JSON.stringify(depoimentos)}
+></script>

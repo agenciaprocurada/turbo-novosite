@@ -1,0 +1,55 @@
+---
+import { suporte } from '../data/site'
+---
+
+<div
+  class="overflow-hidden rounded-card border border-white/10 bg-purple-900 shadow-lift"
+  aria-hidden="true"
+>
+  <div class="flex items-center gap-3 border-b border-white/8 bg-white/4 px-4 py-3">
+    <span
+      class="grid size-9 shrink-0 place-items-center rounded-full bg-linear-to-br from-green-soft to-green font-medium text-purple-950"
+      >TC</span
+    >
+    <span class="min-w-0 flex-1">
+      <span class="block truncate text-[14px] font-medium text-white">Suporte Turbo Cloud</span>
+      <span class="flex items-center gap-1.5 font-mono text-[11px] text-green">
+        <span class="pulse-dot"></span> online agora
+      </span>
+    </span>
+  </div>
+
+  <div class="flex flex-col gap-2.5 p-4">
+    {
+      suporte.conversa.map((msg, i) => (
+        <div class:list={['chat-msg flex', msg.de === 'cliente' ? 'justify-end' : 'justify-start']} style={`--i:${i}`}>
+          <div
+            class:list={[
+              'max-w-[85%] rounded-[16px] px-3.5 py-2.5 text-[13.5px] leading-snug',
+              msg.de === 'cliente'
+                ? 'rounded-br-[6px] bg-green text-purple-950'
+                : 'rounded-bl-[6px] bg-white/8 text-white/85',
+            ]}
+          >
+            <p>{msg.texto}</p>
+            <span
+              class:list={[
+                'mt-1 block font-mono text-[10px]',
+                msg.de === 'cliente' ? 'text-purple-950/55' : 'text-white/35',
+              ]}
+            >
+              {msg.hora}
+            </span>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="chat-msg flex items-center gap-2 border-t border-white/8 bg-green/10 px-4 py-3" style={`--i:${suporte.conversa.length}`}>
+    <svg viewBox="0 0 16 16" class="size-4 shrink-0 text-green" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <span class="font-mono text-[11.5px] tracking-[0.06em] text-green uppercase">{suporte.selo}</span>
+  </div>
+</div>
