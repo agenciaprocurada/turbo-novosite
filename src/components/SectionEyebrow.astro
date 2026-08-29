@@ -10,7 +10,7 @@ const { tone = 'light', class: className = '' } = Astro.props
 
 <p
   class:list={[
-    'eyebrow flex items-center gap-2',
+    'eyebrow flex items-center justify-center gap-2 lg:justify-start',
     tone === 'dark' ? 'text-green' : 'text-green-deep',
     className,
   ]}

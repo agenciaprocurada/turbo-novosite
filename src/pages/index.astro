@@ -179,8 +179,8 @@ const ICONES_GARANTIAS = {
     {/* ========================= S3 · PROVA SOCIAL ========================== */}
     <section class="pt-[clamp(48px,6vw,80px)] pb-[clamp(40px,5vw,64px)]">
       <div class="container-page">
-        <div class="reveal grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-16">
-          <div>
+        <div class="reveal grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-16">
+          <div class="text-center lg:text-left">
             <p class="text-[17px] tracking-[0.12em] text-star" aria-label="Nota 5 de 5 estrelas">
               ★★★★★
             </p>
@@ -190,14 +190,14 @@ const ICONES_GARANTIAS = {
               <span data-count>{provas.avaliacoesGoogle.toLocaleString('pt-BR')}</span> avaliações<br />e nota {provas.notaGoogle} no
               Google.
             </h2>
-            <p class="mt-4 max-w-[36ch] text-[14.5px] leading-relaxed text-ink-soft">
+            <p class="mx-auto mt-3 max-w-[36ch] text-[14.5px] leading-relaxed text-ink-soft lg:mx-0 lg:mt-4">
               {provasTexto}
             </p>
             <a
               href={links.avaliacoes}
               rel="noopener"
               target="_blank"
-              class="mt-5 inline-block py-2 -my-2 text-[14px] font-semibold text-ink underline decoration-line underline-offset-4 transition-colors hover:text-green-deep hover:decoration-green-deep"
+              class="mt-4 inline-block py-2 text-[14px] font-semibold text-ink underline decoration-line lg:mt-5 underline-offset-4 transition-colors hover:text-green-deep hover:decoration-green-deep"
               >Ver todas as avaliações →</a
             >
           </div>
@@ -402,14 +402,14 @@ const ICONES_GARANTIAS = {
             <MigrationFunnel />
           </div>
 
-          <div class="reveal lg:col-start-1 lg:self-start" data-delay="2">
-            <p class="max-w-[46ch] text-[16px] leading-relaxed text-ink-soft lg:mt-4">
+          <div class="reveal text-center lg:col-start-1 lg:self-start lg:text-left" data-delay="2">
+            <p class="mx-auto max-w-[46ch] text-[16px] leading-relaxed text-ink-soft lg:mx-0 lg:mt-4">
               {migracao.texto}
             </p>
             <div class="mt-7">
               <Button href={migracao.cta.href} variant="green" size="lg" fullWidth class="sm:w-auto">{migracao.cta.label}</Button>
             </div>
-            <p class="mt-4 font-mono text-[12px] tracking-[0.06em] text-ink-soft uppercase">
+            <p class="mt-4 text-center font-mono text-[12px] tracking-[0.06em] text-ink-soft uppercase lg:text-left">
               Seu site, nossa nuvem.
             </p>
           </div>
@@ -439,17 +439,17 @@ const ICONES_GARANTIAS = {
             </p>
           </div>
 
-          <div class="reveal lg:col-start-1 lg:self-start" data-delay="2">
-            <p class="max-w-[46ch] text-[16px] leading-relaxed text-white/70 lg:mt-4">
+          <div class="reveal text-center lg:col-start-1 lg:self-start lg:text-left" data-delay="2">
+            <p class="mx-auto max-w-[46ch] text-[16px] leading-relaxed text-white/70 lg:mx-0 lg:mt-4">
               {suporte.texto}
             </p>
 
-            <dl class="mt-7 flex flex-col gap-2 border-t border-white/10 pt-6 font-mono text-[12.5px]">
-              <div class="flex flex-wrap gap-x-2">
+            <dl class="mt-7 flex flex-col gap-3 border-t border-white/10 pt-6 font-mono text-[12.5px] sm:gap-2">
+              <div class="flex flex-wrap justify-center gap-x-2 max-sm:flex-col max-sm:gap-y-0.5 lg:justify-start">
                 <dt class="text-white/40 uppercase">WhatsApp</dt>
                 <dd class="text-white/75">{atendimento.whatsapp}</dd>
               </div>
-              <div class="flex flex-wrap gap-x-2">
+              <div class="flex flex-wrap justify-center gap-x-2 max-sm:flex-col max-sm:gap-y-0.5 lg:justify-start">
                 <dt class="text-white/40 uppercase">Ticket</dt>
                 <dd class="text-white/75">{atendimento.ticket}</dd>
               </div>
@@ -484,8 +484,8 @@ const ICONES_GARANTIAS = {
             </div>
           </div>
 
-          <div class="reveal lg:col-start-1 lg:self-start" data-delay="2">
-            <p class="max-w-[42ch] text-[16px] leading-relaxed text-ink-soft lg:mt-4">{brasil.texto}</p>
+          <div class="reveal text-center lg:col-start-1 lg:self-start lg:text-left" data-delay="2">
+            <p class="mx-auto max-w-[42ch] text-[16px] leading-relaxed text-ink-soft lg:mx-0 lg:mt-4">{brasil.texto}</p>
             <a
               href={brasil.link.href}
               class="mt-5 inline-flex items-center gap-1.5 py-2 -my-2 text-[14.5px] font-bold text-green-deep underline decoration-green-deep/40 underline-offset-4 transition-colors hover:decoration-green-deep"
@@ -663,12 +663,12 @@ const ICONES_GARANTIAS = {
         >
           <div class="hidden lg:block" aria-hidden="true"></div>
 
-          <div class="lg:pt-2">
+          <div class="text-center lg:pt-2 lg:text-left">
             <SectionEyebrow>Dúvidas frequentes</SectionEyebrow>
             <h2
-              class="mt-3 text-[clamp(1.5rem,2.6vw,1.85rem)] leading-[1.15] font-bold tracking-[-0.015em] text-ink"
+              class="mt-3 text-[clamp(1.6rem,2.6vw,1.85rem)] leading-[1.15] font-bold tracking-[-0.015em] text-ink"
             >
-              Perguntas<br />frequentes
+              Perguntas<span class="max-lg:hidden"><br /></span><span class="lg:hidden"> </span>frequentes
             </h2>
             <a
               href={links.ajuda}
@@ -679,24 +679,22 @@ const ICONES_GARANTIAS = {
             >
           </div>
 
-          <div class="divide-y divide-line rounded-card border border-line bg-surface px-5 shadow-soft sm:px-6">
+          <div class="divide-y divide-line overflow-hidden rounded-card border border-line bg-surface shadow-soft">
             {
               faq.map((item) => (
-                <details class="group">
-                  <summary class="flex cursor-pointer list-none items-center gap-4 py-4 text-[15px] font-semibold text-ink">
+                <details class="group transition-colors open:bg-green/4">
+                  <summary class="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-[15px] leading-snug font-semibold text-ink sm:gap-4 sm:px-6">
                     <span class="flex-1">{item.p}</span>
-                    <svg
-                      viewBox="0 0 16 16"
-                      class="size-4 shrink-0 text-ink-soft transition-transform duration-200 group-open:rotate-180"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.8"
+                    <span
+                      class="grid size-7 shrink-0 place-items-center rounded-full border border-line text-ink-soft transition-[transform,background-color,border-color,color] duration-300 group-open:rotate-180 group-open:border-green-deep group-open:bg-green-deep group-open:text-white"
                       aria-hidden="true"
                     >
-                      <path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
+                      <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </span>
                   </summary>
-                  <p class="max-w-[62ch] pb-5 text-[14.5px] leading-relaxed text-ink-soft">{item.r}</p>
+                  <p class="max-w-[62ch] px-5 pb-5 text-[14.5px] leading-relaxed text-ink-soft sm:px-6">{item.r}</p>
                 </details>
               ))
             }

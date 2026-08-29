@@ -35,7 +35,15 @@ const sizes = {
 }
 ---
 
-<Tag class:list={[sizes[size], tone === 'dark' ? 'text-white' : 'text-ink', className]}>
+<Tag
+  class:list={[
+    sizes[size],
+    // no celular todo título principal é centralizado; do lg pra cima volta ao alinhamento do bloco
+    'text-center lg:text-left',
+    tone === 'dark' ? 'text-white' : 'text-ink',
+    className,
+  ]}
+>
   <span>{parte1}</span>{stacked ? <br /> : ' '}<span
     class={tone === 'dark' ? 'text-green' : size === 'sub' ? 'text-green-deep' : 'text-green-ink'}
     >{parte2}</span
