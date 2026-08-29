@@ -53,6 +53,7 @@
   --color-purple-950: #300c51; /* blocos escuros, texto sobre botão verde */
   --color-purple-900: #3b1461;
   --color-purple-800: #4b1f78; /* superfícies dentro dos blocos escuros, ícones sobre claro */
+  --color-purple-logo: #5c1f85; /* wordmark do logo sobre fundo claro (8,9:1 no branco) */
 
   /* Estrelas de avaliação (só decorativo — nunca texto) */
   --color-star: #f5b301;
