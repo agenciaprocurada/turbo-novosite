@@ -122,8 +122,8 @@ const ICONES_GARANTIAS = {
           />
         </div>
 
-        <div class="reveal stagger">
-          <SectionEyebrow>{hero.eyebrow}</SectionEyebrow>
+        <div class="reveal stagger text-center lg:text-left">
+          <SectionEyebrow class="justify-center lg:justify-start">{hero.eyebrow}</SectionEyebrow>
 
           <h1
             class="mt-4 text-[clamp(2.3rem,5.2vw,2.9rem)] leading-[1.08] font-bold tracking-[-0.024em] text-ink lg:mt-5"
@@ -133,8 +133,8 @@ const ICONES_GARANTIAS = {
         </div>
 
 
-        <div class="reveal stagger lg:col-start-1" data-delay="2">
-          <p class="max-w-[50ch] lg:mt-5 text-[clamp(1rem,1.6vw,1.125rem)] leading-relaxed text-ink-soft">
+        <div class="reveal stagger text-center lg:col-start-1 lg:text-left" data-delay="2">
+          <p class="mx-auto max-w-[50ch] lg:mx-0 lg:mt-5 text-[clamp(1rem,1.6vw,1.125rem)] leading-relaxed text-ink-soft">
             <strong class="font-bold text-ink">{hero.subLead}</strong>
             {' '}{hero.sub}
           </p>
@@ -148,7 +148,7 @@ const ICONES_GARANTIAS = {
             >
           </div>
 
-          <ul class="mt-8 flex flex-wrap gap-1.5">
+          <ul class="mt-8 flex flex-wrap justify-center gap-1.5 lg:justify-start">
             {
               hero.beneficios.map((item) => (
                 <li class="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 py-1.5 pr-3 pl-1.5 text-[12.5px] font-semibold whitespace-nowrap text-ink shadow-soft">
@@ -166,7 +166,7 @@ const ICONES_GARANTIAS = {
             }
           </ul>
 
-          <p class="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11.5px] tracking-[0.06em] text-ink-soft uppercase">
+          <p class="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 font-mono text-[11.5px] tracking-[0.06em] text-ink-soft uppercase lg:justify-start">
             <span class="text-[14px] tracking-[0.08em] text-green-deep" aria-hidden="true">★★★★★</span>
             <span>
               {provas.notaGoogle} no Google · {provas.avaliacoesGoogle.toLocaleString('pt-BR')} avaliações · desde {marca.desde}
