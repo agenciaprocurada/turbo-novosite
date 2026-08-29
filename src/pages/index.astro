@@ -372,7 +372,7 @@ const ICONES_GARANTIAS = {
             </div>
 
             <div class="shrink-0">
-              <Button href={bannerTurbo.cta.href} variant="green" size="lg">{bannerTurbo.cta.label}</Button>
+              <Button href={bannerTurbo.cta.href} variant="green" size="lg" fullWidth class="sm:w-auto">{bannerTurbo.cta.label}</Button>
             </div>
           </div>
 
@@ -407,7 +407,7 @@ const ICONES_GARANTIAS = {
               {migracao.texto}
             </p>
             <div class="mt-7">
-              <Button href={migracao.cta.href} variant="green" size="lg">{migracao.cta.label}</Button>
+              <Button href={migracao.cta.href} variant="green" size="lg" fullWidth class="sm:w-auto">{migracao.cta.label}</Button>
             </div>
             <p class="mt-4 font-mono text-[12px] tracking-[0.06em] text-ink-soft uppercase">
               Seu site, nossa nuvem.
@@ -749,11 +749,11 @@ const ICONES_GARANTIAS = {
         <p class="mx-auto mt-3 max-w-[52ch] text-[15px] leading-relaxed text-white/65">
           {ctaFinal.texto}
         </p>
-        <div class="mt-7 flex flex-wrap justify-center gap-3">
-          <Button href={ctaFinal.primario.href} variant="green" size="lg"
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
+          <Button href={ctaFinal.primario.href} variant="green" size="lg" fullWidth class="sm:w-auto"
             >{ctaFinal.primario.label}</Button
           >
-          <Button href={ctaFinal.secundario.href} variant="outline-light" size="lg"
+          <Button href={ctaFinal.secundario.href} variant="outline-light" size="lg" fullWidth class="sm:w-auto"
             >{ctaFinal.secundario.label}</Button
           >
         </div>
