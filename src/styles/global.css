@@ -257,6 +257,33 @@
     }
   }
 
+  /* Pacotes do mapa: percorrem a rota (offset-path) até o servidor em loop.
+     Coberto pela regra global de prefers-reduced-motion — parados, ficam invisíveis
+     (opacity 0 no fim), e sobram só as rotas estáticas. */
+  .map-packet {
+    offset-distance: 0%;
+    opacity: 0;
+    animation: turbo-packet 3s linear infinite;
+    filter: drop-shadow(0 0 3px rgba(107, 221, 18, 0.9));
+  }
+
+  @keyframes turbo-packet {
+    0% {
+      offset-distance: 0%;
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    92% {
+      opacity: 1;
+    }
+    100% {
+      offset-distance: 100%;
+      opacity: 0;
+    }
+  }
+
   /* Marcador do mapa */
   @keyframes turbo-marker {
     0%,

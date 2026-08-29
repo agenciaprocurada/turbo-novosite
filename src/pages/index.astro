@@ -423,7 +423,10 @@ const ICONES_GARANTIAS = {
         {/* Celular: título → conversa → texto e CTAs. Desktop: texto à esquerda, conversa à direita. */}
         <div class="container-page grid gap-y-8 lg:grid-cols-2 lg:content-center lg:gap-x-16 lg:gap-y-0">
           <div class="reveal lg:self-end">
-            <SectionEyebrow tone="dark">{suporte.eyebrow}</SectionEyebrow>
+            <SectionEyebrow
+              tone="dark"
+              class="mx-auto w-fit max-w-[24ch] rounded-full border border-green/25 bg-green/10 px-4 py-2 text-[11px] leading-[1.7] text-balance lg:mx-0 lg:max-w-none lg:rounded-none lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:text-[12px] lg:leading-[1.2]"
+              >{suporte.eyebrow}</SectionEyebrow>
             <HeadingDuo
               parte1={suporte.titulo1}
               parte2={suporte.titulo2}
@@ -565,7 +568,7 @@ const ICONES_GARANTIAS = {
           </div>
 
           <div
-            class="flex gap-1 self-start rounded-full border border-line bg-surface p-1 sm:ml-auto sm:self-auto"
+            class="mx-auto flex gap-1 self-center rounded-full border border-line bg-surface p-1 sm:mx-0 sm:ml-auto sm:self-auto"
             role="group"
             aria-label="Ciclo de cobrança"
           >

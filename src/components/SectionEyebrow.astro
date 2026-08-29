@@ -10,7 +10,8 @@ const { tone = 'light', class: className = '' } = Astro.props
 
 <p
   class:list={[
-    'eyebrow flex items-center justify-center gap-2 lg:justify-start',
+    // no celular: centralizado e, quando quebra linha, cada linha também centrada
+    'eyebrow flex items-center justify-center gap-2 text-center lg:justify-start lg:text-left',
     tone === 'dark' ? 'text-green' : 'text-green-deep',
     className,
   ]}

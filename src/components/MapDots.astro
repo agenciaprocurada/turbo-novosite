@@ -51,6 +51,65 @@ for (let y = STEP / 2; y < H; y += STEP) {
     if (dentro(lon, lat)) pontos.push({ x, y })
   }
 }
+
+/* ---- Rotas de acesso: capitais → São Paulo -------------------------------
+   Cada origem vira um ponto + uma curva até o servidor. Um "pacote" verde
+   percorre a curva em loop (CSS offset-path), com atraso diferente por cidade
+   para o tráfego parecer contínuo. Decoração: as cidades são só as capitais. */
+const proj = (lon: number, lat: number) => ({
+  x: Math.round(OFFSET_X + (lon - LON0) * ESCALA),
+  y: Math.round((LAT0 - lat) * ESCALA),
+})
+
+const SP = proj(-46.63, -23.55)
+
+/** As 26 capitais além de São Paulo. A curvatura (último número) desvia a rota
+ *  para um lado ou para o outro, para as linhas abrirem em leque em vez de
+ *  virarem um feixe reto. */
+const origens: [string, number, number, number][] = [
+  ['Boa Vista', -60.67, 2.82, 70],
+  ['Macapá', -51.07, 0.03, -50],
+  ['Manaus', -60.02, -3.1, 58],
+  ['Belém', -48.5, -1.46, -40],
+  ['São Luís', -44.3, -2.53, -45],
+  ['Fortaleza', -38.54, -3.73, -55],
+  ['Teresina', -42.8, -5.09, -34],
+  ['Natal', -35.21, -5.79, -60],
+  ['João Pessoa', -34.86, -7.12, -50],
+  ['Recife', -34.88, -8.05, -42],
+  ['Porto Velho', -63.9, -8.76, 46],
+  ['Rio Branco', -67.81, -9.97, 52],
+  ['Palmas', -48.33, -10.18, 26],
+  ['Aracaju', -37.07, -10.91, -32],
+  ['Salvador', -38.5, -12.97, -26],
+  ['Cuiabá', -56.1, -15.6, 34],
+  ['Brasília', -47.93, -15.78, 20],
+  ['Goiânia', -49.25, -16.68, -12],
+  ['Belo Horizonte', -43.94, -19.92, -18],
+  ['Vitória', -40.34, -20.32, -28],
+  ['Campo Grande', -54.65, -20.44, 24],
+  ['Rio de Janeiro', -43.17, -22.91, -14],
+  ['Curitiba', -49.27, -25.43, 16],
+  ['Florianópolis', -48.55, -27.6, -14],
+  ['Porto Alegre', -51.23, -30.03, 22],
+  ['Maceió', -35.73, -9.67, -38],
+]
+
+const rotas = origens.map(([nome, lon, lat, curva], i) => {
+  const o = proj(lon, lat)
+  // ponto de controle: meio do segmento deslocado na perpendicular
+  const mx = (o.x + SP.x) / 2
+  const my = (o.y + SP.y) / 2
+  const dx = SP.x - o.x
+  const dy = SP.y - o.y
+  const len = Math.hypot(dx, dy) || 1
+  const cx = +(mx + (-dy / len) * curva).toFixed(1)
+  const cy = +(my + (dx / len) * curva).toFixed(1)
+  const d = `M${o.x} ${o.y} Q${cx} ${cy} ${SP.x} ${SP.y}`
+  const dur = +(2.2 + (len / 300) * 1.6).toFixed(2)
+  const delay = +((i * 0.43) % 3.2).toFixed(2)
+  return { nome, o, d, dur, delay }
+})
 ---
 
 <div class="w-full" aria-hidden="true">
@@ -60,6 +119,29 @@ for (let y = STEP / 2; y < H; y += STEP) {
   <svg viewBox={`0 0 ${W} ${H}`} class="block h-auto w-full" style={`aspect-ratio:${W}/${H}`}>
     <g class="map-dots" fill="currentColor" opacity=".26">
       {pontos.map((p) => <circle cx={p.x} cy={p.y} r="2" />)}
+    </g>
+
+    {/* rotas (traço fino) */}
+    <g fill="none" stroke="#6BDD12" stroke-width="1" stroke-opacity=".22" stroke-linecap="round">
+      {rotas.map((r) => <path d={r.d} />)}
+    </g>
+
+    {/* origens */}
+    <g fill="#FFFFFF" fill-opacity=".5">
+      {rotas.map((r) => <circle cx={r.o.x} cy={r.o.y} r="2.4" />)}
+    </g>
+
+    {/* pacotes em movimento */}
+    <g fill="#6BDD12">
+      {
+        rotas.map((r) => (
+          <circle
+            class="map-packet"
+            r="3"
+            style={`offset-path:path('${r.d}');animation-duration:${r.dur}s;animation-delay:-${r.delay}s`}
+          />
+        ))
+      }
     </g>
   </svg>
 
