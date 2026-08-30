@@ -84,7 +84,7 @@ const ICONES_GARANTIAS = {
       <div
         class="hero-art pointer-events-none absolute inset-0 hidden bg-no-repeat lg:block"
         data-parallax
-        style={`background-image:url(${fundoHero.src});background-size:auto;background-position:calc(50% + 45px) center`}
+        style={`background-image:url(${fundoHero.src});background-size:auto;background-position:calc(50% + 120px) center`}
         aria-hidden="true"
       >
       </div>
@@ -107,7 +107,7 @@ const ICONES_GARANTIAS = {
       {/* No celular a ordem é: imagem → título → texto e botões. No desktop os dois blocos de
           texto ficam empilhados na coluna da esquerda (lg:col-start-1) e a imagem some. */}
       <div
-        class="relative container-page grid gap-y-7 py-[clamp(40px,7vw,88px)] lg:min-h-[720px] lg:grid-cols-[minmax(0,440px)_1fr] lg:content-center lg:gap-x-6 lg:gap-y-0"
+        class="relative container-page grid gap-y-7 py-[clamp(40px,7vw,88px)] lg:min-h-[720px] lg:grid-cols-[minmax(0,616px)_1fr] lg:content-center lg:gap-x-6 lg:gap-y-0"
       >
         {/* Recorte dedicado da arte (astronauta + painéis), 780px = 2× da tela. Entra antes
             do título no celular; é lazy + display:none no desktop, então o desktop não baixa. */}
@@ -126,7 +126,7 @@ const ICONES_GARANTIAS = {
           <SectionEyebrow class="justify-center lg:justify-start">{hero.eyebrow}</SectionEyebrow>
 
           <h1
-            class="mt-4 text-[clamp(2.1rem,5.2vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.024em] text-ink lg:mt-5"
+            class="mt-4 text-[clamp(2.3rem,5.2vw,2.9rem)] leading-[1.08] font-bold tracking-[-0.024em] text-ink lg:mt-5"
           >
             <span>{hero.titulo1}</span><br /><span class="text-green-ink">{hero.titulo2}</span>
           </h1>
