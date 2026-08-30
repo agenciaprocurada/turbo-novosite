@@ -78,14 +78,44 @@ const temSubmenu = (
         <a
           href={links.areaCliente}
           rel="noopener"
-          class="hidden rounded-full px-3.5 py-2 text-[14.5px] text-ink-soft transition-colors hover:bg-ink/4 hover:text-ink sm:block"
-          >Área do cliente</a
+          class="hidden h-11 items-center gap-2 rounded-full border border-line bg-surface px-5 text-[14.5px] font-semibold text-ink shadow-soft transition-[background-color,border-color,box-shadow] hover:border-ink/20 hover:shadow-lift sm:inline-flex"
         >
+          <svg
+            viewBox="0 0 24 24"
+            class="size-[19px] text-ink-soft"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="8" r="3.6"></circle>
+            <path d="M4.5 20a7.5 7.5 0 0 1 15 0"></path>
+          </svg>
+          Área do cliente
+        </a>
         {/* O wrapper controla a visibilidade: `hidden` no próprio Button perderia
             para o `inline-flex` da variante base na ordem da folha de estilo. */}
         <span class="hidden sm:block">
-          <Button href="#planos" variant="green" class="h-10 px-4 text-[14.5px]">Comece agora</Button
-          >
+          <Button href="#planos" variant="green" class="h-11 px-5 text-[14.5px]">
+            <svg
+              viewBox="0 0 24 24"
+              class="size-[19px]"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 15c-1.4 1.4-1.9 3.8-2 5.9 2.1-.1 4.5-.6 5.9-2"></path>
+              <path d="M13.5 4.2c2.2-1.6 5.2-2.1 7.3-1.1.9 2.1.5 5.1-1.1 7.3l-5.9 6-6.2-6.2 5.9-6Z"></path>
+              <path d="m9.6 12.4 2 2"></path>
+              <circle cx="15.6" cy="8.4" r="1.2"></circle>
+            </svg>
+            Comece agora
+          </Button>
         </span>
 
         <a
