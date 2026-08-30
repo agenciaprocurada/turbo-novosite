@@ -10,6 +10,15 @@
 import Avatar from './Avatar.astro'
 import { depoimentos, provas } from '../data/site'
 
+import fotoCafe from '../assets/imagens/empresa-de-hospedagem-de-site-avatar-cliente-cafe.webp'
+import fotoEscritorio from '../assets/imagens/empresa-de-hospedagem-de-site-avatar-cliente-escritorio.webp'
+import fotoParque from '../assets/imagens/empresa-de-hospedagem-de-site-avatar-cliente-parque.webp'
+import fotoHomeOffice from '../assets/imagens/empresa-de-hospedagem-de-site-avatar-cliente-home-office.webp'
+
+/** Fotos da pilha de avatares, na ordem dos depoimentos. 104px = 2× do maior
+ *  uso na tela (52px no avatar grande). */
+const fotos = [fotoCafe, fotoEscritorio, fotoParque, fotoHomeOffice]
+
 const total = provas.avaliacoesGoogle.toLocaleString('pt-BR')
 ---
 
@@ -21,7 +30,9 @@ const total = provas.avaliacoesGoogle.toLocaleString('pt-BR')
 >
   <div class="flex items-start justify-between gap-3 sm:gap-4">
     <div class="flex items-center gap-3 sm:gap-3.5">
-      <div data-slot="avatar"><Avatar nome={depoimentos[0]!.nome} size={52} /></div>
+      <div data-slot="avatar" class="flex">
+        <Avatar nome={depoimentos[0]!.nome} foto={fotos[0]} size={52} />
+      </div>
       <div>
         <p class="text-[15px] font-bold text-ink" data-slot="nome">{depoimentos[0]!.nome}</p>
         <p class="font-mono text-[11.5px] text-ink-soft" data-slot="data">{depoimentos[0]!.data}</p>
@@ -49,7 +60,7 @@ const total = provas.avaliacoesGoogle.toLocaleString('pt-BR')
             aria-label={`Depoimento de ${dep.nome}`}
             class="-ml-2 rounded-full ring-2 ring-surface transition-transform duration-200 first:ml-0 hover:z-10 hover:scale-110 aria-selected:z-10 aria-selected:ring-green-deep"
           >
-            <Avatar nome={dep.nome} size={34} />
+            <Avatar nome={dep.nome} foto={fotos[i]} size={34} />
           </button>
         ))
       }
@@ -100,13 +111,17 @@ const total = provas.avaliacoesGoogle.toLocaleString('pt-BR')
       slotData.textContent = dep.data
       slotTexto.textContent = ''
 
-      // O avatar grande é uma cópia do monograma da aba escolhida
-      const mono = abas[i]?.firstElementChild?.cloneNode(true) as HTMLElement | undefined
-      if (mono) {
-        mono.style.width = '52px'
-        mono.style.height = '52px'
-        mono.style.fontSize = '19px'
-        slotAvatar.replaceChildren(mono)
+      // O avatar grande é uma cópia do avatar da aba escolhida (foto ou monograma)
+      const mini = abas[i]?.firstElementChild?.cloneNode(true) as HTMLElement | undefined
+      if (mini) {
+        mini.style.width = '52px'
+        mini.style.height = '52px'
+        mini.style.fontSize = '19px'
+        if (mini instanceof HTMLImageElement) {
+          mini.width = 52
+          mini.height = 52
+        }
+        slotAvatar.replaceChildren(mini)
       }
 
       abas.forEach((aba, j) => aba.setAttribute('aria-selected', String(j === i)))

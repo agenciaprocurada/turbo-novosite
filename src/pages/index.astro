@@ -558,7 +558,7 @@ const ICONES_GARANTIAS = {
                   data-aba-plano={aba.id}
                   aria-selected={i === 0 ? 'true' : 'false'}
                   aria-controls={`planos-${aba.id}`}
-                  class="flex-1 rounded-full px-2 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink-soft transition-colors aria-selected:bg-purple-950 aria-selected:text-white sm:flex-none sm:px-4 sm:text-[14px]"
+                  class="flex-1 rounded-full px-2 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink-soft transition-colors aria-selected:bg-purple-logo aria-selected:text-white sm:flex-none sm:px-4 sm:text-[14px]"
                 >
                   <span class="sm:hidden">{aba.labelCurto ?? aba.label}</span>
                   <span class="hidden sm:inline">{aba.label}</span>
@@ -576,14 +576,14 @@ const ICONES_GARANTIAS = {
               type="button"
               data-ciclo="mensal"
               aria-pressed="true"
-              class="rounded-full px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-950 aria-pressed:text-white"
+              class="rounded-full px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
               >Mensal</button
             >
             <button
               type="button"
               data-ciclo="anual"
               aria-pressed="false"
-              class="group flex items-center gap-2 rounded-full px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-950 aria-pressed:text-white"
+              class="group flex items-center gap-2 rounded-full px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
             >
               Anual
               <span class="rounded-full bg-green/15 px-2 py-0.5 text-[10.5px] text-green-deep group-aria-pressed:bg-green group-aria-pressed:text-purple-950">8% off</span>
@@ -602,7 +602,10 @@ const ICONES_GARANTIAS = {
                   {aba.nota}
                 </p>
               )}
-              <div class="reveal plans-grid mt-6 -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pt-3 pb-5 lg:mx-0 lg:grid lg:grid-cols-4 lg:px-0 lg:pb-2">
+              {/* pt/pb generosos: o overflow-x do carrossel também corta na vertical,
+                  e o card em destaque tem brilho e sombra que passam da borda.
+                  No desktop não há scroll, então o overflow volta a ser visível. */}
+              <div class="reveal plans-grid mt-6 -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pt-5 pb-10 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0 lg:pt-4 lg:pb-4">
                 {aba.planos.map((plano, j) => (
                   <div class:list={['w-[85vw] max-w-[330px] shrink-0 snap-start lg:w-auto lg:max-w-none', plano.destaque === true && 'plan-glow']}>
                     <PricingCard
@@ -625,7 +628,7 @@ const ICONES_GARANTIAS = {
               <li class="flex items-center gap-3 lg:px-5">
                 <svg
                   viewBox="0 0 24 24"
-                  class="size-7 shrink-0 text-green-deep"
+                  class="size-7 shrink-0 text-green-ink"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="1.7"
@@ -842,7 +845,7 @@ const ICONES_GARANTIAS = {
       const card = botao.closest('article')
       const aberto = botao.getAttribute('aria-expanded') === 'true'
       botao.setAttribute('aria-expanded', String(!aberto))
-      card?.querySelectorAll<HTMLElement>('[data-recursos-extra]').forEach((g) => g.classList.toggle('max-lg:hidden', aberto))
+      card?.querySelectorAll<HTMLElement>('[data-recursos-extra]').forEach((g) => g.classList.toggle('hidden', aberto))
       const fechado = botao.querySelector<HTMLElement>('[data-label-fechado]')
       const abertoEl = botao.querySelector<HTMLElement>('[data-label-aberto]')
       if (fechado) fechado.hidden = !aberto
