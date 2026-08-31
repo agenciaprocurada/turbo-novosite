@@ -2,202 +2,259 @@
 import { regioes } from '../data/site'
 
 /**
- * Mapa do Brasil pontilhado, gerado em build — grade de pontos recortada por um
- * contorno simplificado do país (lon/lat). Custa ~5KB de SVG e nenhuma imagem.
+ * Mapa-múndi pontilhado, gerado em build. Os continentes são contornos
+ * simplificados em [lon, lat]; os pontos saem de um `<pattern>` SVG, então o
+ * desenho inteiro custa alguns contornos em vez de milhares de <circle>.
+ *
  * Aproximação intencional: é decoração, não cartografia.
+ *
+ * Sobre o mapa vão os três pontos de presença (Brasil, EUA e Europa) e as
+ * rotas dos visitantes até o mais próximo, com um "pacote" que percorre a
+ * curva em loop (offset-path). Tudo desliga em prefers-reduced-motion.
  */
 
-// Contorno aproximado do Brasil em [lon, lat], sentido horário a partir do Acre.
-const contorno: [number, number][] = [
-  [-73.9, -7.3], [-72.9, -9.4], [-70.6, -11.0], [-69.5, -10.9], [-68.7, -11.1],
-  [-66.7, -9.9], [-65.4, -9.7], [-65.3, -11.5], [-64.4, -12.5], [-60.5, -13.8],
-  [-60.2, -15.1], [-60.2, -16.3], [-58.4, -17.2], [-58.2, -19.8], [-57.8, -22.1],
-  [-55.7, -22.4], [-55.4, -24.0], [-54.6, -25.6], [-53.8, -27.2], [-55.8, -28.3],
-  [-57.6, -30.2], [-56.0, -31.1], [-53.4, -33.7], [-52.6, -32.9], [-50.6, -31.0],
-  [-48.6, -28.6], [-48.5, -26.0], [-46.3, -24.0], [-44.7, -23.1], [-41.9, -22.9],
-  [-40.9, -21.3], [-39.7, -19.7], [-39.0, -17.7], [-38.9, -15.7], [-38.5, -13.0],
-  [-37.0, -11.0], [-35.2, -8.9], [-34.8, -7.2], [-35.3, -5.5], [-37.3, -4.8],
-  [-39.5, -3.0], [-41.8, -2.9], [-44.3, -2.5], [-46.5, -1.0], [-48.3, -0.9],
-  [-49.5, 0.6], [-50.5, 1.5], [-51.6, 4.2], [-52.6, 2.3], [-54.5, 2.4],
-  [-56.5, 1.9], [-58.4, 1.5], [-59.9, 1.7], [-59.8, 3.5], [-60.6, 5.2],
-  [-61.4, 4.2], [-62.8, 3.7], [-64.0, 4.1], [-65.6, 0.9], [-66.9, 1.2],
-  [-69.4, 1.1], [-69.9, -4.2], [-72.9, -5.0],
+/* ------------------------------------------------------------------ */
+/* Projeção equiretangular                                             */
+/* ------------------------------------------------------------------ */
+
+const LON0 = -168
+const LON1 = 180
+const LAT0 = 74 // topo
+const LAT1 = -56 // base (corta a Antártida)
+
+const W = 700
+const ESCALA = W / (LON1 - LON0)
+const H = Math.round((LAT0 - LAT1) * ESCALA)
+
+const px = (lon: number, lat: number): [number, number] => [
+  Math.round((lon - LON0) * ESCALA),
+  Math.round((LAT0 - lat) * ESCALA),
 ]
 
-const dentro = (x: number, y: number) => {
-  let ok = false
-  for (let i = 0, j = contorno.length - 1; i < contorno.length; j = i++) {
-    const [xi, yi] = contorno[i]
-    const [xj, yj] = contorno[j]
-    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) ok = !ok
-  }
-  return ok
-}
+const contorno = (pts: [number, number][]) =>
+  'M' + pts.map(([lo, la]) => px(lo, la).join(' ')).join('L') + 'Z'
 
-// Projeção simples: 1° = ESCALA px. Brasil tem ~39° × 39°, então cabe num quadrado.
-const W = 560
-const H = 400
-const ESCALA = 9.6
-const LON0 = -74
-const LAT0 = 5.4
-const OFFSET_X = (W - 39.2 * ESCALA) / 2
-const STEP = 11
+/* ------------------------------------------------------------------ */
+/* Continentes — contornos grosseiros, só o suficiente para reconhecer */
+/* ------------------------------------------------------------------ */
 
-const pontos: { x: number; y: number }[] = []
-for (let y = STEP / 2; y < H; y += STEP) {
-  for (let x = STEP / 2; x < W; x += STEP) {
-    const lon = (x - OFFSET_X) / ESCALA + LON0
-    const lat = LAT0 - y / ESCALA
-    if (dentro(lon, lat)) pontos.push({ x, y })
-  }
-}
+const AMERICA_NORTE: [number, number][] = [
+  [-168, 66], [-165, 60], [-152, 59], [-140, 60], [-130, 54], [-125, 49],
+  [-124, 40], [-120, 34], [-114, 30], [-110, 24], [-105, 20], [-97, 16],
+  [-92, 15], [-87, 13], [-83, 9], [-79, 8], [-82, 15], [-87, 21], [-91, 19],
+  [-95, 19], [-97, 26], [-94, 29], [-89, 29], [-84, 30], [-81, 25], [-80, 32],
+  [-76, 35], [-70, 42], [-67, 45], [-60, 47], [-55, 52], [-56, 58], [-64, 60],
+  [-68, 63], [-78, 63], [-80, 70], [-90, 70], [-100, 69], [-115, 70],
+  [-130, 70], [-140, 70], [-156, 71],
+]
 
-/* ---- Rotas de acesso: capitais → São Paulo -------------------------------
-   Cada origem vira um ponto + uma curva até o servidor. Um "pacote" verde
-   percorre a curva em loop (CSS offset-path), com atraso diferente por cidade
-   para o tráfego parecer contínuo. Decoração: as cidades são só as capitais. */
-const proj = (lon: number, lat: number) => ({
-  x: Math.round(OFFSET_X + (lon - LON0) * ESCALA),
-  y: Math.round((LAT0 - lat) * ESCALA),
+const AMERICA_SUL: [number, number][] = [
+  [-81, -4], [-79, -8], [-76, -14], [-71, -18], [-70, -23], [-71, -30],
+  [-73, -37], [-74, -44], [-75, -50], [-70, -55], [-66, -55], [-62, -50],
+  [-63, -42], [-57, -38], [-57, -34], [-53, -33], [-48, -28], [-48, -25],
+  [-45, -23], [-40, -21], [-39, -17], [-38, -12], [-35, -8], [-35, -5],
+  [-44, -2], [-50, 0], [-51, 4], [-55, 5], [-60, 8], [-64, 10], [-72, 12],
+  [-77, 8], [-79, 2],
+]
+
+const EUROPA: [number, number][] = [
+  [-10, 36], [-9, 43], [-2, 43], [0, 49], [-5, 50], [-3, 55], [-6, 58],
+  [2, 58], [5, 62], [10, 64], [15, 68], [22, 70], [28, 70], [35, 68],
+  [40, 66], [45, 60], [50, 55], [52, 50], [47, 45], [40, 45], [35, 42],
+  [28, 41], [24, 38], [20, 40], [16, 41], [12, 38], [9, 44], [5, 43], [0, 39],
+  [-6, 36],
+]
+
+const ASIA: [number, number][] = [
+  [50, 55], [60, 60], [70, 68], [80, 72], [95, 76], [110, 74], [125, 72],
+  [140, 72], [160, 68], [170, 66], [175, 62], [160, 60], [150, 59], [142, 54],
+  [135, 45], [130, 42], [127, 38], [122, 32], [118, 24], [110, 20], [105, 10],
+  [100, 5], [95, 8], [92, 20], [88, 22], [80, 15], [77, 8], [72, 20], [68, 24],
+  [62, 25], [57, 22], [50, 28], [45, 35], [48, 42], [52, 45],
+]
+
+const AFRICA: [number, number][] = [
+  [-17, 15], [-16, 22], [-10, 28], [0, 32], [10, 34], [20, 32], [30, 31],
+  [33, 28], [35, 22], [38, 15], [43, 11], [51, 12], [45, 5], [41, -2],
+  [40, -10], [35, -18], [32, -26], [28, -33], [20, -34], [15, -28], [12, -18],
+  [9, -2], [2, 5], [-8, 4], [-15, 11],
+]
+
+const OCEANIA: [number, number][] = [
+  [113, -22], [114, -30], [118, -34], [125, -32], [132, -32], [138, -35],
+  [145, -38], [150, -37], [153, -28], [146, -19], [142, -11], [135, -12],
+  [130, -11], [126, -14], [122, -17],
+]
+
+const MADAGASCAR: [number, number][] = [
+  [44, -12], [50, -15], [50, -21], [47, -25], [44, -22], [43, -16],
+]
+
+const terra = [
+  AMERICA_NORTE, AMERICA_SUL, EUROPA, ASIA, AFRICA, OCEANIA, MADAGASCAR,
+]
+  .map(contorno)
+  .join('')
+
+/* ------------------------------------------------------------------ */
+/* Pontos de presença e rotas dos visitantes                           */
+/* ------------------------------------------------------------------ */
+
+const pops = regioes.map((r) => {
+  const [x, y] = px(r.lon, r.lat)
+  return { ...r, x, y, xPct: +((x / W) * 100).toFixed(2), yPct: +((y / H) * 100).toFixed(2) }
 })
 
-const SP = proj(-46.63, -23.55)
+const BR = pops[0]!
+const US = pops[1]!
+const EU = pops[2]!
 
-/** As 26 capitais além de São Paulo. A curvatura (último número) desvia a rota
- *  para um lado ou para o outro, para as linhas abrirem em leque em vez de
- *  virarem um feixe reto. */
-const origens: [string, number, number, number][] = [
-  ['Boa Vista', -60.67, 2.82, 70],
-  ['Macapá', -51.07, 0.03, -50],
-  ['Manaus', -60.02, -3.1, 58],
-  ['Belém', -48.5, -1.46, -40],
-  ['São Luís', -44.3, -2.53, -45],
-  ['Fortaleza', -38.54, -3.73, -55],
-  ['Teresina', -42.8, -5.09, -34],
-  ['Natal', -35.21, -5.79, -60],
-  ['João Pessoa', -34.86, -7.12, -50],
-  ['Recife', -34.88, -8.05, -42],
-  ['Porto Velho', -63.9, -8.76, 46],
-  ['Rio Branco', -67.81, -9.97, 52],
-  ['Palmas', -48.33, -10.18, 26],
-  ['Aracaju', -37.07, -10.91, -32],
-  ['Salvador', -38.5, -12.97, -26],
-  ['Cuiabá', -56.1, -15.6, 34],
-  ['Brasília', -47.93, -15.78, 20],
-  ['Goiânia', -49.25, -16.68, -12],
-  ['Belo Horizonte', -43.94, -19.92, -18],
-  ['Vitória', -40.34, -20.32, -28],
-  ['Campo Grande', -54.65, -20.44, 24],
-  ['Rio de Janeiro', -43.17, -22.91, -14],
-  ['Curitiba', -49.27, -25.43, 16],
-  ['Florianópolis', -48.55, -27.6, -14],
-  ['Porto Alegre', -51.23, -30.03, 22],
-  ['Maceió', -35.73, -9.67, -38],
+/** Cidades de origem, cada uma ligada ao ponto de presença mais próximo.
+ *  [lon, lat, pop, curvatura] — a curvatura abre as rotas em leque. */
+const origens: [number, number, typeof BR, number][] = [
+  // → Brasil
+  [-38.5, -12.9, BR, -14],
+  [-47.9, -15.8, BR, 12],
+  [-43.2, -22.9, BR, -8],
+  [-51.2, -30.0, BR, 14],
+  [-60.0, -3.1, BR, 22],
+  [-34.9, -8.0, BR, -20],
+  [-58.4, -34.6, BR, 18],
+  [-70.6, -33.4, BR, 24],
+  [-74.1, 4.7, BR, 30],
+  // → EUA
+  [-74.0, 40.7, US, -10],
+  [-118.2, 34.0, US, 16],
+  [-87.6, 41.9, US, -12],
+  [-80.2, 25.8, US, 14],
+  [-79.4, 43.7, US, -14],
+  [-99.1, 19.4, US, 20],
+  // → Europa
+  [-9.1, 38.7, EU, 14],
+  [-3.7, 40.4, EU, 12],
+  [-0.1, 51.5, EU, -10],
+  [2.3, 48.9, EU, 8],
+  [13.4, 52.5, EU, -12],
+  [12.5, 41.9, EU, 14],
+  [28.9, 41.0, EU, 18],
 ]
 
-/* Rota internacional: de São Paulo até o ponto de presença nos EUA, no canto
-   superior esquerdo (10% / 10% do quadro — mesma posição do marcador em
-   `regioes`). Tracejada, para se distinguir das rotas domésticas. */
-const EUA = { x: Math.round(W * 0.1), y: Math.round(H * 0.1) }
-const rotaEUA = `M${SP.x} ${SP.y} Q${Math.round((SP.x + EUA.x) / 2 - 40)} ${Math.round(
-  (SP.y + EUA.y) / 2 + 70,
-)} ${EUA.x} ${EUA.y}`
-
-const rotas = origens.map(([nome, lon, lat, curva], i) => {
-  const o = proj(lon, lat)
-  // ponto de controle: meio do segmento deslocado na perpendicular
-  const mx = (o.x + SP.x) / 2
-  const my = (o.y + SP.y) / 2
-  const dx = SP.x - o.x
-  const dy = SP.y - o.y
+const rotas = origens.map(([lon, lat, pop, curva], i) => {
+  const [ox, oy] = px(lon, lat)
+  const mx = (ox + pop.x) / 2
+  const my = (oy + pop.y) / 2
+  const dx = pop.x - ox
+  const dy = pop.y - oy
   const len = Math.hypot(dx, dy) || 1
   const cx = Math.round(mx + (-dy / len) * curva)
   const cy = Math.round(my + (dx / len) * curva)
-  const d = `M${o.x} ${o.y} Q${cx} ${cy} ${SP.x} ${SP.y}`
-  const dur = +(2.4 + (len / 300) * 1.8).toFixed(2)
-  const delay = +((i * 0.61) % 4).toFixed(2)
-  return { nome, o, d, dur, delay }
+  return {
+    o: { x: ox, y: oy },
+    d: `M${ox} ${oy} Q${cx} ${cy} ${pop.x} ${pop.y}`,
+    dur: +(2.2 + (len / 200) * 1.6).toFixed(2),
+    delay: +((i * 0.53) % 3.6).toFixed(2),
+  }
+})
+
+/** Rotas entre os próprios pontos de presença — a "espinha" da rede. */
+const espinha = [
+  { de: BR, para: US, curva: 46 },
+  { de: US, para: EU, curva: -34 },
+  { de: BR, para: EU, curva: -40 },
+].map(({ de, para, curva }, i) => {
+  const mx = (de.x + para.x) / 2
+  const my = (de.y + para.y) / 2
+  const dx = para.x - de.x
+  const dy = para.y - de.y
+  const len = Math.hypot(dx, dy) || 1
+  const cx = Math.round(mx + (-dy / len) * curva)
+  const cy = Math.round(my + (dx / len) * curva)
+  return {
+    d: `M${de.x} ${de.y} Q${cx} ${cy} ${para.x} ${para.y}`,
+    dur: +(4.4 + i * 0.7).toFixed(2),
+    delay: +(i * 1.5).toFixed(2),
+  }
 })
 ---
 
 <div class="w-full" aria-hidden="true">
-  {/* O wrapper relativo envolve SÓ o SVG: os % do marcador são em relação ao mapa.
-      (No celular a legenda abaixo entrava na conta e o marcador descia.) */}
+  {/* O wrapper relativo envolve SÓ o SVG: os % dos marcadores são em relação
+      ao mapa. (Com a legenda dentro da conta, o marcador descia.) */}
   <div class="relative">
-  <svg viewBox={`0 0 ${W} ${H}`} class="block h-auto w-full" style={`aspect-ratio:${W}/${H}`}>
-    <g class="map-dots" fill="currentColor" opacity=".26">
-      {pontos.map((p) => <circle cx={p.x} cy={p.y} r="2" />)}
-    </g>
+    <svg viewBox={`0 0 ${W} ${H}`} class="block h-auto w-full" style={`aspect-ratio:${W}/${H}`}>
+      <defs>
+        {/* Os pontos do mapa saem daqui — um <circle> só, repetido pelo browser */}
+        <pattern id="mapDots" width="9" height="9" patternUnits="userSpaceOnUse">
+          <circle cx="4.5" cy="4.5" r="1.7" fill="currentColor"></circle>
+        </pattern>
+      </defs>
 
-    {/* rotas (traço fino) */}
-    <g fill="none" stroke="#6BDD12" stroke-width="1" stroke-opacity=".18" stroke-linecap="round">
-      {rotas.map((r) => <path d={r.d} />)}
-    </g>
+      <path d={terra} fill="url(#mapDots)" opacity=".3" fill-rule="evenodd"></path>
 
-    {/* rota internacional São Paulo → EUA */}
-    <path
-      d={rotaEUA}
-      fill="none"
-      stroke="#6BDD12"
-      stroke-width="1"
-      stroke-opacity=".3"
-      stroke-dasharray="5 6"
-      stroke-linecap="round"></path>
-    <circle
-      class="map-packet"
-      r="3"
-      fill="#6BDD12"
-      style={`offset-path:path('${rotaEUA}');animation-duration:4.2s;animation-delay:-1s`}></circle>
+      {/* espinha da rede: PoP ↔ PoP */}
+      <g fill="none" stroke="#6BDD12" stroke-opacity=".28" stroke-width="1.2" stroke-dasharray="5 6" stroke-linecap="round">
+        {espinha.map((r) => <path d={r.d} />)}
+      </g>
 
-    {/* origens */}
-    <g fill="#FFFFFF" fill-opacity=".45">
-      {rotas.map((r) => <circle cx={r.o.x} cy={r.o.y} r="2" />)}
-    </g>
+      {/* rotas dos visitantes */}
+      <g fill="none" stroke="#6BDD12" stroke-opacity=".16" stroke-width="1" stroke-linecap="round">
+        {rotas.map((r) => <path d={r.d} />)}
+      </g>
 
-    {/* pacotes em movimento */}
-    <g fill="#6BDD12">
-      {
-        rotas.map((r) => (
-          <circle
-            class="map-packet"
-            r="2.6"
-            style={`offset-path:path('${r.d}');animation-duration:${r.dur}s;animation-delay:-${r.delay}s`}
-          />
-        ))
-      }
-    </g>
-  </svg>
+      {/* origens */}
+      <g fill="#FFFFFF" fill-opacity=".4">
+        {rotas.map((r) => <circle cx={r.o.x} cy={r.o.y} r="1.9" />)}
+      </g>
 
-  {
-    regioes.map((regiao) => (
-      <span
-        class="map-marker absolute -translate-x-1/2 -translate-y-1/2"
-        style={`left:${regiao.x}%;top:${regiao.y}%`}
-      >
+      {/* pacotes em movimento */}
+      <g fill="#6BDD12">
+        {
+          rotas.map((r) => (
+            <circle
+              class="map-packet"
+              r="2.4"
+              style={`offset-path:path('${r.d}');animation-duration:${r.dur}s;animation-delay:-${r.delay}s`}
+            />
+          ))
+        }
+        {
+          espinha.map((r) => (
+            <circle
+              class="map-packet"
+              r="3"
+              style={`offset-path:path('${r.d}');animation-duration:${r.dur}s;animation-delay:-${r.delay}s`}
+            />
+          ))
+        }
+      </g>
+    </svg>
+
+    {
+      pops.map((pop) => (
         <span
-          class:list={[
-            'block rounded-full',
-            regiao.principal ? 'size-3 bg-green' : 'size-2 bg-white/45',
-          ]}
-          style={regiao.principal ? 'animation: turbo-marker 2.4s ease-in-out infinite' : ''}
-        />
-        {regiao.principal ? (
-          <span class="absolute bottom-full left-1/2 mb-2.5 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-white/12 bg-white/10 px-3 py-1.5 font-mono text-[10.5px] tracking-[0.08em] whitespace-nowrap text-white uppercase backdrop-blur-sm sm:inline-flex">
-            <span class="size-1.5 rounded-full bg-green" />
-            {regiao.nome} ({regiao.detalhe})
-          </span>
-        ) : (
-          <span class="absolute top-full left-1/2 mt-2 hidden -translate-x-1/2 font-mono text-[9.5px] tracking-[0.1em] whitespace-nowrap text-white/55 uppercase sm:block">
-            {regiao.detalhe}
-          </span>
-        )}
-      </span>
-    ))
-  }
-
+          class="map-marker absolute -translate-x-1/2 -translate-y-1/2"
+          style={`left:${pop.xPct}%;top:${pop.yPct}%`}
+        >
+          <span
+            class:list={['block rounded-full', pop.principal ? 'size-3 bg-green' : 'size-2 bg-green/70']}
+            style={pop.principal ? 'animation: turbo-marker 2.4s ease-in-out infinite' : ''}
+          />
+          {pop.principal ? (
+            <span class="absolute top-full left-1/2 mt-2 hidden -translate-x-1/2 items-center gap-1.5 rounded-full border border-green/25 bg-green/12 px-2 py-1 font-mono text-[9.5px] leading-none tracking-[0.08em] whitespace-nowrap text-green uppercase backdrop-blur-sm sm:inline-flex">
+              <span class="size-1 rounded-full bg-green" />
+              São Paulo ({pop.detalhe})
+            </span>
+          ) : (
+            <span class="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 font-mono text-[9.5px] leading-none tracking-[0.1em] whitespace-nowrap text-white/60 uppercase sm:block">
+              {pop.detalhe}
+            </span>
+          )}
+        </span>
+      ))
+    }
   </div>
 
-  {/* No mobile o rótulo não cabe sobre o mapa — vira legenda */}
+  {/* No celular o rótulo não cabe sobre o mapa — vira legenda */}
   <ul class="mt-4 flex flex-wrap justify-center gap-2 sm:hidden">
     {
       regioes.map((regiao) => (

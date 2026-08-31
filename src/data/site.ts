@@ -406,12 +406,14 @@ export const suporte = {
 /* ------------------------------------------------------------------ */
 
 /** Marcadores do mapa do Brasil (S9). x/y em % do viewBox do MapDots. */
-/** Pontos de presença marcados no mapa. A estrutura principal é a de São Paulo;
- *  os servidores nos EUA existem e estão no site atual, mas sem cidade
- *  divulgada — por isso o rótulo fica em "Estados Unidos". */
+/** Pontos de presença marcados no mapa-múndi, em [lon, lat].
+ *  A estrutura principal é a de São Paulo (Ascenty). Os servidores nos EUA e
+ *  na Europa existem e estão no site atual, mas sem cidade divulgada — por
+ *  isso a posição é aproximada e o rótulo não cita cidade. */
 export const regioes = [
-  { nome: 'São Paulo – SP', detalhe: 'BR', principal: true, x: 63.5, y: 70 },
-  { nome: 'Estados Unidos', detalhe: 'US', principal: false, x: 10, y: 10 },
+  { nome: 'São Paulo – SP', detalhe: 'BR', principal: true, lon: -46.6, lat: -23.5 },
+  { nome: 'Estados Unidos', detalhe: 'US', principal: false, lon: -77, lat: 38.5 },
+  { nome: 'Europa', detalhe: 'EU', principal: false, lon: 6, lat: 50 },
 ] as const
 
 /* ------------------------------------------------------------------ */
