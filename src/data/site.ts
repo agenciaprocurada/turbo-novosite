@@ -32,6 +32,12 @@ export const links = {
   ajuda: 'https://app.turbocloud.com.br/knowledgebase',
   ticket: 'https://app.turbocloud.com.br/submitticket.php',
   status: 'https://status.turbocloud.com.br/',
+  /** JSON público da status page (Better Stack). Traz o `aggregate_state` que o
+   *  rodapé lê para dizer se está tudo operacional.
+   *  O locale (`/en/`) vai explícito de propósito: `/index.json` responde 302 para
+   *  cá, e a resposta de redirect não carrega o header CORS — o navegador barra.
+   *  Só o 200 final tem `Access-Control-Allow-Origin: *`. */
+  statusApi: 'https://status.turbocloud.com.br/en/index.json',
   /** Página pública das avaliações (Trustindex — fonte dos depoimentos). */
   avaliacoes: 'https://www.trustindex.io/reviews/turbocloud.com.br',
   calculadora: 'https://turbocloud.com.br/calculadora-perda-de-trafego/',

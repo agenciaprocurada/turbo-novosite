@@ -14,13 +14,18 @@ const ano = new Date().getFullYear()
           Hospedagem de alta performance com servidores no Brasil. Desde {marca.desde}.
         </p>
 
+        {/* Nasce neutro: só afirma que está tudo operacional depois de confirmar
+            na status page. Se o fetch não acontecer, fica neste estado. */}
         <a
           href={links.status}
           rel="noopener"
+          data-status-pill
+          data-status-url={links.statusApi}
           class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 font-mono text-[11.5px] text-ink-soft transition-colors hover:border-ink/20 hover:text-ink"
+          style="--pulse-color: var(--color-ink-soft)"
         >
-          <span class="pulse-dot"></span>
-          todos os sistemas operacionais
+          <span class="pulse-dot" data-pulse="off" aria-hidden="true"></span>
+          <span data-status-texto>status dos serviços</span>
         </a>
 
         <dl class="mt-5 flex flex-col items-center gap-1 text-[14px] lg:items-start">
@@ -101,3 +106,56 @@ const ano = new Date().getFullYear()
     </p>
   </div>
 </footer>
+
+<script>
+  /* Status real dos serviços, lido da status page (Better Stack).
+     Só dispara depois da primeira interação do visitante — o JSON tem ~18 KB
+     gzip e não pode competir com o carregamento da página. Se nada acontecer,
+     a pílula fica no estado neutro que veio no HTML. */
+  const pilula = document.querySelector<HTMLElement>('[data-status-pill]')
+
+  if (pilula) {
+    const texto = pilula.querySelector<HTMLElement>('[data-status-texto]')
+    const ponto = pilula.querySelector<HTMLElement>('.pulse-dot')
+    const url = pilula.dataset.statusUrl
+
+    const estados: Record<string, { texto: string; cor: string }> = {
+      operational: { texto: 'todos os sistemas operacionais', cor: 'var(--color-green)' },
+      maintenance: { texto: 'manutenção programada', cor: 'var(--color-purple-800)' },
+    }
+    const instabilidade = {
+      texto: 'instabilidade em alguns sistemas',
+      cor: 'var(--color-amber-deep)',
+    }
+
+    const carregar = async () => {
+      if (!url || !texto || !ponto) return
+      try {
+        const resposta = await fetch(url)
+        if (!resposta.ok) return
+        const dados = await resposta.json()
+        const estado = dados?.data?.attributes?.aggregate_state
+        if (typeof estado !== 'string') return
+
+        const conhecido = estados[estado]
+        const { texto: rotulo, cor } = conhecido ?? instabilidade
+        texto.textContent = rotulo
+        pilula.style.setProperty('--pulse-color', cor)
+        ponto.removeAttribute('data-pulse')
+        // Só instabilidade tinge o texto. Manutenção programada é aviso, não alarme.
+        if (!conhecido) pilula.dataset.estado = 'alerta'
+      } catch {
+        /* Sem rede, bloqueador ou endpoint mudou: fica no estado neutro. */
+      }
+    }
+
+    const eventos = ['pointerdown', 'keydown', 'scroll', 'touchstart'] as const
+    const disparar = () => {
+      eventos.forEach((evento) => window.removeEventListener(evento, disparar))
+      carregar()
+    }
+    eventos.forEach((evento) =>
+      window.addEventListener(evento, disparar, { once: true, passive: true })
+    )
+  }
+</script>
