@@ -165,12 +165,7 @@ export const hero = {
   ctaPrimario: { label: 'Ver planos', href: '#planos' },
   ctaSecundario: { label: 'Falar com especialista', href: links.whatsapp },
   /** Selos abaixo dos botões. "Suporte 24h" não entra — o horário real é 8h–1h. */
-  beneficios: [
-    'Servidores no Brasil',
-    `Uptime ${provas.uptimeTier3}`,
-    'Suporte humano',
-    'Migração grátis',
-  ],
+  beneficios: [`Uptime ${provas.uptimeTier3}`, 'Suporte humano', 'Migração grátis'],
   /** Barra de números do painel flutuante — só dado real de `provas`. */
   numeros: [
     { valor: provas.ttfb, label: 'TTFB' },
@@ -192,6 +187,12 @@ export type Depoimento = {
   texto: string
   nota: 5
 }
+
+/** Aviso obrigatório enquanto os avatares usarem foto de banco de imagens:
+ *  separa o que é real (nome, texto, nota — tudo do Google) do que é
+ *  ilustração. Se um dia entrarem fotos reais e autorizadas dos clientes,
+ *  esta linha sai. */
+export const avisoFotos = 'Fotos ilustrativas · avaliações reais do Google'
 
 /** Transcritos de trustindex.io/reviews/turbocloud.com.br em 14/08/2026.
  *  Só entraram os que foi possível transcrever por inteiro. */
@@ -405,8 +406,12 @@ export const suporte = {
 /* ------------------------------------------------------------------ */
 
 /** Marcadores do mapa do Brasil (S9). x/y em % do viewBox do MapDots. */
+/** Pontos de presença marcados no mapa. A estrutura principal é a de São Paulo;
+ *  os servidores nos EUA existem e estão no site atual, mas sem cidade
+ *  divulgada — por isso o rótulo fica em "Estados Unidos". */
 export const regioes = [
   { nome: 'São Paulo – SP', detalhe: 'BR', principal: true, x: 63.5, y: 70 },
+  { nome: 'Estados Unidos', detalhe: 'US', principal: false, x: 10, y: 10 },
 ] as const
 
 /* ------------------------------------------------------------------ */

@@ -95,6 +95,14 @@ const origens: [string, number, number, number][] = [
   ['Maceió', -35.73, -9.67, -38],
 ]
 
+/* Rota internacional: de São Paulo até o ponto de presença nos EUA, no canto
+   superior esquerdo (10% / 10% do quadro — mesma posição do marcador em
+   `regioes`). Tracejada, para se distinguir das rotas domésticas. */
+const EUA = { x: Math.round(W * 0.1), y: Math.round(H * 0.1) }
+const rotaEUA = `M${SP.x} ${SP.y} Q${Math.round((SP.x + EUA.x) / 2 - 40)} ${Math.round(
+  (SP.y + EUA.y) / 2 + 70,
+)} ${EUA.x} ${EUA.y}`
+
 const rotas = origens.map(([nome, lon, lat, curva], i) => {
   const o = proj(lon, lat)
   // ponto de controle: meio do segmento deslocado na perpendicular
@@ -125,6 +133,21 @@ const rotas = origens.map(([nome, lon, lat, curva], i) => {
     <g fill="none" stroke="#6BDD12" stroke-width="1" stroke-opacity=".18" stroke-linecap="round">
       {rotas.map((r) => <path d={r.d} />)}
     </g>
+
+    {/* rota internacional São Paulo → EUA */}
+    <path
+      d={rotaEUA}
+      fill="none"
+      stroke="#6BDD12"
+      stroke-width="1"
+      stroke-opacity=".3"
+      stroke-dasharray="5 6"
+      stroke-linecap="round"></path>
+    <circle
+      class="map-packet"
+      r="3"
+      fill="#6BDD12"
+      style={`offset-path:path('${rotaEUA}');animation-duration:4.2s;animation-delay:-1s`}></circle>
 
     {/* origens */}
     <g fill="#FFFFFF" fill-opacity=".45">
@@ -158,10 +181,14 @@ const rotas = origens.map(([nome, lon, lat, curva], i) => {
           ]}
           style={regiao.principal ? 'animation: turbo-marker 2.4s ease-in-out infinite' : ''}
         />
-        {regiao.principal && (
+        {regiao.principal ? (
           <span class="absolute bottom-full left-1/2 mb-2.5 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-white/12 bg-white/10 px-3 py-1.5 font-mono text-[10.5px] tracking-[0.08em] whitespace-nowrap text-white uppercase backdrop-blur-sm sm:inline-flex">
             <span class="size-1.5 rounded-full bg-green" />
             {regiao.nome} ({regiao.detalhe})
+          </span>
+        ) : (
+          <span class="absolute top-full left-1/2 mt-2 hidden -translate-x-1/2 font-mono text-[9.5px] tracking-[0.1em] whitespace-nowrap text-white/55 uppercase sm:block">
+            {regiao.detalhe}
           </span>
         )}
       </span>

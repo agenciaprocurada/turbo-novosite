@@ -72,7 +72,9 @@
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
 
   /* Raio */
-  --radius-btn: 10px;
+  /* Raio único de todo controle clicável com fundo: botão, pílula do header,
+     aba de plano e alternador de ciclo. Medido na arte de referência. */
+  --radius-btn: 14px;
   --radius-card: 20px;
   --radius-block: 28px;
 

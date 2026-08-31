@@ -8,7 +8,7 @@
  * botão de pausa (WCAG 2.2.2).
  */
 import Avatar from './Avatar.astro'
-import { depoimentos, provas } from '../data/site'
+import { depoimentos, provas, avisoFotos } from '../data/site'
 
 import fotoCafe from '../assets/imagens/empresa-de-hospedagem-de-site-avatar-cliente-cafe.webp'
 import fotoEscritorio from '../assets/imagens/empresa-de-hospedagem-de-site-avatar-cliente-escritorio.webp'
@@ -84,6 +84,10 @@ const total = provas.avaliacoesGoogle.toLocaleString('pt-BR')
       </svg>
       {provas.notaGoogle} no Google
     </p>
+
+    {/* O nome, o texto e a nota são reais (Google). A foto é ilustração —
+        e isso precisa estar escrito, não subentendido. */}
+    <p class="w-full text-[11.5px] leading-snug text-ink-soft">{avisoFotos}</p>
   </div>
 </div>
 

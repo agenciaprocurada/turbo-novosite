@@ -546,7 +546,7 @@ const ICONES_GARANTIAS = {
           data-planos
         >
           <div
-            class="flex w-full gap-1 rounded-full border border-line bg-surface p-1 sm:w-auto"
+            class="flex w-full gap-1 rounded-btn border border-line bg-surface p-1 sm:w-auto"
             role="tablist"
             aria-label="Categorias de plano"
           >
@@ -558,7 +558,7 @@ const ICONES_GARANTIAS = {
                   data-aba-plano={aba.id}
                   aria-selected={i === 0 ? 'true' : 'false'}
                   aria-controls={`planos-${aba.id}`}
-                  class="flex-1 rounded-full px-2 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink-soft transition-colors aria-selected:bg-purple-logo aria-selected:text-white sm:flex-none sm:px-4 sm:text-[14px]"
+                  class="flex-1 rounded-btn px-2 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink-soft transition-colors aria-selected:bg-purple-logo aria-selected:text-white sm:flex-none sm:px-4 sm:text-[14px]"
                 >
                   <span class="sm:hidden">{aba.labelCurto ?? aba.label}</span>
                   <span class="hidden sm:inline">{aba.label}</span>
@@ -568,7 +568,7 @@ const ICONES_GARANTIAS = {
           </div>
 
           <div
-            class="mx-auto flex gap-1 self-center rounded-full border border-line bg-surface p-1 sm:mx-0 sm:ml-auto sm:self-auto"
+            class="mx-auto flex gap-1 self-center rounded-btn border border-line bg-surface p-1 sm:mx-0 sm:ml-auto sm:self-auto"
             role="group"
             aria-label="Ciclo de cobrança"
           >
@@ -576,14 +576,14 @@ const ICONES_GARANTIAS = {
               type="button"
               data-ciclo="mensal"
               aria-pressed="true"
-              class="rounded-full px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
+              class="rounded-btn px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
               >Mensal</button
             >
             <button
               type="button"
               data-ciclo="anual"
               aria-pressed="false"
-              class="group flex items-center gap-2 rounded-full px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
+              class="group flex items-center gap-2 rounded-btn px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
             >
               Anual
               <span class="rounded-full bg-green/15 px-2 py-0.5 text-[10.5px] text-green-deep group-aria-pressed:bg-green group-aria-pressed:text-purple-950">8% off</span>
