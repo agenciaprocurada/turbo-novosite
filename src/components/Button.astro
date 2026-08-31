@@ -21,8 +21,10 @@ const {
   fullWidth = false,
 } = Astro.props
 
+/* Caixa alta em todo CTA. Nunito em uppercase precisa de tracking positivo —
+   com o -0.02em do resto do site as letras encostam umas nas outras. */
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-btn font-bold whitespace-nowrap transition-[transform,background-color,border-color,box-shadow] duration-200 hover:-translate-y-0.5 active:translate-y-px'
+  'inline-flex items-center justify-center gap-2 rounded-btn font-bold tracking-[0.04em] uppercase whitespace-nowrap transition-[transform,background-color,border-color,box-shadow] duration-200 hover:-translate-y-0.5 active:translate-y-px'
 
 const sizes = {
   md: 'h-11 px-5 text-[15px]',

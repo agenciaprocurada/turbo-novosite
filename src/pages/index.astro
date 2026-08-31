@@ -148,15 +148,18 @@ const ICONES_GARANTIAS = {
             >
           </div>
 
-          <ul class="mt-8 flex flex-wrap justify-center gap-1.5 lg:justify-start">
+          {/* No celular os três chips cabem numa linha só: texto, ícone e respiro
+              encolhem até 640px. Abaixo de 375px não há largura para os três, então
+              ali eles voltam a quebrar em vez de sair da tela. */}
+          <ul class="mt-8 flex flex-wrap justify-center gap-1 min-[375px]:flex-nowrap sm:flex-wrap sm:gap-1.5 lg:justify-start">
             {
               hero.beneficios.map((item) => (
-                <li class="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 py-1.5 pr-3 pl-1.5 text-[12.5px] font-semibold whitespace-nowrap text-ink shadow-soft">
+                <li class="inline-flex items-center gap-1 rounded-btn border border-line bg-surface/80 py-1.5 pr-1.5 pl-1 text-[9.5px] font-semibold whitespace-nowrap text-ink shadow-soft sm:gap-2 sm:pr-3 sm:pl-1.5 sm:text-[12.5px]">
                   <span
-                    class="grid size-5 place-items-center rounded-full bg-green-deep text-white"
+                    class="grid size-4 place-items-center rounded-full bg-green-deep text-white sm:size-5"
                     aria-hidden="true"
                   >
-                    <svg viewBox="0 0 12 12" class="size-3" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg viewBox="0 0 12 12" class="size-2.5 sm:size-3" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M2.5 6.4L4.8 8.7L9.5 3.6" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                   </span>
