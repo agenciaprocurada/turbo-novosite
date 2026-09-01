@@ -44,12 +44,16 @@ export const links = {
      Enquanto forem absolutos, apontam para o site antigo de propósito:
      link quebrado é pior que link para a versão velha. */
   calculadora: 'https://turbocloud.com.br/calculadora-perda-de-trafego/',
-  estrutura: 'https://turbocloud.com.br/estrutura/',
 
   /* Já reconstruídas aqui */
   planos: '/planos/',
   contato: '/contato/',
   hospedagem: '/hospedagem/',
+  estrutura: '/estrutura/',
+  afiliados: '/afiliados/',
+  /** Índice dos documentos. Os textos ficam no WHMCS — fonte única, para não
+   *  repetir o que aconteceu com as duas políticas de privacidade diferentes. */
+  legal: '/legal/',
   produtos: {
     institucionais: '/hospedagem/sites-institucionais/',
     woocommerce: '/hospedagem/lojas-virtuais-woocommerce/',
@@ -57,6 +61,7 @@ export const links = {
     containers: '/hospedagem/containers/',
     cloudVps: '/hospedagem/cloud-vps/',
     email: '/hospedagem/servidor-para-e-mail/',
+    openclaw: '/hospedagem/openclaw/',
   },
 } as const
 
@@ -163,6 +168,11 @@ export const nav = [
         label: 'Servidor de e-mail',
         desc: 'E-mail separado do site',
         href: links.produtos.email,
+      },
+      {
+        label: 'OpenClaw VPS',
+        desc: 'Infraestrutura para agente de IA',
+        href: links.produtos.openclaw,
       },
     ],
   },
@@ -834,6 +844,7 @@ export const footer = {
         { label: 'Container', href: links.produtos.containers },
         { label: 'Cloud / VPS', href: links.produtos.cloudVps },
         { label: 'Servidor de e-mail', href: links.produtos.email },
+        { label: 'OpenClaw VPS', href: links.produtos.openclaw },
       ],
     },
     {
@@ -843,6 +854,8 @@ export const footer = {
         { label: 'Planos', href: links.planos },
         { label: 'Contato', href: links.contato },
         { label: 'Calculadora de perda de tráfego', href: links.calculadora },
+        { label: 'Programa de afiliados', href: links.afiliados },
+        { label: 'Documentos e políticas', href: links.legal },
       ],
     },
     {
@@ -938,5 +951,6 @@ export const PENDENTE = [
   'Número total de sites/clientes hospedados — o site não publica esse dado.',
   'Confirmar se o desconto de 8% no ciclo anual segue vigente (a página /planos/ é sazonal).',
   'Definir se a conversa da seção de suporte vira transcrição de um caso real (hoje é representação do fluxo).',
+  'Programa de afiliados: a tabela de comissões publicada lista "Plano Elite 40", que não existe na tabela de planos (são 5, 10, 15, 20, 30 e 50). Confirmar se é o Elite 30 ou o Elite 50 — o valor foi mantido como está publicado.',
   'Sincronizar o package-lock: falta @emnapi/runtime e @emnapi/core no topo, e por isso npm ci quebra no Linux. O deploy usa npm install e não sente, mas qualquer CI com npm ci vai falhar. Precisa ser regenerado num Linux — regenerar no Windows não resolve.',
 ] as const

@@ -1,0 +1,128 @@
+---
+/**
+ * /legal/ — índice dos documentos e políticas.
+ *
+ * Os textos NÃO vivem aqui. Cada item abre a versão oficial na Central de
+ * Ajuda, que é onde o time mantém. Duplicar texto jurídico em dois sistemas
+ * é como surgiram as duas políticas de privacidade diferentes que estavam no
+ * ar ao mesmo tempo: a do WordPress, genérica, sem citar LGPD e citando
+ * Google AdSense; e a do WHMCS, que cita LGPD. Uma fonte só.
+ *
+ * A antiga /politica-de-privacidade/ redireciona para cá (astro.config.mjs).
+ */
+import Base from '../layouts/Base.astro'
+import TopBar from '../components/TopBar.astro'
+import HeaderPill from '../components/HeaderPill.astro'
+import FooterMega from '../components/FooterMega.astro'
+
+import HeroProduto from '../components/HeroProduto.astro'
+import SectionEyebrow from '../components/SectionEyebrow.astro'
+import Button from '../components/Button.astro'
+
+import { legal } from '../data/institucional'
+import { marca, links } from '../data/site'
+
+const trilha = [
+  { label: 'Home', href: '/' },
+  { label: 'Documentos', href: '/legal/' },
+]
+---
+
+<Base titulo={legal.titulo} descricao={legal.descricao} trilha={trilha}>
+  <TopBar />
+  <HeaderPill />
+
+  <main id="conteudo">
+    <HeroProduto
+      eyebrow={legal.eyebrow}
+      titulo={legal.h1}
+      tituloVerde={legal.h1Verde}
+      lead={legal.lead}
+      trilha={trilha}
+      ctaPrimario={{ label: 'Ver os documentos', href: '#documentos' }}
+      ctaSecundario={{ label: 'Tirar dúvida no WhatsApp', href: links.whatsapp }}
+    />
+
+    <section class="pt-[clamp(48px,6vw,80px)] pb-[clamp(72px,9vw,120px)]" id="documentos">
+      <div class="container-page">
+        <div class="mx-auto flex max-w-[820px] flex-col gap-10">
+          {
+            legal.grupos.map((grupo, g) => (
+              <div class="reveal" data-delay={String(g + 1)}>
+                <SectionEyebrow>{grupo.titulo}</SectionEyebrow>
+
+                <ul class="mt-4 divide-y divide-line overflow-hidden rounded-card border border-line bg-surface shadow-soft">
+                  {grupo.itens.map((item) => (
+                    <li>
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener"
+                        class="group flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-green/4 sm:px-6"
+                      >
+                        <span class="text-[15.5px] leading-snug font-semibold text-ink">
+                          {item.label}
+                        </span>
+                        <span
+                          class="grid size-7 shrink-0 place-items-center rounded-full border border-line text-ink-soft transition-[background-color,border-color,color,transform] duration-200 group-hover:translate-x-0.5 group-hover:border-green-deep group-hover:bg-green-deep group-hover:text-white"
+                          aria-hidden="true"
+                        >
+                          <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12L12 4M12 4H6M12 4v6" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+
+          {/* Por que os textos não estão nesta página */}
+          <p
+            class="reveal rounded-card border border-line bg-surface px-6 py-5 text-[14px] leading-relaxed text-ink-soft shadow-soft"
+          >
+            Todo link acima abre a Central de Ajuda, que é onde os documentos são mantidos.
+            Manter uma cópia aqui significaria duas versões do mesmo texto jurídico, e uma delas
+            ficaria para trás. Preferimos uma fonte só.
+          </p>
+
+          {/* Dados da empresa, que costumam ser pedidos junto com os documentos */}
+          <div class="reveal grid gap-8 rounded-card border border-line bg-surface p-6 shadow-soft sm:p-8 md:grid-cols-2">
+            <div>
+              <p class="font-mono text-[11px] tracking-[0.12em] text-ink-soft uppercase">Empresa</p>
+              <p class="mt-3 text-[15px] leading-relaxed text-ink">
+                {marca.nome}<br />
+                <span class="text-ink-soft">CNPJ {marca.cnpj}</span><br />
+                <span class="text-ink-soft">No ar desde {marca.desde}</span>
+              </p>
+            </div>
+            <div>
+              <p class="font-mono text-[11px] tracking-[0.12em] text-ink-soft uppercase">Endereço</p>
+              <address class="mt-3 text-[15px] leading-relaxed text-ink-soft not-italic">
+                {marca.endereco}
+              </address>
+            </div>
+          </div>
+
+          <div class="reveal text-center">
+            <h2 class="text-[clamp(1.4rem,2.6vw,1.7rem)] leading-snug font-bold tracking-[-0.018em] text-ink">
+              {legal.rodape.titulo}
+            </h2>
+            <p class="mx-auto mt-3 max-w-[48ch] text-[15px] leading-relaxed text-ink-soft">
+              {legal.rodape.texto}
+            </p>
+            <div class="mt-6 flex justify-center">
+              <Button href={legal.rodape.cta.href} variant="green" size="lg">
+                {legal.rodape.cta.label}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <FooterMega />
+</Base>

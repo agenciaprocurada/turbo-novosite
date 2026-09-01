@@ -1,0 +1,202 @@
+---
+/**
+ * /hospedagem/openclaw/ — VPS dedicada para rodar OpenClaw em produção.
+ *
+ * Rota estática de propósito, fora do `[slug].astro`: o template de produto
+ * argumenta "por que escolher → planos → benefícios → segurança → FAQ", e
+ * esta página segue outro caminho — explica o que é o OpenClaw, mostra por
+ * que VPS genérica falha e só então apresenta o plano. Forçar no molde
+ * estragaria o texto, que é o melhor do site atual.
+ */
+import Base from '../../layouts/Base.astro'
+import TopBar from '../../components/TopBar.astro'
+import HeaderPill from '../../components/HeaderPill.astro'
+import FooterMega from '../../components/FooterMega.astro'
+
+import HeroProduto from '../../components/HeroProduto.astro'
+import BeneficioCard from '../../components/BeneficioCard.astro'
+import SectionEyebrow from '../../components/SectionEyebrow.astro'
+import Button from '../../components/Button.astro'
+
+import Migracao from '../../components/secoes/Migracao.astro'
+import CtaFinal from '../../components/secoes/CtaFinal.astro'
+
+import { openclaw } from '../../data/institucional'
+import { links } from '../../data/site'
+
+const trilha = [
+  { label: 'Home', href: '/' },
+  { label: 'Hospedagem', href: '/hospedagem/' },
+  { label: 'OpenClaw VPS', href: '/hospedagem/openclaw/' },
+]
+---
+
+<Base titulo={openclaw.titulo} descricao={openclaw.descricao} trilha={trilha}>
+  <TopBar />
+  <HeaderPill />
+
+  <main id="conteudo">
+    <HeroProduto
+      eyebrow={openclaw.eyebrow}
+      titulo={openclaw.h1}
+      tituloVerde={openclaw.h1Verde}
+      lead={openclaw.lead}
+      badges={openclaw.badges}
+      trilha={trilha}
+      ctaPrimario={openclaw.cta}
+      ctaSecundario={{ label: 'Falar com especialista', href: links.whatsapp }}
+    />
+
+    {/* ---------------------------- O que é ----------------------------- */}
+    <section class="pt-[clamp(56px,7vw,96px)] pb-[clamp(40px,5vw,64px)]">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[680px] text-center">
+          <SectionEyebrow align="center">{openclaw.oQueE.eyebrow}</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.7rem,3.6vw,2.3rem)] leading-[1.12] font-bold tracking-[-0.018em] text-ink"
+          >
+            {openclaw.oQueE.titulo1}{' '}<span class="text-green-ink">{openclaw.oQueE.titulo2}</span>
+          </h2>
+          <p class="mx-auto mt-4 max-w-[62ch] text-[16px] leading-relaxed text-ink-soft">
+            {openclaw.oQueE.texto}
+          </p>
+        </div>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            openclaw.capacidades.map((item, i) => (
+              <div class="reveal flex" data-delay={String((i % 3) + 1)}>
+                <BeneficioCard icone={item.icone} titulo={item.titulo} texto={item.texto} class="w-full" />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* --------------------------- O problema --------------------------- */}
+    <section class="py-2">
+      <div class="block-section block-dark bg-purple-950 py-[clamp(56px,7vw,104px)] text-white">
+        <div class="container-page grid gap-y-10 lg:grid-cols-2 lg:items-center lg:gap-x-16">
+          <div class="reveal">
+            <SectionEyebrow tone="dark">{openclaw.problema.eyebrow}</SectionEyebrow>
+            <h2
+              class="mt-4 text-[clamp(1.7rem,3.6vw,2.3rem)] leading-[1.12] font-bold tracking-[-0.02em] text-balance"
+            >
+              {openclaw.problema.titulo1}<br /><span class="text-green">{openclaw.problema.titulo2}</span>
+            </h2>
+            <p class="mt-5 max-w-[50ch] text-[16px] leading-relaxed text-white/70">
+              {openclaw.problema.texto}
+            </p>
+            <p class="mt-6 font-mono text-[12.5px] tracking-[0.06em] text-green uppercase">
+              {openclaw.problema.remate}
+            </p>
+          </div>
+
+          <ul class="reveal flex flex-col gap-2.5 lg:col-start-2" data-delay="1">
+            {
+              openclaw.problema.itens.map((item) => (
+                <li class="flex items-start gap-3 rounded-[14px] border border-white/12 bg-white/5 px-5 py-3.5">
+                  <span
+                    class="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-white/12 text-white/70"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 12 12" class="size-2.5" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <path d="M3 3l6 6M9 3l-6 6" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="text-[15px] leading-snug text-white/80">{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {/* ------------------------- O que você recebe ---------------------- */}
+    <section class="pt-[clamp(64px,8vw,110px)] pb-[clamp(40px,5vw,64px)]">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[640px] text-center">
+          <SectionEyebrow align="center">{openclaw.recebe.eyebrow}</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.7rem,3.6vw,2.3rem)] leading-[1.12] font-bold tracking-[-0.018em] text-balance text-ink"
+          >
+            {openclaw.recebe.titulo1}<br /><span class="text-green-ink">{openclaw.recebe.titulo2}</span>
+          </h2>
+        </div>
+
+        <ul class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            openclaw.recebe.itens.map((item, i) => (
+              <li
+                class="reveal flex items-start gap-3 rounded-card border border-line bg-surface px-5 py-4 shadow-soft"
+                data-delay={String((i % 4) + 1)}
+              >
+                <span
+                  class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green-deep text-white"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 12 12" class="size-3" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2.5 6.4L4.8 8.7L9.5 3.6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+                <span class="text-[14.5px] leading-snug text-ink">{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="reveal mx-auto mt-8 max-w-[52ch] text-center text-[16px] leading-relaxed font-bold text-ink">
+          {openclaw.recebe.remate}
+        </p>
+
+        <div class="reveal mt-7 flex justify-center">
+          <Button href={openclaw.cta.href} variant="green" size="lg">{openclaw.cta.label}</Button>
+        </div>
+      </div>
+    </section>
+
+    {/* --------------------------- Para quem ---------------------------- */}
+    <section class="pb-[clamp(72px,9vw,120px)]">
+      <div class="container-page">
+        <div
+          class="reveal mx-auto flex max-w-[900px] flex-col gap-8 rounded-card border border-line bg-surface p-7 shadow-soft sm:p-10 lg:flex-row lg:gap-14"
+        >
+          <div class="lg:max-w-[34ch]">
+            <SectionEyebrow>{openclaw.paraQuem.eyebrow}</SectionEyebrow>
+            <h2
+              class="mt-4 text-[clamp(1.5rem,3vw,2rem)] leading-[1.14] font-bold tracking-[-0.018em] text-ink"
+            >
+              {openclaw.paraQuem.titulo1}<br /><span class="text-green-ink">{openclaw.paraQuem.titulo2}</span>
+            </h2>
+            <p class="mt-5 text-[14.5px] leading-relaxed text-ink-soft">
+              {openclaw.paraQuem.remate}
+            </p>
+          </div>
+
+          <ul class="flex flex-1 flex-col gap-2.5">
+            {
+              openclaw.paraQuem.itens.map((item) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-2 size-1.5 shrink-0 rounded-full bg-green-deep" aria-hidden="true" />
+                  <span class="text-[15px] leading-snug text-ink">{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <Migracao class="py-[clamp(72px,9vw,132px)]" />
+
+    <CtaFinal
+      titulo1="Pronto para rodar OpenClaw"
+      titulo2="de verdade."
+      texto="Comece agora com infraestrutura que não vai te limitar. Migração feita pela nossa equipe e suporte humano no WhatsApp."
+    />
+  </main>
+
+  <FooterMega />
+</Base>

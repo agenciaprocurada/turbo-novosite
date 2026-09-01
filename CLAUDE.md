@@ -57,6 +57,7 @@ npm run check   # astro check — deve fechar com 0 erros
 | **padrão de design (o que usar e quando)** | `docs/DESIGN-SYSTEM.md` |
 | preço, plano, texto, link, depoimento, número | `src/data/site.ts` |
 | texto das 6 páginas de produto e do hub | `src/data/produtos.ts` |
+| texto de estrutura, afiliados, legal e OpenClaw | `src/data/institucional.ts` |
 | cor, fonte, raio, sombra | bloco `@theme` em `src/styles/global.css` |
 | ordem das seções da home | `src/pages/index.astro` |
 | uma seção usada em várias páginas | `src/components/secoes/` |
@@ -277,6 +278,10 @@ estão no `Base.astro`, porque valem para toda página.
 | `/planos/` | `src/pages/planos.astro` — 3 abas + planos de e-mail |
 | `/contato/` | `src/pages/contato.astro` — sem formulário, ver abaixo |
 | `/404` | `src/pages/404.astro` + `src/components/PaginaErro.astro` |
+| `/estrutura/` | `src/pages/estrutura.astro` |
+| `/afiliados/` | `src/pages/afiliados.astro` |
+| `/legal/` | `src/pages/legal.astro` — índice, não guarda texto |
+| `/hospedagem/openclaw/` | `src/pages/hospedagem/openclaw.astro` — rota própria, ver abaixo |
 
 **O hero das páginas internas é claro, não roxo.** `HeroProduto.astro` segue
 o mesmo sistema do hero da home: fundo `#F6F1FA`, título em duas cores
@@ -337,6 +342,20 @@ A página vai `noindex, follow` (prop `noindex` do `Base.astro`): URL de erro
 não indexa, mas os links dela continuam sendo seguidos. O arquivo gerado é
 `dist/404.html` — a maioria dos hosts estáticos serve esse nome sozinha; se o
 seu não servir, apontar a regra de 404 para ele.
+
+**A `/legal/` não guarda texto jurídico.** Ela lista os dez documentos e
+manda para a versão oficial no WHMCS, que é onde o time mantém. O motivo é
+concreto: existiam **duas políticas de privacidade diferentes** publicadas ao
+mesmo tempo — a do WordPress, genérica, sem citar LGPD e citando Google
+AdSense, e a do WHMCS, que cita LGPD. Duplicar texto jurídico em dois sistemas
+é como isso acontece. Uma fonte só. A antiga `/politica-de-privacidade/`
+redireciona para cá, via `redirects` do `astro.config.mjs`.
+
+**A OpenClaw tem rota própria, fora do `[slug].astro`.** O template de produto
+argumenta "por que escolher → planos → benefícios → segurança → FAQ"; a página
+dela explica o que é o OpenClaw, mostra por que VPS genérica falha e só então
+apresenta o plano. Forçar no molde estragaria o texto, que é o melhor do site
+atual.
 
 **Por que `/contato/` não tem formulário.** O projeto é `output: 'static'`: não
 há servidor para processar POST. Em vez de pendurar o lead num serviço de

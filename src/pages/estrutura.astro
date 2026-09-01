@@ -1,0 +1,255 @@
+---
+/**
+ * /estrutura/ — quem é a Turbo Cloud e onde os servidores ficam.
+ *
+ * É a página com mais alcance da onda 2: era um dos dois únicos links que
+ * ainda mandavam o visitante de volta ao WordPress, e está no menu das onze
+ * páginas.
+ */
+import Base from '../layouts/Base.astro'
+import TopBar from '../components/TopBar.astro'
+import HeaderPill from '../components/HeaderPill.astro'
+import FooterMega from '../components/FooterMega.astro'
+
+import HeroProduto from '../components/HeroProduto.astro'
+import BeneficioCard from '../components/BeneficioCard.astro'
+import SectionEyebrow from '../components/SectionEyebrow.astro'
+import HeadingDuo from '../components/HeadingDuo.astro'
+import Button from '../components/Button.astro'
+import MapDots from '../components/MapDots.astro'
+
+import ProvaSocial from '../components/secoes/ProvaSocial.astro'
+import Faq from '../components/secoes/Faq.astro'
+import Migracao from '../components/secoes/Migracao.astro'
+import CtaFinal from '../components/secoes/CtaFinal.astro'
+
+import { estrutura } from '../data/institucional'
+import { faq, links, marca, provas } from '../data/site'
+
+const trilha = [
+  { label: 'Home', href: '/' },
+  { label: 'Estrutura', href: '/estrutura/' },
+]
+
+const SECAO = 'py-[clamp(72px,9vw,132px)]'
+---
+
+<Base
+  titulo={estrutura.titulo}
+  descricao={estrutura.descricao}
+  faq={faq}
+  trilha={trilha}
+>
+  <TopBar />
+  <HeaderPill />
+
+  <main id="conteudo">
+    <HeroProduto
+      eyebrow={estrutura.eyebrow}
+      titulo={estrutura.h1}
+      tituloVerde={estrutura.h1Verde}
+      lead={estrutura.lead}
+      badges={estrutura.badges}
+      trilha={trilha}
+      ctaPrimario={{ label: 'Turbinar meu site', href: links.planos }}
+    />
+
+    {/* --------------------------- Propósito --------------------------- */}
+    <section class="pt-[clamp(56px,7vw,96px)] pb-[clamp(40px,5vw,64px)]">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[640px] text-center">
+          <SectionEyebrow align="center">{estrutura.proposito.eyebrow}</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.7rem,3.6vw,2.3rem)] leading-[1.12] font-bold tracking-[-0.018em] text-ink"
+          >
+            {estrutura.proposito.titulo}<span class="text-green-ink">.</span>
+          </h2>
+          <p class="mx-auto mt-4 max-w-[58ch] text-[16px] leading-relaxed text-ink-soft">
+            {estrutura.proposito.texto}
+          </p>
+        </div>
+
+        <dl class="mt-10 grid gap-4 md:grid-cols-3">
+          {
+            estrutura.proposito.itens.map((item, i) => (
+              <div
+                class="reveal flex flex-col gap-2 rounded-card border border-line bg-surface p-6 shadow-soft"
+                data-delay={String(i + 1)}
+              >
+                <dt class="font-mono text-[11px] tracking-[0.12em] text-green-deep uppercase">
+                  {item.rotulo}
+                </dt>
+                <dd class="text-[15px] leading-relaxed text-ink-soft">{item.texto}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    {/* -------------------------- Diferenciais -------------------------- */}
+    <section class="pb-[clamp(56px,7vw,96px)]">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[640px] text-center">
+          <SectionEyebrow align="center">Conheça a Turbo</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.7rem,3.6vw,2.3rem)] leading-[1.12] font-bold tracking-[-0.018em] text-balance text-ink"
+          >
+            Veja por que a Turbo Cloud <span class="text-green-ink">é para você.</span>
+          </h2>
+        </div>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            estrutura.diferenciais.map((item, i) => (
+              <div class="reveal flex" data-delay={String((i % 4) + 1)}>
+                <BeneficioCard icone={item.icone} titulo={item.titulo} texto={item.texto} class="w-full" />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* --------------------------- Datacenter --------------------------- */}
+    <section class="py-2">
+      <div class="block-section block-dark bg-purple-950 py-[clamp(56px,7vw,104px)] text-white">
+        <div class="container-page grid gap-y-10 lg:grid-cols-2 lg:items-center lg:gap-x-16">
+          <div class="reveal">
+            <SectionEyebrow tone="dark">{estrutura.datacenter.eyebrow}</SectionEyebrow>
+            <HeadingDuo
+              parte1={estrutura.datacenter.titulo1}
+              parte2={estrutura.datacenter.titulo2}
+              tone="dark"
+              class="mt-4"
+            />
+            <p class="mt-5 max-w-[52ch] text-[16px] leading-relaxed text-white/70">
+              {estrutura.datacenter.texto}
+            </p>
+
+            <dl class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6">
+              {
+                estrutura.datacenter.selos.map((selo) => (
+                  <div>
+                    <dt class="font-mono text-[11px] tracking-[0.1em] text-white/40 uppercase">
+                      {selo.rotulo}
+                    </dt>
+                    <dd class="mt-1 text-[19px] font-bold tracking-[-0.02em] text-green">
+                      {selo.valor}
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+
+            <div class="mt-8">
+              <Button href={links.planos} variant="green" size="lg" fullWidth class="sm:w-auto">
+                Conheça os planos
+              </Button>
+            </div>
+          </div>
+
+          <div class="reveal lg:col-start-2" data-delay="1">
+            <MapDots />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* --------------------------- Segurança ---------------------------- */}
+    <section class={SECAO}>
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[680px] text-center">
+          <SectionEyebrow align="center">{estrutura.seguranca.eyebrow}</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.7rem,3.6vw,2.3rem)] leading-[1.12] font-bold tracking-[-0.018em] text-balance text-ink"
+          >
+            {estrutura.seguranca.titulo1}{' '}<span class="text-green-ink">{estrutura.seguranca.titulo2}</span>
+          </h2>
+          <p class="mx-auto mt-4 max-w-[60ch] text-[16px] leading-relaxed text-ink-soft">
+            {estrutura.seguranca.texto}
+          </p>
+        </div>
+
+        {/* Painel */}
+        <div class="mt-14">
+          <div class="reveal mx-auto max-w-[640px] text-center">
+            <SectionEyebrow align="center">{estrutura.painel.eyebrow}</SectionEyebrow>
+            <h3
+              class="mt-4 text-[clamp(1.5rem,3vw,1.95rem)] leading-[1.15] font-bold tracking-[-0.018em] text-ink"
+            >
+              {estrutura.painel.titulo1}{' '}<span class="text-green-ink">{estrutura.painel.titulo2}</span>
+            </h3>
+            <p class="mx-auto mt-3 max-w-[54ch] text-[15.5px] leading-relaxed text-ink-soft">
+              {estrutura.painel.texto}
+            </p>
+          </div>
+
+          <div class="mt-9 grid gap-4 md:grid-cols-3">
+            {
+              estrutura.painel.itens.map((item, i) => (
+                <div class="reveal flex" data-delay={String(i + 1)}>
+                  <BeneficioCard icone={item.icone} titulo={item.titulo} texto={item.texto} class="w-full" />
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ---------------------------- Garantia ---------------------------- */}
+    <section class="pb-[clamp(72px,9vw,120px)]">
+      <div class="container-page">
+        <div
+          class="reveal mx-auto flex max-w-[880px] flex-col gap-8 rounded-card border border-line bg-surface p-7 shadow-soft sm:p-10 lg:flex-row lg:items-center lg:gap-14"
+        >
+          <div class="lg:max-w-[38ch]">
+            <SectionEyebrow>{estrutura.garantia.eyebrow}</SectionEyebrow>
+            <h2
+              class="mt-4 text-[clamp(1.5rem,3vw,2rem)] leading-[1.14] font-bold tracking-[-0.018em] text-ink"
+            >
+              {estrutura.garantia.titulo1}<br /><span class="text-green-ink">{estrutura.garantia.titulo2}</span>
+            </h2>
+          </div>
+
+          <div class="flex-1">
+            <ul class="flex flex-col gap-4">
+              {
+                estrutura.garantia.itens.map((item) => (
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green-deep text-white"
+                      aria-hidden="true"
+                    >
+                      <svg viewBox="0 0 12 12" class="size-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2.5 6.4L4.8 8.7L9.5 3.6" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </span>
+                    <span class="text-[15px] leading-snug text-ink">
+                      <strong class="font-bold">{item.titulo}</strong>
+                      <span class="block text-ink-soft">{item.texto}</span>
+                    </span>
+                  </li>
+                ))
+              }
+            </ul>
+            <p class="mt-6 border-t border-line pt-5 font-mono text-[12px] tracking-[0.06em] text-ink-soft uppercase">
+              {estrutura.garantia.remate}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <ProvaSocial class="pb-[clamp(40px,5vw,64px)]" />
+
+    <Faq itens={faq} comArte />
+
+    <Migracao class={SECAO} />
+
+    <CtaFinal />
+  </main>
+
+  <FooterMega />
+</Base>
