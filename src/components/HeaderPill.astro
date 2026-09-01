@@ -3,6 +3,18 @@ import Logo from './Logo.astro'
 import Button from './Button.astro'
 import { nav, links } from '../data/site'
 
+interface Props {
+  /** Destino do CTA "Comece agora".
+   *
+   *  O padrão é a página /planos/, que existe em qualquer rota. A âncora
+   *  `#planos` só funciona onde a seção de planos está na própria página —
+   *  em /contato/, /hospedagem/ e na 404 ela não existe, e o botão ficava
+   *  morto: clicava e não acontecia nada. Quem tem a seção passa a âncora. */
+  ctaPlanos?: string
+}
+
+const { ctaPlanos = links.planos } = Astro.props
+
 const temSubmenu = (
   item: (typeof nav)[number],
 ): item is Extract<(typeof nav)[number], { itens: readonly unknown[] }> => 'itens' in item
@@ -98,7 +110,7 @@ const temSubmenu = (
         {/* O wrapper controla a visibilidade: `hidden` no próprio Button perderia
             para o `inline-flex` da variante base na ordem da folha de estilo. */}
         <span class="hidden sm:block">
-          <Button href="#planos" variant="green" class="h-11 px-5 text-[13px]">
+          <Button href={ctaPlanos} variant="green" class="h-11 px-5 text-[13px]">
             <svg
               viewBox="0 0 24 24"
               class="size-[19px]"
@@ -186,7 +198,7 @@ const temSubmenu = (
       </ul>
       <div class="mt-3 flex flex-col gap-2 border-t border-line pt-3">
         <Button href={links.areaCliente} variant="outline-dark" fullWidth>Área do cliente</Button>
-        <Button href="#planos" variant="green" fullWidth>Comece agora</Button>
+        <Button href={ctaPlanos} variant="green" fullWidth>Comece agora</Button>
       </div>
     </div>
   </div>

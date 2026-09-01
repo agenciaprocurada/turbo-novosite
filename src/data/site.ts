@@ -812,7 +812,10 @@ export const ctaFinal = {
   titulo2: 'em modo Turbo.',
   texto:
     'Contrate em minutos ou deixe a migração com a gente. São 7 dias de teste e garantia de devolução — se não gostar, você não fica no prejuízo.',
-  primario: { label: 'Comece agora', href: '#planos' },
+  /* /planos/ e não '#planos': o CtaFinal aparece em toda página, inclusive
+     em /contato/ e /hospedagem/, que não têm seção de planos. Âncora que não
+     existe é botão morto. */
+  primario: { label: 'Comece agora', href: links.planos },
   secundario: { label: 'Migrar grátis', href: links.whatsapp },
 } as const
 
