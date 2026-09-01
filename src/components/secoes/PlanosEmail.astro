@@ -1,0 +1,122 @@
+---
+/**
+ * Planos de e-mail. São nove faixas que só mudam o espaço total — não cabem
+ * no card de quatro colunas dos planos de hospedagem, e repetir a mesma
+ * lista de recursos nove vezes seria ruído. Por isso: a lista de recursos
+ * aparece uma vez, e as faixas viram uma grade compacta de preço.
+ */
+import Button from '../Button.astro'
+import SectionEyebrow from '../SectionEyebrow.astro'
+import { planosEmail, recursosEmail } from '../../data/produtos'
+import { links } from '../../data/site'
+
+interface Props {
+  titulo1?: string
+  titulo2a?: string
+  titulo2b?: string
+  texto?: string
+  id?: string
+}
+
+const {
+  titulo1 = 'Planos de e-mail',
+  titulo2a = 'para a sua',
+  titulo2b = 'empresa.',
+  texto = 'Todos os planos têm servidor exclusivo, contas ilimitadas e SMTP profissional. O que muda é o espaço total.',
+  id = 'planos',
+} = Astro.props
+---
+
+<section class="pt-[clamp(40px,5vw,64px)] pb-[clamp(56px,7vw,96px)]" id={id}>
+  <div class="container-page">
+    <div class="reveal mx-auto max-w-[680px] text-center">
+      <SectionEyebrow class="justify-center">Planos</SectionEyebrow>
+      <h2
+        class="mt-4 text-[clamp(1.9rem,4.2vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.018em] text-ink"
+      >
+        {titulo1}<br />{titulo2a}{' '}<span class="text-green-ink">{titulo2b}</span>
+      </h2>
+      <p class="mx-auto mt-4 max-w-[60ch] text-[16px] leading-relaxed text-ink-soft">{texto}</p>
+    </div>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-[minmax(0,300px)_1fr] lg:gap-8">
+      {/* O que vem em todos — dito uma vez, não nove */}
+      <div class="reveal rounded-card border border-line bg-surface p-6 shadow-soft lg:self-start">
+        <p class="font-mono text-[11px] tracking-[0.12em] text-ink-soft uppercase">Em todos os planos</p>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          {
+            recursosEmail.map((recurso) => (
+              <li class="flex items-start gap-2.5 text-[14.5px] leading-snug text-ink">
+                <svg
+                  viewBox="0 0 16 16"
+                  class="mt-0.5 size-4 shrink-0 text-green-deep"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  aria-hidden="true"
+                >
+                  <path d="M3 8.5l3.2 3L13 4.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {recurso}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-5 border-t border-line pt-4 text-[13.5px] leading-relaxed text-ink-soft">
+          Não achou o tamanho certo? A gente monta o plano com você pelo WhatsApp.
+        </p>
+        <Button href={links.whatsapp} variant="outline-purple" size="md" fullWidth class="mt-4">
+          Falar com um especialista
+        </Button>
+      </div>
+
+      {/* As nove faixas */}
+      <ul class="reveal grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-delay="1">
+        {
+          planosEmail.map((plano) => (
+            <li>
+              <a
+                href={plano.href}
+                target="_blank"
+                rel="noopener"
+                class:list={[
+                  'group flex h-full flex-col justify-between gap-4 rounded-card border p-5 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:shadow-lift',
+                  'destaque' in plano && plano.destaque
+                    ? 'border-green-deep/45 bg-surface shadow-soft'
+                    : 'border-line bg-surface',
+                ]}
+              >
+                <div>
+                  <p class="flex items-baseline gap-2">
+                    <span class="text-[20px] font-bold tracking-[-0.02em] text-ink">{plano.gb}GB</span>
+                    {'destaque' in plano && plano.destaque && (
+                      <span class="rounded-full bg-green/15 px-2 py-0.5 font-mono text-[10px] tracking-[0.06em] text-green-deep uppercase">
+                        Mais escolhido
+                      </span>
+                    )}
+                  </p>
+                  <p class="mt-1 text-[13px] text-ink-soft">de espaço total</p>
+                </div>
+
+                <div>
+                  <p class="text-[26px] leading-none font-bold tracking-[-0.02em] text-ink tabular-nums">
+                    <span class="align-top text-[0.55em] text-ink-soft">R$</span>{' '}{plano.preco}
+                    <span class="text-[13px] font-normal text-ink-soft">/mês</span>
+                  </p>
+                  <p class="mt-3 inline-flex items-center gap-1.5 text-[13.5px] font-bold text-green-deep transition-[gap] duration-200 group-hover:gap-2.5">
+                    Contratar <span aria-hidden="true">→</span>
+                  </p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <p class="mx-auto mt-8 max-w-[80ch] text-center text-[13px] leading-relaxed text-ink-soft">
+      Valores mensais vigentes em turbocloud.com.br. Contas de e-mail ilimitadas em todas as faixas —
+      o que muda é o espaço total do servidor. Aceitamos PIX, boleto e cartão.
+    </p>
+  </div>
+</section>

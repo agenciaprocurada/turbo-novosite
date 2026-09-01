@@ -1,13 +1,23 @@
 ---
 import '../styles/global.css'
-import { marca, links, faq, abasPlanos } from '../data/site'
+import { marca, links, abasPlanos } from '../data/site'
+import type { Faq } from '../data/site'
 
 interface Props {
   titulo: string
   descricao: string
+  /** FAQPage do schema.org. Só entra na página que realmente mostra esse FAQ —
+   *  repetir o mesmo FAQPage em 9 URLs é o tipo de coisa que o Google ignora. */
+  faq?: readonly Faq[]
+  /** Product do schema.org. Só onde a tabela de planos aparece de fato. */
+  comProduto?: boolean
+  /** Trilha de navegação para o BreadcrumbList. A home não passa nada. */
+  trilha?: readonly { label: string; href: string }[]
+  /** Tira a página do índice. Só o 404 usa — URL de erro não indexa. */
+  noindex?: boolean
 }
 
-const { titulo, descricao } = Astro.props
+const { titulo, descricao, faq, comProduto = false, trilha, noindex = false } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://turbocloud.com.br').toString()
 
 const schema = {
@@ -30,7 +40,7 @@ const schema = {
       },
       sameAs: [links.status],
     },
-    {
+    ...(comProduto ? [{
       '@type': 'Product',
       name: 'Hospedagem de sites Turbo Cloud',
       description:
@@ -44,15 +54,24 @@ const schema = {
         url: plano.href,
         availability: 'https://schema.org/InStock',
       })),
-    },
-    {
+    }] : []),
+    ...(faq ? [{
       '@type': 'FAQPage',
       mainEntity: faq.map((item) => ({
         '@type': 'Question',
         name: item.p,
         acceptedAnswer: { '@type': 'Answer', text: item.r },
       })),
-    },
+    }] : []),
+    ...(trilha ? [{
+      '@type': 'BreadcrumbList',
+      itemListElement: trilha.map((item, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: item.label,
+        item: new URL(item.href, 'https://turbocloud.com.br').toString(),
+      })),
+    }] : []),
   ],
 }
 ---
@@ -66,6 +85,7 @@ const schema = {
     <title>{titulo}</title>
     <meta name="description" content={descricao} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#300C51" />
 
     <meta property="og:type" content="website" />
@@ -89,9 +109,43 @@ const schema = {
     <slot />
 
     <script>
+      const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      // Números contam do zero até o valor real quando entram na tela (99,982%, 18 ms, 1.366…)
+      const contadores = document.querySelectorAll<HTMLElement>('[data-count]')
+      if (contadores.length && !reduzido && 'IntersectionObserver' in window) {
+        const anima = (el: HTMLElement) => {
+          const original = el.textContent ?? ''
+          const m = original.match(/^([\d.]+)(,(\d+))?/)
+          if (!m) return
+          const inteiro = Number(m[1].replace(/\./g, ''))
+          const dec = m[3] ?? ''
+          const alvo = Number(`${inteiro}.${dec || 0}`)
+          const resto = original.slice(m[0].length)
+          const casas = dec.length
+          const ini = performance.now()
+          const dur = 1400
+          const tick = (t: number) => {
+            const p = Math.min(1, (t - ini) / dur)
+            const e = 1 - Math.pow(2, -10 * p) // ease-out expo
+            const v = alvo * (p === 1 ? 1 : e)
+            el.textContent =
+              v.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas }) + resto
+            if (p < 1) requestAnimationFrame(tick)
+            else el.textContent = original
+          }
+          requestAnimationFrame(tick)
+        }
+        const io = new IntersectionObserver(
+          (es) => es.forEach((e) => { if (e.isIntersecting) { anima(e.target as HTMLElement); io.unobserve(e.target) } }),
+          { threshold: 0.6 },
+        )
+        contadores.forEach((el) => io.observe(el))
+      }
+
       // Reveal on scroll — uma vez só, e desligado em prefers-reduced-motion
       const alvos = document.querySelectorAll('.reveal')
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (reduzido) {
         alvos.forEach((el) => el.classList.add('is-in'))
       } else {
         const io = new IntersectionObserver(

@@ -40,19 +40,32 @@ export const links = {
   statusApi: 'https://status.turbocloud.com.br/en/index.json',
   /** Página pública das avaliações (Trustindex — fonte dos depoimentos). */
   avaliacoes: 'https://www.trustindex.io/reviews/turbocloud.com.br',
+  /* Ainda no WordPress — entram na onda 2 e 3 do mapa de páginas.
+     Enquanto forem absolutos, apontam para o site antigo de propósito:
+     link quebrado é pior que link para a versão velha. */
   calculadora: 'https://turbocloud.com.br/calculadora-perda-de-trafego/',
-  planos: 'https://turbocloud.com.br/planos/',
-  contato: 'https://turbocloud.com.br/contato/',
   estrutura: 'https://turbocloud.com.br/estrutura/',
+
+  /* Já reconstruídas aqui */
+  planos: '/planos/',
+  contato: '/contato/',
+  hospedagem: '/hospedagem/',
   produtos: {
-    institucionais: 'https://turbocloud.com.br/hospedagem/sites-institucionais/',
-    woocommerce: 'https://turbocloud.com.br/hospedagem/lojas-virtuais-woocommerce/',
-    blogs: 'https://turbocloud.com.br/hospedagem/blogs-e-portais-de-conteudo/',
-    containers: 'https://turbocloud.com.br/hospedagem/containers/',
-    cloudVps: 'https://turbocloud.com.br/hospedagem/cloud-vps/',
-    email: 'https://turbocloud.com.br/hospedagem/servidor-para-e-mail/',
+    institucionais: '/hospedagem/sites-institucionais/',
+    woocommerce: '/hospedagem/lojas-virtuais-woocommerce/',
+    blogs: '/hospedagem/blogs-e-portais-de-conteudo/',
+    containers: '/hospedagem/containers/',
+    cloudVps: '/hospedagem/cloud-vps/',
+    email: '/hospedagem/servidor-para-e-mail/',
   },
 } as const
+
+/** Carrinho do WHMCS. Cada plano leva direto para o seu produto — antes todos
+ *  apontavam para a página /planos/, o que dava uma volta a mais entre "quero
+ *  esse" e o checkout. Slugs conferidos em app.turbocloud.com.br.
+ *  O card "VPS com Cloudron ou EasyPanel" cobre dois produtos, então vai para
+ *  a categoria em vez de escolher um dos dois por conta. */
+export const loja = (caminho: string) => `https://app.turbocloud.com.br/store/${caminho}`
 
 /** Janela real de atendimento. O site atual se contradiz (diz "24/7" em banner e
  *  "8h às 1h" no FAQ). Aqui vale o FAQ — honestidade vende melhor que 24/7 genérico. */
@@ -154,7 +167,7 @@ export const nav = [
     ],
   },
   { label: 'Estrutura', href: links.estrutura },
-  { label: 'Planos', href: '#planos' },
+  { label: 'Planos', href: links.planos },
   { label: 'Contato', href: links.contato },
 ] as const
 
@@ -493,7 +506,7 @@ export const abasPlanos: AbaPlanos[] = [
         precoAnualMes: 32.9,
         precoAnualTotal: 394.9,
         grupos: gruposHospedagem('1 domínio Blindagem Turbo', '15GB SSD NVMe', '2 vCPU e 5GB DDR4'),
-        href: links.planos,
+        href: loja('alta-performance/one'),
       },
       {
         nome: 'Three',
@@ -504,7 +517,7 @@ export const abasPlanos: AbaPlanos[] = [
         destaque: true,
         selo: 'MAIS ESCOLHIDO',
         grupos: gruposHospedagem('3 domínios em 1 cPanel', '50GB SSD NVMe', '2 vCPU e 5GB DDR4'),
-        href: links.planos,
+        href: loja('alta-performance/three'),
       },
       {
         nome: 'Duo',
@@ -517,7 +530,7 @@ export const abasPlanos: AbaPlanos[] = [
           '20GB SSD NVMe',
           '2 vCPU e 5GB DDR4 por domínio',
         ),
-        href: links.planos,
+        href: loja('alta-performance/duo'),
       },
       {
         nome: 'Revenda Elite 5',
@@ -530,7 +543,7 @@ export const abasPlanos: AbaPlanos[] = [
           '50GB SSD NVMe',
           '2 vCPU e 5GB DDR4 por domínio',
         ),
-        href: links.planos,
+        href: loja('alta-performance/revenda-elite-5'),
       },
     ],
   },
@@ -569,7 +582,7 @@ export const abasPlanos: AbaPlanos[] = [
             itens: ['E-mail profissional', 'Instalador WordPress 1Click', 'Plugins premium originais grátis'],
           },
         ],
-        href: links.produtos.containers,
+        href: loja('container-especial/special-container-4v50-295'),
       },
       {
         nome: 'Container 4v100',
@@ -601,7 +614,7 @@ export const abasPlanos: AbaPlanos[] = [
             itens: ['E-mail profissional', 'Instalador WordPress 1Click', 'Plugins premium originais grátis'],
           },
         ],
-        href: links.produtos.containers,
+        href: loja('container-especial/special-container-4v100-395'),
       },
       {
         nome: 'Container 8v100',
@@ -635,7 +648,7 @@ export const abasPlanos: AbaPlanos[] = [
             itens: ['E-mail profissional', 'Instalador WordPress 1Click', 'Plugins premium originais grátis'],
           },
         ],
-        href: links.produtos.containers,
+        href: loja('container-especial/special-container-8v100-545'),
       },
       {
         nome: 'Container 16v100',
@@ -667,7 +680,7 @@ export const abasPlanos: AbaPlanos[] = [
             itens: ['E-mail profissional', 'Instalador WordPress 1Click', 'Plugins premium originais grátis'],
           },
         ],
-        href: links.produtos.containers,
+        href: loja('container-especial/container-especial-16v100'),
       },
     ],
   },
@@ -696,7 +709,7 @@ export const abasPlanos: AbaPlanos[] = [
             itens: ['Recursos dedicados', 'Monitoramento 24h', 'Escalabilidade sob demanda'],
           },
         ],
-        href: links.produtos.cloudVps,
+        href: loja('cloud-vps/vps-nvme-linux'),
       },
       {
         nome: 'VPS com cPanel',
@@ -719,7 +732,7 @@ export const abasPlanos: AbaPlanos[] = [
             itens: ['Firewall', 'NGINX', 'MariaDB', 'WordPress Toolkit'],
           },
         ],
-        href: links.produtos.cloudVps,
+        href: loja('cloud-vps/vps-nvme-com-cpanel-especial'),
       },
       {
         nome: 'VPS com CloudPanel',
@@ -740,7 +753,7 @@ export const abasPlanos: AbaPlanos[] = [
             itens: ['Recursos dedicados', 'Monitoramento 24h', 'Escalabilidade sob demanda'],
           },
         ],
-        href: links.produtos.cloudVps,
+        href: loja('cloud-vps/vps-nvme-com-cloudpanel'),
       },
       {
         nome: 'VPS com Cloudron ou EasyPanel',
@@ -761,7 +774,7 @@ export const abasPlanos: AbaPlanos[] = [
             itens: ['n8n', 'Typebot', 'Chatwoot', 'Mautic', '+50 aplicações'],
           },
         ],
-        href: links.produtos.cloudVps,
+        href: loja('cloud-vps'),
       },
     ],
   },
@@ -846,6 +859,9 @@ export const footer = {
 /* Perguntas frequentes (SEO: FAQPage) — respostas do site atual        */
 /* ------------------------------------------------------------------ */
 
+export type Faq = { p: string; r: string }
+
+/** FAQ geral, da home. Cada página de produto tem o seu, em `produtos.ts`. */
 export const faq = [
   {
     p: 'O que significa hospedar em um datacenter TIER III?',
@@ -872,6 +888,39 @@ export const faq = [
     r: 'Sim. São 7 dias de teste grátis e garantia de devolução do dinheiro caso você não fique satisfeito.',
   },
 ] as const
+
+/* ------------------------------------------------------------------ */
+/* 404 — página não encontrada                                         */
+/* ------------------------------------------------------------------ */
+
+export const paginaErro = {
+  titulo: 'Página não encontrada — Turbo Cloud',
+  /** noindex no 404: essa URL não deve entrar em índice nenhum. */
+  descricao:
+    'Essa página não existe ou mudou de endereço. Veja os caminhos mais usados do site ou fale com a gente no WhatsApp.',
+  eyebrow: 'Erro 404',
+  h1: 'Essa página',
+  h1Verde: 'se perdeu no espaço.',
+  lead: 'O endereço não existe, mudou de lugar ou tem um erro de digitação. O que você procura provavelmente está num dos caminhos abaixo.',
+  ctaPrimario: { label: 'Voltar para a home', href: '/' },
+  ctaSecundario: { label: 'Falar no WhatsApp', href: links.whatsapp },
+  atalhosTitulo: 'Talvez você procurasse',
+  atalhos: [
+    { label: 'Planos e preços', desc: 'Hospedagem, Container, VPS e e-mail', href: links.planos },
+    { label: 'Hospedagem', desc: 'As seis soluções, lado a lado', href: links.hospedagem },
+    { label: 'Sites institucionais', desc: 'WordPress com recursos dedicados', href: links.produtos.institucionais },
+    { label: 'Lojas virtuais', desc: 'WooCommerce sem travar no pico', href: links.produtos.woocommerce },
+    { label: 'Cloud / VPS', desc: 'Acesso root e recursos garantidos', href: links.produtos.cloudVps },
+    { label: 'Contato', desc: 'WhatsApp, ticket e e-mail', href: links.contato },
+  ],
+  ajudaTitulo: 'Já é cliente?',
+  ajuda: [
+    { label: 'Área do cliente', href: links.areaCliente },
+    { label: 'Abrir ticket', href: links.ticket },
+    { label: 'Central de ajuda', href: links.ajuda },
+    { label: 'Status dos serviços', href: links.status },
+  ],
+} as const
 
 /* ==================================================================== */
 /* PENDENTE — o que ainda precisa vir do time antes de publicar          */

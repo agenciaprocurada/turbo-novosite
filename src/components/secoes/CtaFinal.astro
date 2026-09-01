@@ -1,0 +1,71 @@
+---
+/** S11 · CTA final — bloco roxo com a arte do foguete. */
+import { Image } from 'astro:assets'
+import Button from '../Button.astro'
+import { ctaFinal } from '../../data/site'
+import fundoCta from '../../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-fundo.webp'
+import fundoCtaMobile from '../../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-mobile.webp'
+
+interface Props {
+  titulo1?: string
+  titulo2?: string
+  texto?: string
+}
+const {
+  titulo1 = ctaFinal.titulo1,
+  titulo2 = ctaFinal.titulo2,
+  texto = ctaFinal.texto,
+} = Astro.props
+---
+
+<section
+  class="block-dark relative overflow-hidden bg-purple-950 py-[clamp(56px,7vw,88px)] text-center text-white"
+>
+  {/* Arte de fundo: lua à esquerda, foguete decolando à direita, centro livre para o texto.
+      No mobile só a nebulosa do centro fica atrás do texto. */}
+  <Image
+    src={fundoCta}
+    alt=""
+    loading="lazy"
+    class="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[center_12%] lg:block"
+    aria-hidden="true"
+  />
+  {/* Celular/tablet: recorte só com o foguete, ancorado à direita */}
+  <Image
+    src={fundoCtaMobile}
+    alt=""
+    loading="lazy"
+    class="pointer-events-none absolute inset-0 h-full w-full object-cover object-[right_center] lg:hidden"
+    aria-hidden="true"
+  />
+  <div
+    class="pointer-events-none absolute inset-0 lg:hidden"
+    style="background:linear-gradient(180deg, rgba(48,12,81,.45) 0%, rgba(48,12,81,.7) 100%)"
+    aria-hidden="true"
+  >
+  </div>
+  {/* Escurece de leve o miolo para o texto manter contraste sobre a nebulosa */}
+  <div
+    class="pointer-events-none absolute inset-0"
+    style="background:radial-gradient(48% 80% at 50% 50%, rgba(48,12,81,.6), rgba(48,12,81,0) 100%)"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative container-page reveal lg:px-[260px]">
+    <h2 class="text-[clamp(1.9rem,4.4vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.02em]">
+      <span class="text-white">{titulo1}</span>{' '}<span class="text-white/60">{titulo2}</span>
+    </h2>
+    <p class="mx-auto mt-3 max-w-[52ch] text-[15px] leading-relaxed text-white/65">
+      {texto}
+    </p>
+    <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
+      <Button href={ctaFinal.primario.href} variant="green" size="lg" fullWidth class="sm:w-auto"
+        >{ctaFinal.primario.label}</Button
+      >
+      <Button href={ctaFinal.secundario.href} variant="outline-light" size="lg" fullWidth class="sm:w-auto"
+        >{ctaFinal.secundario.label}</Button
+      >
+    </div>
+  </div>
+</section>

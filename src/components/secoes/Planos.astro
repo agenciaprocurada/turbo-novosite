@@ -1,0 +1,262 @@
+---
+/** S10 · Planos — abas de categoria × ciclo mensal/anual.
+ *  A home mostra as três abas; cada página de produto mostra só a sua,
+ *  e nesse caso a barra de abas some (não há o que alternar). */
+import PricingCard from '../PricingCard.astro'
+import { abasPlanos, planosCabecalho, garantiasPlanos, notaPlanos } from '../../data/site'
+import type { AbaPlanos } from '../../data/site'
+
+interface Props {
+  abas?: AbaPlanos[]
+  titulo1?: string
+  titulo2a?: string
+  titulo2b?: string
+  texto?: string
+  /** Pílula acima do título. `false` desliga — nas páginas de produto ela sobra. */
+  selo?: string | false
+  id?: string
+  class?: string
+}
+
+const {
+  abas = abasPlanos,
+  titulo1 = planosCabecalho.titulo1,
+  titulo2a = planosCabecalho.titulo2a,
+  titulo2b = planosCabecalho.titulo2b,
+  texto = planosCabecalho.texto,
+  selo = planosCabecalho.selo,
+  id = 'planos',
+  class: cls = 'py-[clamp(72px,9vw,132px)]',
+} = Astro.props
+
+// Ícones dos 4 planos de hospedagem (One, Three, Duo, Revenda)
+const ICONES_PLANOS = ['foguete', 'coroa', 'camadas', 'grupo'] as const
+const ICONES_GARANTIAS = {
+  migracao: 'M7 18a4 4 0 0 1-.6-7.95A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5H7Zm5-6v6m-2.5-3.5L12 12l2.5 2.5',
+  uptime: 'M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3Zm-3 9 2 2 4-4',
+  backup: 'M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4M12 8v4l3 2',
+  ssl: 'M6 11V8a6 6 0 0 1 12 0v3M5 11h14v10H5zM12 15v3',
+  suporte: 'M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2v-2Zm16 0a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2v-2Zm-3 5a3 3 0 0 1-3 2',
+} as const
+
+const comAbas = abas.length > 1
+const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font-bold">$2</strong>') : ''
+---
+
+<section class={cls} id={id}>
+  <div class="container-page">
+    <div class="reveal mx-auto max-w-[760px] text-center">
+      {
+        selo && (
+          <p class="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-center text-[13px] text-ink shadow-soft sm:text-[14px]">
+            <svg viewBox="0 0 24 24" class="size-4 text-green-deep" fill="currentColor" aria-hidden="true">
+              <path d="M12 21s-7.5-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2 4.4-9.5 9-9.5 9Z" />
+            </svg>
+            <span set:html={seloHtml} />
+          </p>
+        )
+      }
+      <h2
+        class:list={[
+          'text-[clamp(1.9rem,4.2vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.018em] text-ink',
+          selo && 'mt-5',
+        ]}
+      >
+        {titulo1}<br />{titulo2a}{' '}<span class="text-green-ink">{titulo2b}</span>
+      </h2>
+      <p class="mx-auto mt-4 max-w-[64ch] text-[16px] leading-relaxed text-ink-soft">
+        {texto}
+      </p>
+    </div>
+
+    <div class="reveal mt-8 flex flex-col gap-3 sm:flex-row sm:items-center" data-planos>
+      {
+        comAbas && (
+          <div
+            class="flex w-full gap-1 rounded-btn border border-line bg-surface p-1 sm:w-auto"
+            role="tablist"
+            aria-label="Categorias de plano"
+          >
+            {abas.map((aba, i) => (
+              <button
+                type="button"
+                role="tab"
+                data-aba-plano={aba.id}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-controls={`planos-${aba.id}`}
+                class="flex-1 rounded-btn px-2 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink-soft transition-colors aria-selected:bg-purple-logo aria-selected:text-white sm:flex-none sm:px-4 sm:text-[14px]"
+              >
+                <span class="sm:hidden">{aba.labelCurto ?? aba.label}</span>
+                <span class="hidden sm:inline">{aba.label}</span>
+              </button>
+            ))}
+          </div>
+        )
+      }
+
+      <div
+        class="mx-auto flex gap-1 self-center rounded-btn border border-line bg-surface p-1 sm:mx-0 sm:ml-auto sm:self-auto"
+        role="group"
+        aria-label="Ciclo de cobrança"
+      >
+        <button
+          type="button"
+          data-ciclo="mensal"
+          aria-pressed="true"
+          class="rounded-btn px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
+          >Mensal</button
+        >
+        <button
+          type="button"
+          data-ciclo="anual"
+          aria-pressed="false"
+          class="group flex items-center gap-2 rounded-btn px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
+        >
+          Anual
+          <span
+            class="rounded-full bg-green/15 px-2 py-0.5 text-[10.5px] text-green-deep group-aria-pressed:bg-green group-aria-pressed:text-purple-950"
+            >8% off</span
+          >
+        </button>
+      </div>
+    </div>
+
+    {
+      abas.map((aba, i) => (
+        <div id={`planos-${aba.id}`} data-painel-plano={aba.id} hidden={i !== 0}>
+          {aba.nota && (
+            <p class="mt-6 flex items-start gap-2 rounded-[14px] border border-line bg-surface px-4 py-3 text-[13.5px] leading-snug text-ink-soft">
+              <span aria-hidden="true" class="text-green-deep">
+                ⚠
+              </span>
+              {aba.nota}
+            </p>
+          )}
+          {/* pt/pb generosos: o overflow-x do carrossel também corta na vertical,
+              e o card em destaque tem brilho e sombra que passam da borda.
+              No desktop não há scroll, então o overflow volta a ser visível. */}
+          <div class="reveal plans-grid mt-6 -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pt-5 pb-10 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0 lg:pt-4 lg:pb-4">
+            {aba.planos.map((plano, j) => (
+              <div
+                class:list={[
+                  'w-[85vw] max-w-[330px] shrink-0 snap-start lg:w-auto lg:max-w-none',
+                  plano.destaque === true && 'plan-glow',
+                ]}
+              >
+                <PricingCard plano={plano} icone={aba.id === 'hospedagem' ? ICONES_PLANOS[j] : 'servidor'} />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+
+    {/* Garantias comuns a todos os planos */}
+    <ul
+      class="reveal mt-8 grid gap-4 rounded-card border border-line bg-surface px-5 py-5 shadow-soft sm:grid-cols-2 lg:grid-cols-5 lg:gap-0 lg:divide-x lg:divide-line lg:px-2"
+    >
+      {
+        garantiasPlanos.map((g) => (
+          <li class="flex items-center gap-3 lg:px-5">
+            <svg
+              viewBox="0 0 24 24"
+              class="size-7 shrink-0 text-green-ink"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d={ICONES_GARANTIAS[g.icone]} />
+            </svg>
+            <span class="text-[13px] leading-snug text-ink">
+              <span class="block font-bold">{g.linha1}</span>
+              <span class="block text-ink-soft">{g.linha2}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mx-auto mt-6 max-w-[80ch] text-center text-[13px] leading-relaxed text-ink-soft">
+      {notaPlanos}
+    </p>
+  </div>
+</section>
+
+<script>
+  const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  // Planos (desktop com mouse): o card inclina na direção do ponteiro e o brilho o acompanha
+  if (!reduzido && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('.plan-card').forEach((card) => {
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect()
+        const x = (e.clientX - r.left) / r.width
+        const y = (e.clientY - r.top) / r.height
+        card.style.setProperty('--ry', `${((x - 0.5) * 10).toFixed(2)}deg`)
+        card.style.setProperty('--rx', `${((0.5 - y) * 8).toFixed(2)}deg`)
+        card.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`)
+        card.style.setProperty('--my', `${(y * 100).toFixed(1)}%`)
+      })
+      card.addEventListener('pointerleave', () => {
+        card.style.setProperty('--rx', '0deg')
+        card.style.setProperty('--ry', '0deg')
+      })
+    })
+  }
+
+  // Celular: "Ver tudo que inclui" abre os grupos extras do card de plano
+  document.querySelectorAll<HTMLButtonElement>('[data-toggle-recursos]').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      const card = botao.closest('article')
+      const aberto = botao.getAttribute('aria-expanded') === 'true'
+      botao.setAttribute('aria-expanded', String(!aberto))
+      card?.querySelectorAll<HTMLElement>('[data-recursos-extra]').forEach((g) => g.classList.toggle('hidden', aberto))
+      const fechado = botao.querySelector<HTMLElement>('[data-label-fechado]')
+      const abertoEl = botao.querySelector<HTMLElement>('[data-label-aberto]')
+      if (fechado) fechado.hidden = !aberto
+      if (abertoEl) abertoEl.hidden = aberto
+      const seta = botao.querySelector<HTMLElement>('[aria-hidden]')
+      if (seta) seta.style.transform = aberto ? '' : 'rotate(180deg)'
+    })
+  })
+
+  // Abas de categoria e ciclo de cobrança
+  const barra = document.querySelector<HTMLElement>('[data-planos]')
+
+  if (barra) {
+    const abas = [...barra.querySelectorAll<HTMLButtonElement>('[data-aba-plano]')]
+    const paineis = [...document.querySelectorAll<HTMLElement>('[data-painel-plano]')]
+
+    abas.forEach((aba) => {
+      aba.addEventListener('click', () => {
+        const id = aba.dataset.abaPlano
+        abas.forEach((a) => a.setAttribute('aria-selected', String(a === aba)))
+        paineis.forEach((p) => {
+          p.hidden = p.dataset.painelPlano !== id
+          if (!p.hidden) {
+            const grade = p.querySelector<HTMLElement>('.plans-grid')
+            if (grade) {
+              grade.classList.remove('is-in')
+              void grade.offsetWidth
+              grade.classList.add('is-in')
+            }
+          }
+        })
+      })
+    })
+
+    const botoesCiclo = [...barra.querySelectorAll<HTMLButtonElement>('[data-ciclo]')]
+
+    botoesCiclo.forEach((botao) => {
+      botao.addEventListener('click', () => {
+        const anual = botao.dataset.ciclo === 'anual'
+        botoesCiclo.forEach((b) => b.setAttribute('aria-pressed', String(b === botao)))
+        document.querySelectorAll<HTMLElement>('[data-ciclo-mensal]').forEach((el) => (el.hidden = anual))
+        document.querySelectorAll<HTMLElement>('[data-ciclo-anual]').forEach((el) => (el.hidden = !anual))
+      })
+    })
+  }
+</script>

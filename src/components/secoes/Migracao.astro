@@ -1,0 +1,41 @@
+---
+/** S7 · Migração grátis — funil + CTA. Igual em toda página. */
+import SectionEyebrow from '../SectionEyebrow.astro'
+import HeadingDuo from '../HeadingDuo.astro'
+import Button from '../Button.astro'
+import MigrationFunnel from '../MigrationFunnel.astro'
+import { migracao } from '../../data/site'
+
+interface Props {
+  class?: string
+}
+const { class: cls = 'py-[clamp(72px,9vw,132px)]' } = Astro.props
+---
+
+<section class={cls}>
+  <div class="container-page">
+    {/* Celular: título → funil → texto e CTA. Desktop: texto empilhado à esquerda, funil à direita. */}
+    <div class="grid gap-y-8 lg:grid-cols-2 lg:content-center lg:gap-x-16 lg:gap-y-0">
+      <div class="reveal lg:self-end">
+        <SectionEyebrow>{migracao.eyebrow}</SectionEyebrow>
+        <HeadingDuo parte1={migracao.titulo1} parte2={migracao.titulo2} class="mt-4" />
+      </div>
+
+      <div class="reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" data-delay="1">
+        <MigrationFunnel />
+      </div>
+
+      <div class="reveal text-center lg:col-start-1 lg:self-start lg:text-left" data-delay="2">
+        <p class="mx-auto max-w-[46ch] text-[16px] leading-relaxed text-ink-soft lg:mx-0 lg:mt-4">
+          {migracao.texto}
+        </p>
+        <div class="mt-7">
+          <Button href={migracao.cta.href} variant="green" size="lg" fullWidth class="sm:w-auto">{migracao.cta.label}</Button>
+        </div>
+        <p class="mt-4 text-center font-mono text-[12px] tracking-[0.06em] text-ink-soft uppercase lg:text-left">
+          Seu site, nossa nuvem.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

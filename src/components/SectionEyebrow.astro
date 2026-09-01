@@ -2,16 +2,20 @@
 interface Props {
   /** claro = fundo branco da página; escuro = dentro dos blocos roxos */
   tone?: 'light' | 'dark'
+  /** auto = centrado no celular, à esquerda no desktop (padrão da home).
+   *  center = centrado em qualquer largura, para seções de coluna única. */
+  align?: 'auto' | 'center'
   class?: string
 }
 
-const { tone = 'light', class: className = '' } = Astro.props
+const { tone = 'light', align = 'auto', class: className = '' } = Astro.props
 ---
 
 <p
   class:list={[
     // no celular: centralizado e, quando quebra linha, cada linha também centrada
-    'eyebrow flex items-center justify-center gap-2 text-center lg:justify-start lg:text-left',
+    'eyebrow flex items-center justify-center gap-2 text-center',
+    align === 'auto' && 'lg:justify-start lg:text-left',
     tone === 'dark' ? 'text-green' : 'text-green-deep',
     className,
   ]}

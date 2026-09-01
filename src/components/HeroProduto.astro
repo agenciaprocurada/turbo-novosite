@@ -1,0 +1,138 @@
+---
+/**
+ * Hero das páginas internas. Segue o mesmo sistema do hero da home: fundo
+ * lilás-claro (#F6F1FA), título em duas cores (ink + green-ink), chips com
+ * check verde e degradê no pé fundindo com a cor da página. Nada de bloco
+ * roxo aqui — o roxo é do hero da home e dos blocos de seção, não das
+ * páginas internas.
+ *
+ * O `-mt` + `pt` repete o gesto da home: a seção passa por baixo do header
+ * pílula em vez de começar depois dele.
+ *
+ * Sem imagem de propósito. A arte do hero da home é a peça mais pesada do
+ * site; repeti-la em nove páginas estouraria o orçamento (regra 4).
+ */
+import Button from './Button.astro'
+import Trilha from './Trilha.astro'
+import SectionEyebrow from './SectionEyebrow.astro'
+import { links } from '../data/site'
+
+interface Props {
+  eyebrow: string
+  /** primeira parte do H1, em text-ink */
+  titulo: string
+  /** segunda parte do H1, em verde. Mesmo par do hero da home. */
+  tituloVerde?: string
+  lead: string
+  badges?: readonly string[]
+  aPartirDe?: number
+  ctaPrimario?: { label: string; href: string }
+  ctaSecundario?: { label: string; href: string }
+  trilha: readonly { label: string; href: string }[]
+}
+
+const {
+  eyebrow,
+  titulo,
+  tituloVerde,
+  lead,
+  badges = [],
+  aPartirDe,
+  ctaPrimario = { label: 'Ver planos', href: '#planos' },
+  ctaSecundario = { label: 'Falar no WhatsApp', href: links.whatsapp },
+  trilha,
+} = Astro.props
+
+const preco = aPartirDe?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+---
+
+<section
+  class="relative overflow-clip bg-[#F6F1FA] -mt-[76px] pt-[76px] sm:-mt-[84px] sm:pt-[84px]"
+>
+  {/* Brilho verde bem de leve no canto direito — o mesmo acento da marca, sem peso de imagem */}
+  <div
+    class="pointer-events-none absolute inset-0"
+    style="background:radial-gradient(52% 62% at 88% 6%, rgba(107,221,18,.10), rgba(246,241,250,0) 72%)"
+    aria-hidden="true"
+  >
+  </div>
+
+  {/* Degradê no pé: a cor do hero some para a cor de fundo da página, sem linha dura */}
+  <div
+    class="pointer-events-none absolute inset-x-0 bottom-0 h-[160px]"
+    style="background:linear-gradient(180deg, rgba(251,251,250,0) 0%, rgba(251,251,250,.6) 50%, #FBFBFA 100%)"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative container-page pt-[clamp(20px,3vw,32px)] pb-[clamp(48px,7vw,88px)]">
+    <Trilha itens={trilha} tone="light" />
+
+    <div class="mt-8 grid gap-y-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-x-12">
+      <div class="reveal stagger mx-auto max-w-[54ch] text-center lg:mx-0 lg:text-left">
+        <SectionEyebrow>{eyebrow}</SectionEyebrow>
+
+        <h1
+          class="mt-4 text-[clamp(2rem,4.6vw,2.9rem)] leading-[1.08] font-bold tracking-[-0.024em] text-balance text-ink lg:mt-5"
+        >
+          <span>{titulo}</span>{tituloVerde && (
+            <>
+              <br />
+              <span class="text-green-ink">{tituloVerde}</span>
+            </>
+          )}
+        </h1>
+
+        <p
+          class="mx-auto mt-5 max-w-[52ch] text-[clamp(1rem,1.6vw,1.125rem)] leading-relaxed text-ink-soft lg:mx-0"
+        >
+          {lead}
+        </p>
+
+        {
+          badges.length > 0 && (
+            <ul class="mt-7 flex flex-wrap justify-center gap-1.5 lg:justify-start">
+              {badges.map((badge) => (
+                <li class="inline-flex items-center gap-2 rounded-btn border border-line bg-surface/80 py-1.5 pr-3 pl-1.5 text-[12.5px] font-semibold whitespace-nowrap text-ink shadow-soft">
+                  <span
+                    class="grid size-5 place-items-center rounded-full bg-green-deep text-white"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 12 12" class="size-3" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M2.5 6.4L4.8 8.7L9.5 3.6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  {badge}
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
+          <Button href={ctaPrimario.href} variant="green" size="lg" fullWidth class="sm:w-auto">
+            {ctaPrimario.label}
+          </Button>
+          <Button href={ctaSecundario.href} variant="white" size="lg" fullWidth class="sm:w-auto">
+            {ctaSecundario.label}
+          </Button>
+        </div>
+      </div>
+
+      {
+        preco && (
+          <div
+            class="reveal stagger w-full rounded-card border border-line bg-surface px-6 py-5 text-center shadow-soft lg:w-auto lg:min-w-[230px] lg:text-left"
+            data-delay="2"
+          >
+            <p class="font-mono text-[11px] tracking-[0.12em] text-ink-soft uppercase">A partir de</p>
+            <p class="mt-2 text-[clamp(2rem,4vw,2.5rem)] leading-none font-bold tracking-[-0.02em] text-ink tabular-nums">
+              <span class="align-top text-[0.5em] text-ink-soft">R$</span>{' '}{preco}
+            </p>
+            <p class="mt-2 text-[13px] leading-snug text-ink-soft">por mês, no plano mais em conta</p>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

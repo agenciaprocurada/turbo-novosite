@@ -1,0 +1,81 @@
+---
+/** FAQ em accordion. A home passa o FAQ geral; cada produto passa o seu.
+ *  `comArte` liga o astronauta com notebook — flourish só da home. */
+import { Image } from 'astro:assets'
+import SectionEyebrow from '../SectionEyebrow.astro'
+import { faq as faqPadrao, links } from '../../data/site'
+import type { Faq } from '../../data/site'
+import astronautaFaq from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-lua-notebook.webp'
+
+interface Props {
+  itens?: readonly Faq[]
+  comArte?: boolean
+  class?: string
+}
+const {
+  itens = faqPadrao,
+  comArte = false,
+  class: cls = 'relative overflow-clip pt-[clamp(16px,2vw,32px)] pb-[clamp(56px,7vw,100px)]',
+} = Astro.props
+---
+
+<section class={cls}>
+  {
+    comArte && (
+      <div
+        class="pointer-events-none absolute bottom-[-6%] left-[max(20px,calc(50%-600px))] hidden w-[340px] lg:block"
+        aria-hidden="true"
+      >
+        <Image src={astronautaFaq} alt="" loading="lazy" class="h-auto w-full" />
+      </div>
+    )
+  }
+
+  <div class="relative container-page">
+    <div
+      class:list={[
+        'reveal grid gap-10 lg:items-start lg:gap-8',
+        comArte ? 'lg:grid-cols-[minmax(0,330px)_minmax(0,220px)_1fr]' : 'lg:grid-cols-[minmax(0,240px)_1fr]',
+      ]}
+    >
+      {comArte && <div class="hidden lg:block" aria-hidden="true" />}
+
+      <div class="text-center lg:pt-2 lg:text-left">
+        <SectionEyebrow>Dúvidas frequentes</SectionEyebrow>
+        <h2
+          class="mt-3 text-[clamp(1.6rem,2.6vw,1.85rem)] leading-[1.15] font-bold tracking-[-0.015em] text-ink"
+        >
+          Perguntas<span class="max-lg:hidden"><br /></span><span class="lg:hidden"> </span>frequentes
+        </h2>
+        <a
+          href={links.ajuda}
+          rel="noopener"
+          target="_blank"
+          class="mt-8 inline-flex items-center gap-1.5 py-2 -my-2 text-[14px] font-bold text-green-deep underline decoration-green-deep/40 underline-offset-4 transition-colors hover:decoration-green-deep"
+          >Ver todas as perguntas <span aria-hidden="true">→</span></a
+        >
+      </div>
+
+      <div class="divide-y divide-line overflow-hidden rounded-card border border-line bg-surface shadow-soft">
+        {
+          itens.map((item) => (
+            <details class="group transition-colors open:bg-green/4">
+              <summary class="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-[15px] leading-snug font-semibold text-ink sm:gap-4 sm:px-6">
+                <span class="flex-1">{item.p}</span>
+                <span
+                  class="grid size-7 shrink-0 place-items-center rounded-full border border-line text-ink-soft transition-[transform,background-color,border-color,color] duration-300 group-open:rotate-180 group-open:border-green-deep group-open:bg-green-deep group-open:text-white"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </summary>
+              <p class="max-w-[62ch] px-5 pb-5 text-[14.5px] leading-relaxed text-ink-soft sm:px-6">{item.r}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

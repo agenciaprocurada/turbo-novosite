@@ -1,0 +1,48 @@
+---
+/**
+ * Trilha de navegação (breadcrumb). O último item é a página atual e não
+ * vira link — o BreadcrumbList do schema.org sai do Base, a partir da mesma
+ * lista.
+ */
+interface Props {
+  itens: readonly { label: string; href: string }[]
+  tone?: 'light' | 'dark'
+}
+
+const { itens, tone = 'light' } = Astro.props
+const escuro = tone === 'dark'
+---
+
+<nav aria-label="Trilha de navegação">
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11.5px] tracking-[0.04em]">
+    {
+      itens.map((item, i) => {
+        const ultimo = i === itens.length - 1
+        return (
+          <li class="flex items-center gap-2">
+            {i > 0 && (
+              <span class:list={[escuro ? 'text-white/25' : 'text-ink-soft/50']} aria-hidden="true">
+                /
+              </span>
+            )}
+            {ultimo ? (
+              <span class:list={[escuro ? 'text-white/70' : 'text-ink']} aria-current="page">
+                {item.label}
+              </span>
+            ) : (
+              <a
+                href={item.href}
+                class:list={[
+                  'underline-offset-4 transition-colors hover:underline',
+                  escuro ? 'text-white/45 hover:text-green' : 'text-ink-soft hover:text-green-deep',
+                ]}
+              >
+                {item.label}
+              </a>
+            )}
+          </li>
+        )
+      })
+    }
+  </ol>
+</nav>

@@ -4,16 +4,19 @@ import TopBar from '../components/TopBar.astro'
 import HeaderPill from '../components/HeaderPill.astro'
 import FooterMega from '../components/FooterMega.astro'
 
+import ProvaSocial from '../components/secoes/ProvaSocial.astro'
+import Planos from '../components/secoes/Planos.astro'
+import Faq from '../components/secoes/Faq.astro'
+import Migracao from '../components/secoes/Migracao.astro'
+import CtaFinal from '../components/secoes/CtaFinal.astro'
+
 import Button from '../components/Button.astro'
 import Badge from '../components/Badge.astro'
 import SectionEyebrow from '../components/SectionEyebrow.astro'
 import HeadingDuo from '../components/HeadingDuo.astro'
 import StatBlock from '../components/StatBlock.astro'
 import PorqueCard from '../components/PorqueCard.astro'
-import PricingCard from '../components/PricingCard.astro'
-import TestimonialCarousel from '../components/TestimonialCarousel.astro'
 import ChatMockup from '../components/ChatMockup.astro'
-import MigrationFunnel from '../components/MigrationFunnel.astro'
 import MapDots from '../components/MapDots.astro'
 
 import fundoHero from '../assets/fundo-topo-hero.webp'
@@ -23,11 +26,8 @@ import ServiceCard from '../components/ServiceCard.astro'
 import { Image } from 'astro:assets'
 import foguete from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-caminho-turbo.webp'
 import planeta from '../assets/imagens/empresa-de-hospedagem-de-site-planeta-anel.webp'
-import fundoCta from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-fundo.webp'
-import astronautaFaq from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-lua-notebook.webp'
 import heroMobile from '../assets/imagens/empresa-de-hospedagem-de-site-hero-astronauta-mobile.webp'
 import racksMobile from '../assets/imagens/empresa-de-hospedagem-de-site-datacenter-racks-mobile.webp'
-import fundoCtaMobile from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-mobile.webp'
 import iconeCaminho from '../assets/imagens/empresa-de-hospedagem-de-site-icone-caminho-turbo.webp'
 
 import {
@@ -37,17 +37,10 @@ import {
   infraLista,
   porque,
   bannerTurbo,
-  migracao,
   suporte,
   stats,
   brasil,
-  abasPlanos,
-  notaPlanos,
-  planosCabecalho,
-  garantiasPlanos,
-  ctaFinal,
   faq,
-  links,
   atendimento,
   marca,
 } from '../data/site'
@@ -56,29 +49,21 @@ const SECAO = 'py-[clamp(72px,9vw,132px)]'
 
 const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar, rápido e seguro.'
 
-// Ícones dos 4 planos de hospedagem (One, Three, Duo, Revenda) e da faixa de garantias
-const ICONES_PLANOS = ['foguete', 'coroa', 'camadas', 'grupo'] as const
-const ICONES_GARANTIAS = {
-  migracao: 'M7 18a4 4 0 0 1-.6-7.95A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5H7Zm5-6v6m-2.5-3.5L12 12l2.5 2.5',
-  uptime: 'M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3Zm-3 9 2 2 4-4',
-  backup: 'M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4M12 8v4l3 2',
-  ssl: 'M6 11V8a6 6 0 0 1 12 0v3M5 11h14v10H5zM12 15v3',
-  suporte: 'M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2v-2Zm16 0a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2v-2Zm-3 5a3 3 0 0 1-3 2',
-} as const
-
 // Fundo do hero: WebP já otimizado (1698×1006, ~38 KB), servido como está.
 ---
 
 <Base
   titulo="Turbo Cloud — hospedagem de alta performance no Brasil"
   descricao="Hospedagem WordPress e WooCommerce com CPU e memória dedicadas, TTFB de 18 ms, backup a cada 12 horas e suporte humano no WhatsApp. Servidores em datacenter TIER III no Brasil. Migração grátis."
+  faq={faq}
+  comProduto
 >
   <TopBar />
   <HeaderPill />
 
   <main id="conteudo">
     {/* ============================== S2 · HERO ============================== */}
-    <section class="relative -mt-[76px] overflow-x-clip bg-[#F6F1FA] pt-[76px] sm:-mt-[84px] sm:pt-[84px]">
+    <section class="relative -mt-[76px] overflow-clip bg-[#F6F1FA] pt-[76px] sm:-mt-[84px] sm:pt-[84px]">
       {/* Fundo do topo (astronauta + cartões já vêm na arte). No desktop cobre a
           altura toda, encostado à direita; a esquerda funde com a cor da arte. */}
       <div
@@ -98,8 +83,8 @@ const ICONES_GARANTIAS = {
 
       {/* Degradê no pé do hero: a arte lilás some para a cor de fundo da página, sem linha dura */}
       <div
-        class="pointer-events-none absolute inset-x-0 bottom-0 h-[160px]"
-        style="background:linear-gradient(180deg, rgba(251,251,250,0) 0%, rgba(251,251,250,.7) 55%, #FBFBFA 100%)"
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-[220px]"
+        style="background:linear-gradient(180deg, rgba(251,251,250,0) 0%, rgba(251,251,250,.55) 45%, rgba(251,251,250,.92) 82%, #FBFBFA 100%)"
         aria-hidden="true"
       >
       </div>
@@ -179,36 +164,7 @@ const ICONES_GARANTIAS = {
       </div>
     </section>
 
-    {/* ========================= S3 · PROVA SOCIAL ========================== */}
-    <section class="pt-[clamp(48px,6vw,80px)] pb-[clamp(40px,5vw,64px)]">
-      <div class="container-page">
-        <div class="reveal grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-16">
-          <div class="text-center lg:text-left">
-            <p class="text-[17px] tracking-[0.12em] text-star" aria-label="Nota 5 de 5 estrelas">
-              ★★★★★
-            </p>
-            <h2
-              class="mt-3 text-[clamp(1.6rem,3vw,2rem)] leading-[1.15] font-bold tracking-[-0.018em] text-ink"
-            >
-              <span data-count>{provas.avaliacoesGoogle.toLocaleString('pt-BR')}</span> avaliações<br />e nota {provas.notaGoogle} no
-              Google.
-            </h2>
-            <p class="mx-auto mt-3 max-w-[36ch] text-[14.5px] leading-relaxed text-ink-soft lg:mx-0 lg:mt-4">
-              {provasTexto}
-            </p>
-            <a
-              href={links.avaliacoes}
-              rel="noopener"
-              target="_blank"
-              class="mt-4 inline-block py-2 text-[14px] font-semibold text-ink underline decoration-line lg:mt-5 underline-offset-4 transition-colors hover:text-green-deep hover:decoration-green-deep"
-              >Ver todas as avaliações →</a
-            >
-          </div>
-
-          <TestimonialCarousel />
-        </div>
-      </div>
-    </section>
+    <ProvaSocial texto={provasTexto} />
 
     {/* ============================ S4 · SERVIÇOS =========================== */}
     <section class="pt-[clamp(40px,5vw,64px)] pb-[clamp(72px,9vw,132px)]" id="servicos">
@@ -391,34 +347,7 @@ const ICONES_GARANTIAS = {
       </div>
     </section>
 
-    {/* ============================ S7 · MIGRAÇÃO =========================== */}
-    <section class={SECAO}>
-      <div class="container-page">
-        {/* Celular: título → funil → texto e CTA. Desktop: texto empilhado à esquerda, funil à direita. */}
-        <div class="grid gap-y-8 lg:grid-cols-2 lg:content-center lg:gap-x-16 lg:gap-y-0">
-          <div class="reveal lg:self-end">
-            <SectionEyebrow>{migracao.eyebrow}</SectionEyebrow>
-            <HeadingDuo parte1={migracao.titulo1} parte2={migracao.titulo2} class="mt-4" />
-          </div>
-
-          <div class="reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" data-delay="1">
-            <MigrationFunnel />
-          </div>
-
-          <div class="reveal text-center lg:col-start-1 lg:self-start lg:text-left" data-delay="2">
-            <p class="mx-auto max-w-[46ch] text-[16px] leading-relaxed text-ink-soft lg:mx-0 lg:mt-4">
-              {migracao.texto}
-            </p>
-            <div class="mt-7">
-              <Button href={migracao.cta.href} variant="green" size="lg" fullWidth class="sm:w-auto">{migracao.cta.label}</Button>
-            </div>
-            <p class="mt-4 text-center font-mono text-[12px] tracking-[0.06em] text-ink-soft uppercase lg:text-left">
-              Seu site, nossa nuvem.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <Migracao class={SECAO} />
 
     {/* ============================ S8 · SUPORTE ============================ */}
     <section class="py-2" id="suporte">
@@ -518,254 +447,11 @@ const ICONES_GARANTIAS = {
       </div>
     </section>
 
-    {/* ============================= S10 · PLANOS =========================== */}
-    <section class={SECAO} id="planos">
-      <div class="container-page">
-        <div class="reveal mx-auto max-w-[760px] text-center">
-          <p
-            class="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-center text-[13px] text-ink shadow-soft sm:text-[14px]"
-          >
-            <svg viewBox="0 0 24 24" class="size-4 text-green-deep" fill="currentColor" aria-hidden="true">
-              <path d="M12 21s-7.5-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2 4.4-9.5 9-9.5 9Z"></path>
-            </svg>
-            <span>
-              Você foca no seu negócio. <strong class="font-bold">A gente cuida do resto.</strong>
-            </span>
-          </p>
-          <h2
-            class="mt-5 text-[clamp(1.9rem,4.2vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.018em] text-ink"
-          >
-            {planosCabecalho.titulo1}<br />{planosCabecalho.titulo2a}{' '}<span class="text-green-ink"
-              >{planosCabecalho.titulo2b}</span
-            >
-          </h2>
-          <p class="mx-auto mt-4 max-w-[64ch] text-[16px] leading-relaxed text-ink-soft">
-            {planosCabecalho.texto}
-          </p>
-        </div>
+    <Planos class={SECAO} />
 
-        <div
-          class="reveal mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
-          data-planos
-        >
-          <div
-            class="flex w-full gap-1 rounded-btn border border-line bg-surface p-1 sm:w-auto"
-            role="tablist"
-            aria-label="Categorias de plano"
-          >
-            {
-              abasPlanos.map((aba, i) => (
-                <button
-                  type="button"
-                  role="tab"
-                  data-aba-plano={aba.id}
-                  aria-selected={i === 0 ? 'true' : 'false'}
-                  aria-controls={`planos-${aba.id}`}
-                  class="flex-1 rounded-btn px-2 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink-soft transition-colors aria-selected:bg-purple-logo aria-selected:text-white sm:flex-none sm:px-4 sm:text-[14px]"
-                >
-                  <span class="sm:hidden">{aba.labelCurto ?? aba.label}</span>
-                  <span class="hidden sm:inline">{aba.label}</span>
-                </button>
-              ))
-            }
-          </div>
+    <Faq comArte />
 
-          <div
-            class="mx-auto flex gap-1 self-center rounded-btn border border-line bg-surface p-1 sm:mx-0 sm:ml-auto sm:self-auto"
-            role="group"
-            aria-label="Ciclo de cobrança"
-          >
-            <button
-              type="button"
-              data-ciclo="mensal"
-              aria-pressed="true"
-              class="rounded-btn px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
-              >Mensal</button
-            >
-            <button
-              type="button"
-              data-ciclo="anual"
-              aria-pressed="false"
-              class="group flex items-center gap-2 rounded-btn px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
-            >
-              Anual
-              <span class="rounded-full bg-green/15 px-2 py-0.5 text-[10.5px] text-green-deep group-aria-pressed:bg-green group-aria-pressed:text-purple-950">8% off</span>
-            </button>
-          </div>
-        </div>
-
-        {
-          abasPlanos.map((aba, i) => (
-            <div id={`planos-${aba.id}`} data-painel-plano={aba.id} hidden={i !== 0}>
-              {aba.nota && (
-                <p class="mt-6 flex items-start gap-2 rounded-[14px] border border-line bg-surface px-4 py-3 text-[13.5px] leading-snug text-ink-soft">
-                  <span aria-hidden="true" class="text-green-deep">
-                    ⚠
-                  </span>
-                  {aba.nota}
-                </p>
-              )}
-              {/* pt/pb generosos: o overflow-x do carrossel também corta na vertical,
-                  e o card em destaque tem brilho e sombra que passam da borda.
-                  No desktop não há scroll, então o overflow volta a ser visível. */}
-              <div class="reveal plans-grid mt-6 -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pt-5 pb-10 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0 lg:pt-4 lg:pb-4">
-                {aba.planos.map((plano, j) => (
-                  <div class:list={['w-[85vw] max-w-[330px] shrink-0 snap-start lg:w-auto lg:max-w-none', plano.destaque === true && 'plan-glow']}>
-                    <PricingCard
-                      plano={plano}
-                      icone={aba.id === 'hospedagem' ? ICONES_PLANOS[j] : 'servidor'}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))
-        }
-
-        {/* Garantias comuns a todos os planos */}
-        <ul
-          class="reveal mt-8 grid gap-4 rounded-card border border-line bg-surface px-5 py-5 shadow-soft sm:grid-cols-2 lg:grid-cols-5 lg:gap-0 lg:divide-x lg:divide-line lg:px-2"
-        >
-          {
-            garantiasPlanos.map((g) => (
-              <li class="flex items-center gap-3 lg:px-5">
-                <svg
-                  viewBox="0 0 24 24"
-                  class="size-7 shrink-0 text-green-ink"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d={ICONES_GARANTIAS[g.icone]} />
-                </svg>
-                <span class="text-[13px] leading-snug text-ink">
-                  <span class="block font-bold">{g.linha1}</span>
-                  <span class="block text-ink-soft">{g.linha2}</span>
-                </span>
-              </li>
-            ))
-          }
-        </ul>
-
-        <p class="mx-auto mt-6 max-w-[80ch] text-center text-[13px] leading-relaxed text-ink-soft">
-          {notaPlanos}
-        </p>
-      </div>
-    </section>
-
-    {/* ============================== FAQ ================================== */}
-    <section class="relative overflow-clip pt-[clamp(16px,2vw,32px)] pb-[clamp(56px,7vw,100px)]">
-      {/* Astronauta com notebook: alinhado à borda esquerda do container e cortado pela base da seção. Só no desktop. */}
-      <div
-        class="pointer-events-none absolute bottom-[-6%] left-[max(20px,calc(50%-600px))] hidden w-[340px] lg:block"
-        aria-hidden="true"
-      >
-        <Image src={astronautaFaq} alt="" loading="lazy" class="h-auto w-full" />
-      </div>
-
-      <div class="relative container-page">
-        <div
-          class="reveal grid gap-10 lg:grid-cols-[minmax(0,330px)_minmax(0,220px)_1fr] lg:items-start lg:gap-8"
-        >
-          <div class="hidden lg:block" aria-hidden="true"></div>
-
-          <div class="text-center lg:pt-2 lg:text-left">
-            <SectionEyebrow>Dúvidas frequentes</SectionEyebrow>
-            <h2
-              class="mt-3 text-[clamp(1.6rem,2.6vw,1.85rem)] leading-[1.15] font-bold tracking-[-0.015em] text-ink"
-            >
-              Perguntas<span class="max-lg:hidden"><br /></span><span class="lg:hidden"> </span>frequentes
-            </h2>
-            <a
-              href={links.ajuda}
-              rel="noopener"
-              target="_blank"
-              class="mt-8 inline-flex items-center gap-1.5 py-2 -my-2 text-[14px] font-bold text-green-deep underline decoration-green-deep/40 underline-offset-4 transition-colors hover:decoration-green-deep"
-              >Ver todas as perguntas <span aria-hidden="true">→</span></a
-            >
-          </div>
-
-          <div class="divide-y divide-line overflow-hidden rounded-card border border-line bg-surface shadow-soft">
-            {
-              faq.map((item) => (
-                <details class="group transition-colors open:bg-green/4">
-                  <summary class="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-[15px] leading-snug font-semibold text-ink sm:gap-4 sm:px-6">
-                    <span class="flex-1">{item.p}</span>
-                    <span
-                      class="grid size-7 shrink-0 place-items-center rounded-full border border-line text-ink-soft transition-[transform,background-color,border-color,color] duration-300 group-open:rotate-180 group-open:border-green-deep group-open:bg-green-deep group-open:text-white"
-                      aria-hidden="true"
-                    >
-                      <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </span>
-                  </summary>
-                  <p class="max-w-[62ch] px-5 pb-5 text-[14.5px] leading-relaxed text-ink-soft sm:px-6">{item.r}</p>
-                </details>
-              ))
-            }
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* =========================== S11 · CTA FINAL ========================== */}
-    <section
-      class="block-dark relative overflow-hidden bg-purple-950 py-[clamp(56px,7vw,88px)] text-center text-white"
-    >
-      {/* Arte de fundo: lua à esquerda, foguete decolando à direita, centro livre para o texto.
-          No mobile só a nebulosa do centro fica atrás do texto. */}
-      <Image
-        src={fundoCta}
-        alt=""
-        loading="lazy"
-        class="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[center_12%] lg:block"
-        aria-hidden="true"
-      />
-      {/* Celular/tablet: recorte só com o foguete, ancorado à direita */}
-      <Image
-        src={fundoCtaMobile}
-        alt=""
-        loading="lazy"
-        class="pointer-events-none absolute inset-0 h-full w-full object-cover object-[right_center] lg:hidden"
-        aria-hidden="true"
-      />
-      <div
-        class="pointer-events-none absolute inset-0 lg:hidden"
-        style="background:linear-gradient(180deg, rgba(48,12,81,.45) 0%, rgba(48,12,81,.7) 100%)"
-        aria-hidden="true"
-      >
-      </div>
-      {/* Escurece de leve o miolo para o texto manter contraste sobre a nebulosa */}
-      <div
-        class="pointer-events-none absolute inset-0"
-        style="background:radial-gradient(48% 80% at 50% 50%, rgba(48,12,81,.6), rgba(48,12,81,0) 100%)"
-        aria-hidden="true"
-      >
-      </div>
-
-      <div class="relative container-page reveal lg:px-[260px]">
-        <h2 class="text-[clamp(1.9rem,4.4vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.02em]">
-          <span class="text-white">{ctaFinal.titulo1}</span>{' '}<span class="text-white/60"
-            >{ctaFinal.titulo2}</span
-          >
-        </h2>
-        <p class="mx-auto mt-3 max-w-[52ch] text-[15px] leading-relaxed text-white/65">
-          {ctaFinal.texto}
-        </p>
-        <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
-          <Button href={ctaFinal.primario.href} variant="green" size="lg" fullWidth class="sm:w-auto"
-            >{ctaFinal.primario.label}</Button
-          >
-          <Button href={ctaFinal.secundario.href} variant="outline-light" size="lg" fullWidth class="sm:w-auto"
-            >{ctaFinal.secundario.label}</Button
-          >
-        </div>
-      </div>
-    </section>
+    <CtaFinal />
   </main>
 
   <FooterMega />
@@ -773,38 +459,6 @@ const ICONES_GARANTIAS = {
 
 <script>
   const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  // Números contam do zero até o valor real quando entram na tela (99,982%, 18 ms, 1.366…)
-  const contadores = document.querySelectorAll<HTMLElement>('[data-count]')
-  if (contadores.length && !reduzido && 'IntersectionObserver' in window) {
-    const anima = (el: HTMLElement) => {
-      const original = el.textContent ?? ''
-      const m = original.match(/^([\d.]+)(,(\d+))?/)
-      if (!m) return
-      const inteiro = Number(m[1].replace(/\./g, ''))
-      const dec = m[3] ?? ''
-      const alvo = Number(`${inteiro}.${dec || 0}`)
-      const resto = original.slice(m[0].length)
-      const casas = dec.length
-      const ini = performance.now()
-      const dur = 1400
-      const tick = (t: number) => {
-        const p = Math.min(1, (t - ini) / dur)
-        const e = 1 - Math.pow(2, -10 * p) // ease-out expo
-        const v = alvo * (p === 1 ? 1 : e)
-        el.textContent =
-          v.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas }) + resto
-        if (p < 1) requestAnimationFrame(tick)
-        else el.textContent = original
-      }
-      requestAnimationFrame(tick)
-    }
-    const io = new IntersectionObserver(
-      (es) => es.forEach((e) => { if (e.isIntersecting) { anima(e.target as HTMLElement); io.unobserve(e.target) } }),
-      { threshold: 0.6 },
-    )
-    contadores.forEach((el) => io.observe(el))
-  }
 
   // Hero (desktop, mouse): a arte acompanha o ponteiro com um deslocamento leve
   const arte = document.querySelector<HTMLElement>('[data-parallax]')
@@ -823,79 +477,4 @@ const ICONES_GARANTIAS = {
     })
   }
 
-  // Planos (desktop com mouse): o card inclina na direção do ponteiro e o brilho o acompanha
-  if (!reduzido && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    document.querySelectorAll<HTMLElement>('.plan-card').forEach((card) => {
-      card.addEventListener('pointermove', (e) => {
-        const r = card.getBoundingClientRect()
-        const x = (e.clientX - r.left) / r.width
-        const y = (e.clientY - r.top) / r.height
-        card.style.setProperty('--ry', `${((x - 0.5) * 10).toFixed(2)}deg`)
-        card.style.setProperty('--rx', `${((0.5 - y) * 8).toFixed(2)}deg`)
-        card.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`)
-        card.style.setProperty('--my', `${(y * 100).toFixed(1)}%`)
-      })
-      card.addEventListener('pointerleave', () => {
-        card.style.setProperty('--rx', '0deg')
-        card.style.setProperty('--ry', '0deg')
-      })
-    })
-  }
-
-  // Celular: "Ver tudo que inclui" abre os grupos extras do card de plano
-  document.querySelectorAll<HTMLButtonElement>('[data-toggle-recursos]').forEach((botao) => {
-    botao.addEventListener('click', () => {
-      const card = botao.closest('article')
-      const aberto = botao.getAttribute('aria-expanded') === 'true'
-      botao.setAttribute('aria-expanded', String(!aberto))
-      card?.querySelectorAll<HTMLElement>('[data-recursos-extra]').forEach((g) => g.classList.toggle('hidden', aberto))
-      const fechado = botao.querySelector<HTMLElement>('[data-label-fechado]')
-      const abertoEl = botao.querySelector<HTMLElement>('[data-label-aberto]')
-      if (fechado) fechado.hidden = !aberto
-      if (abertoEl) abertoEl.hidden = aberto
-      const seta = botao.querySelector<HTMLElement>('[aria-hidden]')
-      if (seta) seta.style.transform = aberto ? '' : 'rotate(180deg)'
-    })
-  })
-
-  // Abas de categoria e ciclo de cobrança dos planos
-  const barra = document.querySelector<HTMLElement>('[data-planos]')
-
-  if (barra) {
-    const abas = [...barra.querySelectorAll<HTMLButtonElement>('[data-aba-plano]')]
-    const paineis = [...document.querySelectorAll<HTMLElement>('[data-painel-plano]')]
-
-    abas.forEach((aba) => {
-      aba.addEventListener('click', () => {
-        const id = aba.dataset.abaPlano
-        abas.forEach((a) => a.setAttribute('aria-selected', String(a === aba)))
-        paineis.forEach((p) => {
-          p.hidden = p.dataset.painelPlano !== id
-          if (!p.hidden) {
-            const grade = p.querySelector<HTMLElement>('.plans-grid')
-            if (grade) {
-              grade.classList.remove('is-in')
-              void grade.offsetWidth
-              grade.classList.add('is-in')
-            }
-          }
-        })
-      })
-    })
-
-    const botoesCiclo = [...barra.querySelectorAll<HTMLButtonElement>('[data-ciclo]')]
-
-    botoesCiclo.forEach((botao) => {
-      botao.addEventListener('click', () => {
-        const anual = botao.dataset.ciclo === 'anual'
-        botoesCiclo.forEach((b) => b.setAttribute('aria-pressed', String(b === botao)))
-        document
-          .querySelectorAll<HTMLElement>('[data-ciclo-mensal]')
-          .forEach((el) => (el.hidden = anual))
-        document
-          .querySelectorAll<HTMLElement>('[data-ciclo-anual]')
-          .forEach((el) => (el.hidden = !anual))
-      })
-    })
-  }
 </script>

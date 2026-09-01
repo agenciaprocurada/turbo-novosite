@@ -1,0 +1,110 @@
+---
+/**
+ * Hub /hospedagem/ — a porta de entrada dos seis produtos.
+ * É página de navegação: manda o visitante para o lugar certo rápido, sem
+ * repetir a home inteira.
+ */
+import Base from '../../layouts/Base.astro'
+import TopBar from '../../components/TopBar.astro'
+import HeaderPill from '../../components/HeaderPill.astro'
+import FooterMega from '../../components/FooterMega.astro'
+
+import HeroProduto from '../../components/HeroProduto.astro'
+import SectionEyebrow from '../../components/SectionEyebrow.astro'
+import ProvaSocial from '../../components/secoes/ProvaSocial.astro'
+import Migracao from '../../components/secoes/Migracao.astro'
+import CtaFinal from '../../components/secoes/CtaFinal.astro'
+
+import { produtos, hub, urlProduto } from '../../data/produtos'
+import { links } from '../../data/site'
+
+const trilha = [
+  { label: 'Home', href: '/' },
+  { label: 'Hospedagem', href: '/hospedagem/' },
+]
+
+const precoFmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+---
+
+<Base titulo={hub.titulo} descricao={hub.descricao} trilha={trilha}>
+  <TopBar />
+  <HeaderPill />
+
+  <main id="conteudo">
+    <HeroProduto
+      eyebrow={hub.eyebrow}
+      titulo={hub.h1}
+      tituloVerde={hub.h1Verde}
+      lead={hub.lead}
+      trilha={trilha}
+      ctaPrimario={{ label: 'Ver as soluções', href: '#solucoes' }}
+      ctaSecundario={{ label: 'Falar no WhatsApp', href: links.whatsapp }}
+    />
+
+    <section class="pt-[clamp(56px,7vw,96px)] pb-[clamp(56px,7vw,96px)]" id="solucoes">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[640px] text-center">
+          <SectionEyebrow class="justify-center">Soluções de serviços em nuvem</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.9rem,4.2vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.018em] text-ink"
+          >
+            Escolha pelo projeto,<br /><span class="text-green-ink">não pela ficha técnica.</span>
+          </h2>
+        </div>
+
+        <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {
+            produtos.map((produto, i) => (
+              <div class="reveal flex" data-delay={String((i % 3) + 1)}>
+                <a
+                  href={urlProduto(produto.slug)}
+                  class="group flex w-full flex-col gap-4 rounded-card border border-line bg-surface p-6 shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift"
+                >
+                  <div>
+                    <h3 class="text-[19px] leading-snug font-bold tracking-[-0.015em] text-ink">
+                      {produto.nome}
+                    </h3>
+                    <p class="mt-2.5 text-[14.5px] leading-relaxed text-ink-soft">{produto.resumoHub}</p>
+                  </div>
+
+                  <div class="mt-auto flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-t border-line pt-4">
+                    <p class="text-[13px] text-ink-soft">
+                      a partir de{' '}
+                      <strong class="text-[16px] font-bold text-ink tabular-nums">
+                        R$ {precoFmt(produto.aPartirDe)}
+                      </strong>
+                      /mês
+                    </p>
+                    <span class="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-green-deep transition-[gap] duration-200 group-hover:gap-2.5">
+                      Ver planos <span aria-hidden="true">→</span>
+                    </span>
+                  </div>
+                </a>
+              </div>
+            ))
+          }
+        </div>
+
+        <p class="reveal mx-auto mt-10 max-w-[62ch] rounded-card border border-line bg-surface px-6 py-5 text-center text-[14.5px] leading-relaxed text-ink-soft shadow-soft">
+          Não sabe qual escolher? Conte o que o projeto precisa no WhatsApp — em geral dá para
+          responder em dois minutos, sem proposta comercial no meio.{' '}
+          <a
+            href={links.whatsapp}
+            target="_blank"
+            rel="noopener"
+            class="font-bold text-green-deep underline decoration-green-deep/40 underline-offset-4 transition-colors hover:decoration-green-deep"
+            >Chamar no WhatsApp →</a
+          >
+        </p>
+      </div>
+    </section>
+
+    <ProvaSocial />
+
+    <Migracao class="py-[clamp(72px,9vw,132px)]" />
+
+    <CtaFinal />
+  </main>
+
+  <FooterMega />
+</Base>
