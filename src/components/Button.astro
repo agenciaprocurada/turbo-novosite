@@ -26,9 +26,11 @@ const {
 const base =
   'inline-flex items-center justify-center gap-2 rounded-btn font-bold tracking-[0.04em] uppercase whitespace-nowrap transition-[transform,background-color,border-color,box-shadow] duration-200 hover:-translate-y-0.5 active:translate-y-px'
 
+/* Fonte menor que o texto corrido: em caixa alta cada letra ocupa mais espaço,
+   e no corpo do botão 15/16px pesavam demais. */
 const sizes = {
-  md: 'h-11 px-5 text-[15px]',
-  lg: 'h-[52px] px-7 text-[16px]',
+  md: 'h-11 px-5 text-[13px]',
+  lg: 'h-[52px] px-7 text-[14px]',
 }
 
 const variants = {
