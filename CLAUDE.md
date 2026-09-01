@@ -309,6 +309,15 @@ O `<picture>` faz art direction de verdade: `<source media>` entrega o recorte
 de celular abaixo de 640px e o quadro largo acima. O navegador baixa **um** dos
 dois — diferente do truque de `display:none` usado no hero da home.
 
+**O 404 depende do servidor, e hoje ele está errado.** Em
+turbocloud-novo-site.up.turbo.cloud o nginx está com fallback de SPA
+(`try_files $uri $uri/ /index.html`): qualquer endereço inexistente devolve
+**200 com a home**, inclusive `/nada.txt` e `/_astro/nao-existe.css`. Isso é o
+certo para app React de página única e o oposto do que este site precisa — aqui
+cada página é um arquivo de verdade. A config correta está em
+`deploy/nginx.conf`, com o `=404`, o `error_page`, gzip e cache. Se o painel
+tiver opção de SPA, desligar resolve o 404 sozinho.
+
 A página vai `noindex, follow` (prop `noindex` do `Base.astro`): URL de erro
 não indexa, mas os links dela continuam sendo seguidos. O arquivo gerado é
 `dist/404.html` — a maioria dos hosts estáticos serve esse nome sozinha; se o
