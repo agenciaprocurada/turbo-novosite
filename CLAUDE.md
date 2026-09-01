@@ -4,6 +4,19 @@ Landing page única para substituir a home de turbocloud.com.br. Site novo, fora
 do WordPress. Segue o estudo "Clean SaaS com sangue Turbo": estrutura, respiro e
 componentes no padrão StayCloud; cor, voz e tema no padrão TurboCloud.
 
+## ⚠️ Design System — leia antes de criar página nova
+
+O padrão visual do projeto está em **[`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md)**:
+cor, tipografia, raio, sombra, ritmo de seção, componentes, movimento e
+acessibilidade — tudo extraído da home já construída.
+
+**Página nova segue esse documento.** Antes de escrever qualquer tela ou
+componente novo, leia-o e reaproveite o que já existe em `src/components/` em
+vez de recriar. Se um token mudar em `global.css`, atualize o documento no mesmo
+commit.
+
+As regras abaixo são o resumo operacional; o documento traz o detalhe e o porquê.
+
 ## Servidores locais
 
 Astro usa **http://localhost:4321** por padrão, tanto no `dev` quanto no
@@ -41,16 +54,21 @@ npm run check   # astro check — deve fechar com 0 erros
 
 | Preciso mudar... | Vá em |
 | --- | --- |
+| **padrão de design (o que usar e quando)** | `docs/DESIGN-SYSTEM.md` |
 | preço, plano, texto, link, depoimento, número | `src/data/site.ts` |
+| texto das 6 páginas de produto e do hub | `src/data/produtos.ts` |
 | cor, fonte, raio, sombra | bloco `@theme` em `src/styles/global.css` |
-| ordem das seções | `src/pages/index.astro` |
+| ordem das seções da home | `src/pages/index.astro` |
+| uma seção usada em várias páginas | `src/components/secoes/` |
 | um componente | `src/components/` |
 | ilustração / mockup de UI | `src/components/mockups/` |
 | imagem (WebP tratado) | `src/assets/imagens/` — ver regra 7 |
+| como uma imagem foi gerada | `scripts/` — um script por arte, comentado |
 | `<head>`, SEO, JSON-LD | `src/layouts/Base.astro` |
 
-**Todo o conteúdo vive em `src/data/site.ts`.** Nenhum preço ou número está
-escrito direto no HTML. Trocar a tabela de planos é editar um arquivo só.
+**Todo o conteúdo vive em `src/data/site.ts` e `src/data/produtos.ts`.**
+Nenhum preço ou número está escrito direto no HTML. Trocar a tabela de planos é
+editar um arquivo só.
 
 ## Regras do projeto
 
@@ -71,16 +89,17 @@ Dois pontos já resolvidos que não devem ser "corrigidos" de volta:
 
 ### 2. Contraste do verde — três tokens, não um
 
-`#6BDD12` sobre branco não tem contraste para texto. Por isso:
+`#6BDD12` sobre branco não tem contraste para texto (1,75:1). Por isso o verde é
+dividido por função:
 
 - `--color-green` `#6BDD12` — só sobre roxo, ou como **fundo** de botão.
   Botão verde **sempre** com texto roxo `#300C51` (9,2:1).
-- `--color-green-ink` `#3E8A00` — 4,24:1. Só texto grande (≥ 24px): é o verde
-  da segunda linha dos títulos `hero` e `section`.
-- `--color-green-deep` `#2F6B00` — 6,4:1, passa AA. É o verde de texto corrido,
-  link, eyebrow e ícone sobre fundo claro.
+- `--color-green-ink` `#3E8A00` — 4,24:1. Só texto grande (≥ 24px) e ícone.
+- `--color-green-deep` `#2F6B00` — 6,4:1, passa AA. Texto corrido, link,
+  eyebrow e ícone sobre fundo claro.
 
 Nunca usar `text-green` sobre fundo claro.
+→ tabela completa, com o roxo e os neutros, em `docs/DESIGN-SYSTEM.md`.
 
 ### 3. Tipografia — Nunito precisa de ajuste
 
@@ -88,7 +107,8 @@ A sans é a **Nunito** (fonte da marca). Por ser arredondada e de contraste
 baixo, ela pede o que uma grotesca não pede:
 
 - títulos, botões e preços em **700** (500 fica frouxo no display);
-- letter-spacing **−0,02em**, não −0,04em — Nunito já vem apertada de fábrica.
+- letter-spacing **−0,02em**, não −0,04em — Nunito já vem apertada de fábrica;
+- em **caixa alta** (todo botão é), tracking **positivo** de `+0,04em`.
 
 A mono é **JetBrains Mono**, só nos rótulos técnicos (`TTFB 18MS`,
 `TIER III · BRASIL`). É o contraste redonda × mono que dá o ar de produto
@@ -97,6 +117,7 @@ técnico — não unificar tudo em Nunito.
 Só o subset **latin** das fontes é carregado. O `index.css` do fontsource puxa
 cirílico, grego e vietnamita junto — centenas de KB inúteis para pt-BR. Os
 `@font-face` estão escritos à mão em `global.css` por causa disso.
+→ escala completa de tamanhos em `docs/DESIGN-SYSTEM.md`.
 
 ### 4. Performance é o produto
 
@@ -218,6 +239,8 @@ do rótulo do marcador no mapa.
 
 ## Estrutura da página
 
+### Home — `src/pages/index.astro`
+
 `S0` topbar fechável · `S1` header pílula · `S2` hero (bloco roxo) ·
 `S3` prova social + depoimentos · `S4` serviços 2×2 · `S5` infraestrutura
 (accordion, bloco roxo) · `S6` becos + banner · `S7` migração · `S8` suporte
@@ -225,3 +248,89 @@ do rótulo do marcador no mapa.
 FAQ · `S11` CTA final · `S12` footer.
 
 O versículo de Romanos 11:36 no rodapé é marca da casa. **Mantém.**
+
+### Seções compartilhadas — `src/components/secoes/`
+
+S3, S7, S10, FAQ e S11 saíram do `index.astro` e viraram componente, porque as
+outras oito páginas usam os mesmos blocos. A home continua idêntica; quem
+mexer numa dessas seções mexe em nove páginas de uma vez.
+
+| Componente | O que é |
+| --- | --- |
+| `ProvaSocial.astro` | nota do Google + carrossel (S3) |
+| `Planos.astro` | abas × ciclo mensal/anual (S10). `abas={[uma]}` esconde a barra de abas |
+| `PlanosEmail.astro` | as 9 faixas de e-mail — não cabem no card de 4 colunas |
+| `Faq.astro` | accordion. `itens` troca o conteúdo, `comArte` liga o astronauta |
+| `Migracao.astro` | funil de migração (S7) |
+| `CtaFinal.astro` | bloco roxo do foguete (S11) |
+
+O contador `[data-count]` e o reveal on scroll moraram no `index.astro`; agora
+estão no `Base.astro`, porque valem para toda página.
+
+### Páginas internas
+
+| Rota | Arquivo |
+| --- | --- |
+| `/hospedagem/` | `src/pages/hospedagem/index.astro` — hub dos 6 produtos |
+| `/hospedagem/<slug>/` | `src/pages/hospedagem/[slug].astro` — **uma** rota, 6 conjuntos de dados |
+| `/planos/` | `src/pages/planos.astro` — 3 abas + planos de e-mail |
+| `/contato/` | `src/pages/contato.astro` — sem formulário, ver abaixo |
+| `/404` | `src/pages/404.astro` + `src/components/PaginaErro.astro` |
+
+**O hero das páginas internas é claro, não roxo.** `HeroProduto.astro` segue
+o mesmo sistema do hero da home: fundo `#F6F1FA`, título em duas cores
+(`text-ink` + `text-green-ink`), chips com check verde, CTA verde + branco e
+degradê no pé fundindo com `#FBFBFA`. O roxo é do hero da home e dos blocos de
+seção (segurança, CTA final) — **não** do topo das internas. Por isso o H1 vem
+partido em dois campos no dado: `h1` e `h1Verde`.
+
+Sem imagem no hero interno, de propósito: a arte do hero da home é a peça mais
+pesada do site e repeti-la em nove páginas estouraria o orçamento da regra 4.
+
+**A arte da 404 é o fundo do topo, não um bloco.** `erro-404-3` já vem com o
+fundo em #F7F1F9 — o #F6F1FA da seção a menos de um nível por canal. Fica
+contínua, sem moldura e sem emenda visível. Largura máxima 1160px, que é a
+largura útil do container.
+
+Duas armadilhas, as duas já pagas:
+
+- **O recorte tem que respeitar a moldura lisa da arte.** O fundo dela só é
+  realmente liso nas bordas — até y=100 em cima, a partir de y=884 embaixo, até
+  x=140 à esquerda e a partir de x=1569 à direita. Cortar além disso passa no
+  meio de uma nuvem e deixa uma linha reta no topo da imagem. Os números estão
+  em `scripts/gera-arte-404.mjs`, com a medição que os produziu.
+- **O texto é posicionado com `padding-top` em porcentagem**
+  (`pt-[47%] sm:pt-[40%]`). Padding em % é relativo à largura do container, então
+  ele encolhe junto com a arte e o texto continua caindo no mesmo ponto do
+  desenho em qualquer largura, sem media query. São dois valores porque os dois
+  recortes têm proporções diferentes.
+
+O `<picture>` faz art direction de verdade: `<source media>` entrega o recorte
+de celular abaixo de 640px e o quadro largo acima. O navegador baixa **um** dos
+dois — diferente do truque de `display:none` usado no hero da home.
+
+A página vai `noindex, follow` (prop `noindex` do `Base.astro`): URL de erro
+não indexa, mas os links dela continuam sendo seguidos. O arquivo gerado é
+`dist/404.html` — a maioria dos hosts estáticos serve esse nome sozinha; se o
+seu não servir, apontar a regra de 404 para ele.
+
+**Por que `/contato/` não tem formulário.** O projeto é `output: 'static'`: não
+há servidor para processar POST. Em vez de pendurar o lead num serviço de
+terceiro (LGPD, mais uma conta para manter), a página manda direto para os
+canais que a Turbo já opera — WhatsApp, ticket e e-mail. Se um dia entrar
+formulário, ele exige adaptador de servidor ou serviço externo. **Decisão
+tomada, não é lacuna.**
+
+### Schema.org é opt-in
+
+O `Base.astro` sempre emite `Organization`. O resto entra por prop:
+`faq={...}` gera o `FAQPage`, `comProduto` gera o `Product`, `trilha={...}`
+gera o `BreadcrumbList`. Repetir o mesmo `FAQPage` em nove URLs é o tipo de
+coisa que o Google ignora — por isso cada página passa o FAQ que ela mostra.
+
+### Ainda no WordPress
+
+`/estrutura/` e `/calculadora-perda-de-trafego/` continuam apontando para
+turbocloud.com.br de propósito: link para a versão velha é melhor que link
+quebrado. Ao criar essas páginas aqui, trocar `links.estrutura` e
+`links.calculadora` em `site.ts` — o menu e o rodapé seguem sozinhos.

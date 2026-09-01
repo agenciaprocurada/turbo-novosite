@@ -1,0 +1,33 @@
+---
+/**
+ * 404 personalizada.
+ *
+ * A arte é o fundo do topo, limitada a 1160px — a largura útil do container.
+ * Detalhes de composição e de recorte em `src/components/PaginaErro.astro` e
+ * `scripts/gera-arte-404.mjs`.
+ *
+ * Um 404 bonito que não leva a lugar nenhum é só uma tela de saída. Por isso a
+ * página faz três coisas: diz o que aconteceu, oferece os caminhos mais usados
+ * do site e separa um bloco para quem já é cliente (painel, ticket, status) —
+ * boa parte de quem cai aqui digitou errado uma URL da área do cliente.
+ *
+ * Vai `noindex, follow`: a URL de erro não entra em índice, mas os links dela
+ * continuam sendo seguidos.
+ */
+import Base from '../layouts/Base.astro'
+import TopBar from '../components/TopBar.astro'
+import HeaderPill from '../components/HeaderPill.astro'
+import FooterMega from '../components/FooterMega.astro'
+import PaginaErro from '../components/PaginaErro.astro'
+
+import { paginaErro } from '../data/site'
+import arte from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-tomada-404.webp'
+import arteCelular from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-tomada-404-celular.webp'
+---
+
+<Base titulo={paginaErro.titulo} descricao={paginaErro.descricao} noindex>
+  <TopBar />
+  <HeaderPill />
+  <PaginaErro arte={arte} arteCelular={arteCelular} />
+  <FooterMega />
+</Base>

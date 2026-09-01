@@ -1,0 +1,153 @@
+---
+/**
+ * Corpo da 404.
+ *
+ * A arte é o **fundo** do topo, não um bloco separado: `erro-404-3` já vem com
+ * o fundo em #F7F1F9, que é o #F6F1FA da seção a menos de um nível por canal.
+ * Não há emenda para esconder — nada de moldura, nada de máscara.
+ *
+ * O texto entra por cima, na faixa vazia abaixo do astronauta. O
+ * `padding-top` é em **porcentagem** de propósito: padding em % é relativo à
+ * largura do container, então ele encolhe junto com a arte e o texto continua
+ * caindo no mesmo ponto do desenho em qualquer largura da faixa.
+ *
+ * São dois valores (`pt-[47%]` e `sm:pt-[40%]`) porque os dois recortes têm
+ * proporções diferentes: o de celular é mais alto, senão a arte vira uma tarja
+ * fina. O `<source media>` faz o navegador baixar **um** deles, nunca os dois.
+ */
+import Button from './Button.astro'
+import SectionEyebrow from './SectionEyebrow.astro'
+import { paginaErro } from '../data/site'
+
+interface Props {
+  arte: ImageMetadata
+  arteCelular: ImageMetadata
+}
+
+const { arte, arteCelular } = Astro.props
+
+---
+
+<main id="conteudo">
+  {/* ------------------------------ Topo ------------------------------ */}
+  <section class="relative overflow-clip bg-[#F6F1FA] -mt-[76px] pt-[76px] sm:-mt-[84px] sm:pt-[84px]">
+    {/* Degradê no pé: a cor do topo some para a cor de fundo da página */}
+    <div
+      class="pointer-events-none absolute inset-x-0 bottom-0 h-[160px]"
+      style="background:linear-gradient(180deg, rgba(251,251,250,0) 0%, rgba(251,251,250,.6) 50%, #FBFBFA 100%)"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="relative container-page pt-[clamp(8px,2vw,28px)] pb-[clamp(40px,6vw,72px)]">
+      <div class="relative mx-auto max-w-[1160px]">
+        {/* Arte de fundo. Decorativa: o título já diz o que ela ilustra. */}
+        <picture class="pointer-events-none absolute inset-x-0 top-0 block" aria-hidden="true">
+          <source
+            media="(max-width: 639px)"
+            srcset={arteCelular.src}
+            width={arteCelular.width}
+            height={arteCelular.height}
+          />
+          <img
+            src={arte.src}
+            width={arte.width}
+            height={arte.height}
+            alt=""
+            fetchpriority="high"
+            decoding="async"
+            class="h-auto w-full"
+          />
+        </picture>
+
+        {/* pt em % da largura: acompanha a altura da arte conforme ela encolhe.
+            São dois valores porque os dois recortes têm proporções diferentes. */}
+        <div class="reveal stagger relative mx-auto max-w-[54ch] pt-[47%] text-center sm:pt-[40%]" data-delay="1">
+          <SectionEyebrow align="center">{paginaErro.eyebrow}</SectionEyebrow>
+
+          <h1
+            class="mt-4 text-[clamp(2rem,4.6vw,2.9rem)] leading-[1.08] font-bold tracking-[-0.024em] text-balance text-ink"
+          >
+            <span>{paginaErro.h1}</span><br /><span class="text-green-ink">{paginaErro.h1Verde}</span>
+          </h1>
+
+          <p class="mx-auto mt-5 max-w-[52ch] text-[clamp(1rem,1.6vw,1.125rem)] leading-relaxed text-ink-soft">
+            {paginaErro.lead}
+          </p>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
+            <Button href={paginaErro.ctaPrimario.href} variant="green" size="lg" fullWidth class="sm:w-auto">
+              {paginaErro.ctaPrimario.label}
+            </Button>
+            <Button href={paginaErro.ctaSecundario.href} variant="white" size="lg" fullWidth class="sm:w-auto">
+              {paginaErro.ctaSecundario.label}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ---------------------------- Atalhos ----------------------------- */}
+  <section class="pt-[clamp(40px,5vw,64px)] pb-[clamp(72px,9vw,120px)]">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-[620px] text-center">
+        <SectionEyebrow align="center">Caminhos mais usados</SectionEyebrow>
+        <h2
+          class="mt-4 text-[clamp(1.7rem,3.6vw,2.3rem)] leading-[1.12] font-bold tracking-[-0.018em] text-ink"
+        >
+          {paginaErro.atalhosTitulo}<span class="text-green-ink">.</span>
+        </h2>
+      </div>
+
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          paginaErro.atalhos.map((atalho, i) => (
+            <li class="reveal flex" data-delay={String((i % 3) + 1)}>
+              <a
+                href={atalho.href}
+                class="group flex w-full flex-col gap-1.5 rounded-card border border-line bg-surface p-5 shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift"
+              >
+                <span class="inline-flex items-center gap-1.5 text-[16.5px] leading-snug font-bold text-ink">
+                  {atalho.label}
+                  <span
+                    class="text-green-deep transition-transform duration-200 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
+                </span>
+                <span class="text-[14px] leading-relaxed text-ink-soft">{atalho.desc}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      {/* Quem já é cliente costuma cair aqui por errar uma URL do painel */}
+      <div
+        class="reveal mx-auto mt-8 flex max-w-[760px] flex-col items-center gap-4 rounded-card border border-line bg-surface px-6 py-5 text-center shadow-soft sm:flex-row sm:justify-center sm:gap-6 sm:text-left"
+      >
+        <p class="font-mono text-[11px] tracking-[0.12em] whitespace-nowrap text-ink-soft uppercase">
+          {paginaErro.ajudaTitulo}
+        </p>
+        <ul class="flex flex-wrap justify-center gap-x-5 gap-y-2">
+          {
+            paginaErro.ajuda.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener"
+                  class="text-[14.5px] font-bold text-green-deep underline decoration-green-deep/35 underline-offset-4 transition-colors hover:decoration-green-deep"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
