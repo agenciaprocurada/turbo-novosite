@@ -1,0 +1,24 @@
+# O contexto de build sobe inteiro para o daemon; tudo que não é fonte só
+# atrasa. node_modules em especial: o `npm ci` reinstala do zero lá dentro,
+# e copiar o de fora ainda arrisca trazer binário compilado para outro SO.
+node_modules
+dist
+.astro
+.git
+.gitignore
+
+# matéria-prima de imagem, ~27 MB que nunca entram no site (regra 7)
+_uploads-turbonovosite
+
+# documentação e ferramentas locais
+docs
+scripts
+*.md
+!package.json
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*

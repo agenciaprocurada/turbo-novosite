@@ -64,6 +64,7 @@ npm run check   # astro check — deve fechar com 0 erros
 | ilustração / mockup de UI | `src/components/mockups/` |
 | imagem (WebP tratado) | `src/assets/imagens/` — ver regra 7 |
 | como uma imagem foi gerada | `scripts/` — um script por arte, comentado |
+| build da imagem e config do servidor | `Dockerfile` e `deploy/nginx.conf` |
 | `<head>`, SEO, JSON-LD | `src/layouts/Base.astro` |
 
 **Todo o conteúdo vive em `src/data/site.ts` e `src/data/produtos.ts`.**
@@ -309,14 +310,16 @@ O `<picture>` faz art direction de verdade: `<source media>` entrega o recorte
 de celular abaixo de 640px e o quadro largo acima. O navegador baixa **um** dos
 dois — diferente do truque de `display:none` usado no hero da home.
 
-**O 404 depende do servidor, e hoje ele está errado.** Em
-turbocloud-novo-site.up.turbo.cloud o nginx está com fallback de SPA
-(`try_files $uri $uri/ /index.html`): qualquer endereço inexistente devolve
-**200 com a home**, inclusive `/nada.txt` e `/_astro/nao-existe.css`. Isso é o
-certo para app React de página única e o oposto do que este site precisa — aqui
-cada página é um arquivo de verdade. A config correta está em
-`deploy/nginx.conf`, com o `=404`, o `error_page`, gzip e cache. Se o painel
-tiver opção de SPA, desligar resolve o 404 sozinho.
+**O 404 depende do servidor.** O preset "Astro" do up.turbo.cloud aplica
+fallback de SPA (`try_files $uri $uri/ /index.html`) e faz qualquer endereço
+inexistente devolver **200 com a home** — inclusive `/nada.txt` e
+`/_astro/nao-existe.css`. Isso é o certo para app React de página única e o
+oposto do que este site precisa: aqui cada página é um arquivo no disco.
+
+Nenhum preset do painel resolve ("React estático" tem o mesmo fallback; os
+outros são de aplicação com processo). Por isso o projeto usa **FRAMEWORK =
+Dockerfile**, com `Dockerfile` na raiz e `deploy/nginx.conf`. **Não voltar
+para o preset Astro** — o 404 quebra de novo.
 
 A página vai `noindex, follow` (prop `noindex` do `Base.astro`): URL de erro
 não indexa, mas os links dela continuam sendo seguidos. O arquivo gerado é
