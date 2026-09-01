@@ -279,7 +279,7 @@ estão no `Base.astro`, porque valem para toda página.
 | `/contato/` | `src/pages/contato.astro` — sem formulário, ver abaixo |
 | `/404` | `src/pages/404.astro` + `src/components/PaginaErro.astro` |
 | `/estrutura/` | `src/pages/estrutura.astro` |
-| `/afiliados/` | `src/pages/afiliados.astro` |
+| `/afiliados/` | `src/pages/afiliados.astro` + `src/data/afiliados.ts` |
 | `/legal/` | `src/pages/legal.astro` — índice, não guarda texto |
 | `/hospedagem/openclaw/` | `src/pages/hospedagem/openclaw.astro` — rota própria, ver abaixo |
 
@@ -342,6 +342,18 @@ A página vai `noindex, follow` (prop `noindex` do `Base.astro`): URL de erro
 não indexa, mas os links dela continuam sendo seguidos. O arquivo gerado é
 `dist/404.html` — a maioria dos hosts estáticos serve esse nome sozinha; se o
 seu não servir, apontar a regra de 404 para ele.
+
+**A `/planos/` foi descontinuada.** Redireciona para a home. A tabela completa
+já vive na home, na seção `#planos`, e os planos de e-mail vivem na página do
+produto — nenhum conteúdo se perdeu, só a URL. Os links internos ("Planos" no
+menu e no rodapé, "Comece agora") apontam para `/#planos`, e não para `/`:
+quem clica quer ver preço, não a dobra inicial.
+
+**Atenção com os redirects.** O `redirects` do `astro.config.mjs` gera um HTML
+com `meta refresh` + canonical + noindex. Isso resolve para o visitante, mas
+**não é um 301 de verdade** — o status HTTP continua 200. Para 301 real, a
+regra tem que estar no servidor. Hoje há dois redirects assim:
+`/politica-de-privacidade` → `/legal/` e `/planos` → `/`.
 
 **A `/legal/` não guarda texto jurídico.** Ela lista os dez documentos e
 manda para a versão oficial no WHMCS, que é onde o time mantém. O motivo é

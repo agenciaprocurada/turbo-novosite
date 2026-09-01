@@ -46,7 +46,10 @@ export const links = {
   calculadora: 'https://turbocloud.com.br/calculadora-perda-de-trafego/',
 
   /* Já reconstruídas aqui */
-  planos: '/planos/',
+  /** A página /planos/ foi descontinuada e redireciona para a home. Os links
+   *  internos apontam para a seção de planos da home, não para o topo dela:
+   *  quem clica em "Planos" quer ver preço, não a dobra inicial. */
+  planos: '/#planos',
   contato: '/contato/',
   hospedagem: '/hospedagem/',
   estrutura: '/estrutura/',

@@ -13,6 +13,10 @@ export default defineConfig({
      então funciona sem depender de config de servidor. */
   redirects: {
     '/politica-de-privacidade': '/legal/',
+    /* A /planos/ deixou de existir. A tabela completa já vive na home, na
+       seção #planos, e os planos de e-mail vivem na página do produto —
+       então nenhum conteúdo se perdeu, só a URL. */
+    '/planos': '/',
   },
   build: {
     // CSS inteiro num arquivo só: a home é uma página, não vale a pena fragmentar
