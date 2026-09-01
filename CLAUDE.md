@@ -310,16 +310,28 @@ O `<picture>` faz art direction de verdade: `<source media>` entrega o recorte
 de celular abaixo de 640px e o quadro largo acima. O navegador baixa **um** dos
 dois — diferente do truque de `display:none` usado no hero da home.
 
-**O 404 depende do servidor.** O preset "Astro" do up.turbo.cloud aplica
-fallback de SPA (`try_files $uri $uri/ /index.html`) e faz qualquer endereço
-inexistente devolver **200 com a home** — inclusive `/nada.txt` e
-`/_astro/nao-existe.css`. Isso é o certo para app React de página única e o
-oposto do que este site precisa: aqui cada página é um arquivo no disco.
+**O 404 depende do servidor, e quem cuida disso é a plataforma.** O preset
+"Astro" do up.turbo.cloud aplicava fallback de SPA
+(`try_files $uri $uri/ /index.html`), o que fazia qualquer endereço inexistente
+devolver **200 com a home** — inclusive `/nada.txt` e `/_astro/nao-existe.css`.
+Isso é o certo para app React de página única e o oposto do que este site
+precisa: aqui cada página é um arquivo no disco. **A plataforma corrigiu o
+preset.**
 
-Nenhum preset do painel resolve ("React estático" tem o mesmo fallback; os
-outros são de aplicação com processo). Por isso o projeto usa **FRAMEWORK =
-Dockerfile**, com `Dockerfile` na raiz e `deploy/nginx.conf`. **Não voltar
-para o preset Astro** — o 404 quebra de novo.
+Se voltar a acontecer, o que o servidor precisa ter:
+
+```nginx
+location / { try_files $uri $uri/ =404; }   # e NÃO /index.html
+error_page 404 /404.html;
+location = /404.html { internal; }          # senão /404.html responde 200
+gzip on;                                    # a home cai de 216 KB para ~33 KB
+```
+
+**Não colocar Dockerfile na raiz.** Chegamos a tentar contornar por ali e a
+plataforma passou a detectar `DOCKERFILE`, ignorando o preset — e o build
+quebrou no `npm ci`, que é mais rígido que o `npm install` usado pelo preset.
+Três deploys seguidos falharam em silêncio, porque o painel mantém a versão
+anterior no ar quando o novo falha.
 
 A página vai `noindex, follow` (prop `noindex` do `Base.astro`): URL de erro
 não indexa, mas os links dela continuam sendo seguidos. O arquivo gerado é

@@ -938,4 +938,5 @@ export const PENDENTE = [
   'Número total de sites/clientes hospedados — o site não publica esse dado.',
   'Confirmar se o desconto de 8% no ciclo anual segue vigente (a página /planos/ é sazonal).',
   'Definir se a conversa da seção de suporte vira transcrição de um caso real (hoje é representação do fluxo).',
+  'Sincronizar o package-lock: falta @emnapi/runtime e @emnapi/core no topo, e por isso npm ci quebra no Linux. O deploy usa npm install e não sente, mas qualquer CI com npm ci vai falhar. Precisa ser regenerado num Linux — regenerar no Windows não resolve.',
 ] as const
