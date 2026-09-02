@@ -20,14 +20,17 @@ const FALTA = +(CIRC * 0.06).toFixed(1) // recuo visível só para o anel não f
 
 {/* Medidas tiradas da arte de referência: os painéis descem em diagonal — o de
     performance no topo, o gráfico deslocado à direita e a barra mais larga
-    embaixo, sobrepondo o gráfico. O bloco todo tem 402×392. */}
+    embaixo, sobrepondo o gráfico. O bloco todo tem 402×392, **em qualquer
+    largura de tela**: é uma ilustração, não um layout que reflui. Quem precisa
+    caber numa tela estreita escala o conjunto, para o tamanho relativo ao
+    astronauta continuar igual ao do desktop. */}
 <div
   aria-hidden="true"
-  class="relative flex flex-col gap-3 select-none lg:ml-auto lg:block lg:h-[392px] lg:w-[402px]"
+  class="relative ml-auto block h-[392px] w-[402px] select-none"
 >
   {/* 1 · Painel de performance */}
   <div
-    class="painel painel-flutua w-full lg:absolute lg:top-0 lg:left-[29px] lg:w-[302px]"
+    class="painel painel-flutua absolute top-0 left-[29px] w-[302px]"
     data-flutua="1"
   >
     <p class="text-[14px] font-bold text-ink">Painel de Performance</p>
@@ -80,7 +83,7 @@ const FALTA = +(CIRC * 0.06).toFixed(1) // recuo visível só para o anel não f
 
   {/* 2 · Gráfico de carregamento */}
   <div
-    class="painel painel-flutua w-full lg:absolute lg:top-[170px] lg:left-[90px] lg:w-[312px]"
+    class="painel painel-flutua absolute top-[170px] left-[90px] w-[312px]"
     data-flutua="2"
   >
     <div class="flex items-baseline justify-between gap-3">
@@ -125,7 +128,7 @@ const FALTA = +(CIRC * 0.06).toFixed(1) // recuo visível só para o anel não f
 
   {/* 3 · Barra de números */}
   <div
-    class="painel painel-flutua z-10 w-full !p-0 lg:absolute lg:top-[305px] lg:left-0 lg:w-[388px]"
+    class="painel painel-flutua absolute top-[305px] left-0 z-10 w-[388px] !p-0"
     data-flutua="3"
   >
     <ul class="grid grid-cols-4 divide-x divide-line">

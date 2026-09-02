@@ -1,0 +1,173 @@
+---
+/**
+ * /teste-nuvens/ — bancada de teste do fundo de nuvens em movimento.
+ *
+ * Não é página de produção: existe só para olhar o ajuste antes de escolher o
+ * que entra no site. Vai `noindex` e não está linkada em lugar nenhum.
+ *
+ * Aqui as nuvens estão no lugar de verdade: o **topo do site**. A seção usa o
+ * mesmo gesto do `HeroProduto` — `-mt` + `pt` da altura do header — para passar
+ * por baixo da pílula em vez de começar depois dela. É por isso que a arte
+ * aparece atrás do menu, e não só abaixo dele.
+ *
+ * O header continua `sticky`, então a seção **não** pode envolvê-lo: `overflow`
+ * escondido em qualquer ancestral mata o sticky. Por isso a pílula é irmã da
+ * seção, e não filha.
+ */
+import Base from '../layouts/Base.astro'
+import TopBar from '../components/TopBar.astro'
+import HeaderPill from '../components/HeaderPill.astro'
+import FooterMega from '../components/FooterMega.astro'
+import FundoNuvens from '../components/FundoNuvens.astro'
+import Button from '../components/Button.astro'
+import SectionEyebrow from '../components/SectionEyebrow.astro'
+import { links } from '../data/site'
+import astronauta from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-notebook-institucional.webp'
+
+const chips = ['Servidores no Brasil', 'Backup a cada 12h', 'Suporte por WhatsApp']
+---
+
+<Base
+  titulo="Teste — fundo de nuvens"
+  descricao="Bancada interna para ver o fundo de nuvens em movimento no topo do site."
+  noindex
+>
+  <TopBar />
+  <HeaderPill />
+
+  <main id="conteudo">
+    <section
+      class="relative overflow-clip bg-[#F6F1FA] -mt-[76px] pt-[76px] sm:-mt-[84px] sm:pt-[84px]"
+    >
+      <FundoNuvens velocidade={60} />
+
+      {/* Degradê no pé: a arte some para a cor de fundo da página, sem linha dura */}
+      <div
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-28"
+        style="background:linear-gradient(180deg,rgba(251,251,250,0) 0,#FBFBFA 100%)"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="container-page relative pt-16 pb-24 sm:pt-20 sm:pb-32">
+        {/* Astronauta no espaço vazio da direita. Entra como background de um
+            div `hidden lg:block` — assim o celular, que não o mostra, também
+            não baixa os 41 KB. É o mesmo gesto do `hero-art` da home. */}
+        <div
+          class="astro-voo pointer-events-none absolute right-0 bottom-6 hidden aspect-[270/443] w-[230px] bg-contain bg-bottom bg-no-repeat lg:block xl:w-[270px]"
+          style={`background-image:url(${astronauta.src})`}
+          aria-hidden="true"
+        >
+        </div>
+
+        <SectionEyebrow>Hospedagem de sites</SectionEyebrow>
+        <h1
+          class="text-ink mt-3 max-w-[660px] text-4xl font-bold tracking-tight sm:text-5xl sm:leading-[1.08]"
+        >
+          Sua hospedagem no Brasil, com <span class="text-green-ink">recurso que é só seu</span>
+        </h1>
+        <p class="text-ink-soft mt-5 max-w-[540px] text-lg leading-relaxed">
+          Sem vizinho consumindo o seu processador. vCPU e memória dedicados por
+          domínio, backup a cada 12 horas e gente de verdade respondendo.
+        </p>
+
+        <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+          {
+            chips.map((chip) => (
+              <li class="text-ink flex items-center gap-2 text-[14.5px]">
+                <svg
+                  viewBox="0 0 20 20"
+                  class="text-green-deep size-[18px] shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m4.5 10.5 3.5 3.5 7.5-8" />
+                </svg>
+                {chip}
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <Button href="/#planos" size="lg">Ver planos</Button>
+          <Button href={links.whatsapp} variant="outline-purple" size="lg" external>
+            Falar no WhatsApp
+          </Button>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-bg py-16">
+      <div class="container-page">
+        <h2 class="text-ink text-xl font-bold tracking-tight">Ajuste em teste</h2>
+        <p class="text-ink-soft mt-3 max-w-[620px] text-base leading-relaxed">
+          D · rápido: uma volta a cada 60 segundos, opacidade cheia, arte na
+          proporção original. Com “reduzir movimento” ligado no sistema, fica parado.
+        </p>
+        <ul class="text-ink-soft mt-5 max-w-[620px] space-y-2 text-base leading-relaxed">
+          <li>
+            <strong class="text-ink">velocidade</strong> — segundos de uma volta da camada
+            de trás. A da frente anda sempre 1,6× mais rápido.
+          </li>
+          <li>
+            <strong class="text-ink">opacidade</strong> — de 0 a 1, o conjunto todo.
+          </li>
+          <li>
+            <strong class="text-ink">inverso</strong> — troca o sentido da passagem.
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <FooterMega />
+</Base>
+
+<style>
+  /* Voo do astronauta.
+   *
+   * Duas animações no mesmo elemento, o que só funciona porque cada uma mexe
+   * numa propriedade individual — `translate` e `rotate`, não `transform`. Com
+   * `transform` a segunda sobrescreveria a primeira.
+   *
+   * Os períodos são propositalmente desencontrados (7s e 9,4s, que não são
+   * múltiplos): a combinação leva minutos para se repetir igual, então o
+   * movimento não tem cadência de metrônomo — parece deriva, não balanço.
+   */
+  .astro-voo {
+    animation:
+      astro-deriva 7s ease-in-out infinite alternate,
+      astro-inclina 9.4s ease-in-out infinite alternate;
+    will-change: translate, rotate;
+  }
+
+  @keyframes astro-deriva {
+    from {
+      translate: 0 -10px;
+    }
+    to {
+      translate: -16px 14px;
+    }
+  }
+
+  @keyframes astro-inclina {
+    from {
+      rotate: -1.8deg;
+    }
+    to {
+      rotate: 2.2deg;
+    }
+  }
+
+  /* Movimento é opcional (regra 5). */
+  @media (prefers-reduced-motion: reduce) {
+    .astro-voo {
+      animation: none;
+    }
+  }
+</style>

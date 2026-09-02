@@ -16,7 +16,8 @@ import ChatMockup from '../components/ChatMockup.astro'
 import MigrationFunnel from '../components/MigrationFunnel.astro'
 import MapDots from '../components/MapDots.astro'
 
-import fundoHero from '../assets/fundo-topo-hero-ngrafi.webp'
+import FundoNuvens from '../components/FundoNuvens.astro'
+import astronautaHero from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-notebook-nuvem.webp'
 import HeroPaineis from '../components/mockups/HeroPaineis.astro'
 import fundoInfra from '../assets/fundo-site-01.webp'
 import InfraStatusCard from '../components/InfraStatusCard.astro'
@@ -26,7 +27,6 @@ import foguete from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-cam
 import planeta from '../assets/imagens/empresa-de-hospedagem-de-site-planeta-anel.webp'
 import fundoCta from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-fundo.webp'
 import astronautaFaq from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-lua-notebook.webp'
-import heroMobile from '../assets/imagens/empresa-de-hospedagem-de-site-hero-astronauta-ngrafi-mobile.webp'
 import racksMobile from '../assets/imagens/empresa-de-hospedagem-de-site-datacenter-racks-mobile.webp'
 import fundoCtaMobile from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-mobile.webp'
 import iconeCaminho from '../assets/imagens/empresa-de-hospedagem-de-site-icone-caminho-turbo.webp'
@@ -80,22 +80,12 @@ const ICONES_GARANTIAS = {
   <main id="conteudo">
     {/* ============================== S2 · HERO ============================== */}
     <section class="relative -mt-[76px] overflow-clip bg-[#F6F1FA] pt-[76px] sm:-mt-[84px] sm:pt-[84px]">
-      {/* Fundo do topo: agora a arte traz SÓ o astronauta. Os painéis que antes
-          vinham gravados nela são recriados em HTML logo abaixo. */}
-      <div
-        class="hero-art pointer-events-none absolute inset-0 hidden bg-no-repeat lg:block"
-        data-parallax
-        style={`background-image:url(${fundoHero.src});background-size:auto;background-position:calc(50% + 74px) center`}
-        aria-hidden="true"
-      >
-      </div>
-      {/* Em telas mais largas que a arte (1698px), suaviza a emenda das bordas com a cor de fundo */}
-      <div
-        class="pointer-events-none absolute inset-0 hidden min-[1520px]:block"
-        style="background:linear-gradient(90deg,#F6F1FA 0,rgba(246,241,250,0) 12%,rgba(246,241,250,0) 88%,#F6F1FA 100%)"
-        aria-hidden="true"
-      >
-      </div>
+      {/* Fundo do topo: nuvens que atravessam a tela em looping. Entrou no lugar
+          da arte estática, que trazia o astronauta gravado — ele agora é um
+          recorte próprio, logo abaixo. O degradê que existia nas laterais era só
+          para esconder a emenda da arte de 1500px; a nuvem repete sem costura,
+          então saiu junto. */}
+      <FundoNuvens velocidade={60} ancora="topo-no-celular" />
 
       {/* Degradê no pé do hero: a arte lilás some para a cor de fundo da página, sem linha dura */}
       <div
@@ -110,17 +100,41 @@ const ICONES_GARANTIAS = {
       <div
         class="relative container-page grid gap-y-7 py-[clamp(40px,7vw,88px)] lg:min-h-[720px] lg:grid-cols-[minmax(0,616px)_1fr] lg:content-center lg:gap-x-6 lg:gap-y-0"
       >
-        {/* Recorte da arte nova (só o astronauta). Entra antes do título no celular;
-            os painéis vêm depois, em HTML. */}
-        <div class="reveal relative -mx-5 -mt-6 -mb-2 lg:hidden">
-          <Image
-            src={heroMobile}
-            alt=""
-            loading="lazy"
-            fetchpriority="high"
-            class="h-auto w-full"
-            style="mask-image:linear-gradient(180deg,transparent,#000 10%,#000 88%,transparent);-webkit-mask-image:linear-gradient(180deg,transparent,#000 10%,#000 88%,transparent)"
-          />
+        {/* Astronauta do desktop, no ponto exato em que a arte antiga o
+            desenhava: centro da seção mais 74px, alinhado pelo meio da altura.
+            O `data-parallax` é o mesmo da arte anterior — o script do fim da
+            página escreve `--px/--py` conforme o ponteiro. Isso vai em
+            `transform` e o voo usa `translate`/`rotate`, então as duas coisas
+            convivem no mesmo elemento sem uma apagar a outra. */}
+        <div
+          class="astro-hero astro-voo pointer-events-none absolute top-1/2 left-1/2 -mt-[206px] -ml-[76px] hidden aspect-[300/413] w-[300px] bg-contain bg-no-repeat lg:block"
+          data-parallax
+          style={`background-image:url(${astronautaHero.src})`}
+          aria-hidden="true"
+        >
+        </div>
+
+        {/* Palco da arte do hero: astronauta + painéis.
+            No desktop nada muda — `lg:contents` dissolve a caixa externa e o
+            palco volta a ser a célula da direita do grid, com o astronauta
+            entrando por fora (absoluto na seção, logo acima).
+            No celular os dois viram um bloco só, no topo e antes do título, com
+            o conjunto inteiro reduzido por `scale`. É o que mantém os painéis
+            do mesmo tamanho relativo ao astronauta que têm no desktop: as
+            medidas em px continuam idênticas, só o zoom do grupo muda. */}
+        <div class="palco-caixa lg:contents">
+          <div
+            class="palco reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
+            data-delay="3"
+          >
+            <div
+              class="astro-voo palco-astro bg-contain bg-no-repeat lg:hidden"
+              style={`background-image:url(${astronautaHero.src})`}
+              aria-hidden="true"
+            >
+            </div>
+            <HeroPaineis />
+          </div>
         </div>
 
         <div class="reveal stagger text-center lg:self-end lg:text-left">
@@ -140,7 +154,12 @@ const ICONES_GARANTIAS = {
             {' '}{hero.sub}
           </p>
 
-          <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          {/* `text-center` do bloco não alinha filho flex, então a fila precisa do
+              seu próprio `justify-center`. Sem ele, de 640px (onde os botões
+              deixam de ocupar a linha inteira) até 1024px (onde a coluna passa a
+              ser alinhada à esquerda) os dois ficavam encostados na margem
+              esquerda enquanto título, texto e chips estavam centrados. */}
+          <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
             <Button href={hero.ctaPrimario.href} variant="green" size="lg" fullWidth class="sm:w-auto"
               >{hero.ctaPrimario.label}</Button
             >
@@ -177,13 +196,6 @@ const ICONES_GARANTIAS = {
             </span>
           </p>
         </div>
-
-        {/* Painéis do hero, recriados em HTML: no desktop flutuam sobre a arte, à
-            direita do astronauta; no celular entram empilhados abaixo do texto. */}
-        <div class="reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" data-delay="3">
-          <HeroPaineis />
-        </div>
-
       </div>
     </section>
 
@@ -907,3 +919,113 @@ const ICONES_GARANTIAS = {
     })
   }
 </script>
+
+<style>
+  /* Voo do astronauta do hero.
+   *
+   * Duas animações no mesmo elemento, o que só funciona porque cada uma mexe
+   * numa propriedade individual — `translate` e `rotate`, não `transform`. Com
+   * `transform` a segunda sobrescreveria a primeira, e `transform` aqui já está
+   * ocupado: é por onde o parallax de ponteiro entra (`--px/--py`).
+   *
+   * Os períodos são propositalmente desencontrados (7s e 9,4s, que não são
+   * múltiplos): a combinação leva minutos para se repetir igual, então o
+   * movimento não tem cadência de metrônomo — parece deriva, não balanço.
+   */
+  .astro-voo {
+    animation:
+      astro-deriva 7s ease-in-out infinite alternate,
+      astro-inclina 9.4s ease-in-out infinite alternate;
+    will-change: translate, rotate;
+  }
+
+  .astro-hero {
+    transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes astro-deriva {
+    from {
+      translate: 0 -9px;
+    }
+    to {
+      translate: -14px 13px;
+    }
+  }
+
+  @keyframes astro-inclina {
+    from {
+      rotate: -1.6deg;
+    }
+    to {
+      rotate: 2deg;
+    }
+  }
+
+  /* Palco da arte no celular.
+   *
+   * As coordenadas saem do desktop, medido a 1440px: o astronauta ocupa
+   * 300×413 e o bloco de painéis 402×392, com o bloco 262px à direita e 13px
+   * abaixo do canto do astronauta. O conjunto fecha em 664×415, e é essa caixa
+   * que encolhe inteira — por isso a relação de tamanho entre gráfico e
+   * astronauta é a mesma nas duas telas.
+   *
+   * `scale` não ocupa espaço no layout, então quem reserva a altura é a caixa
+   * externa (`415px × fator`). O palco fica `absolute` dentro dela, centrado
+   * antes da escala (`left:50%` com metade da largura de recuo) e escalado a
+   * partir do topo — assim continua centrado depois.
+   *
+   * O fator é degrau em vez de conta, porque CSS não divide comprimento por
+   * comprimento: não existe `calc(100vw / 664px)`. Cada degrau é o maior valor
+   * que ainda cabe na tela daquela faixa. */
+  @media (max-width: 1023.98px) {
+    .palco-caixa {
+      --f: 0.52;
+      position: relative;
+      height: calc(415px * var(--f));
+    }
+    .palco {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 664px;
+      height: 415px;
+      margin-left: -332px;
+      transform: scale(var(--f));
+      transform-origin: top center;
+    }
+    .palco-astro {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 300px;
+      height: 413px;
+    }
+  }
+
+  @media (min-width: 420px) and (max-width: 1023.98px) {
+    .palco-caixa {
+      --f: 0.6;
+    }
+  }
+  @media (min-width: 520px) and (max-width: 1023.98px) {
+    .palco-caixa {
+      --f: 0.74;
+    }
+  }
+  @media (min-width: 700px) and (max-width: 1023.98px) {
+    .palco-caixa {
+      --f: 0.95;
+    }
+  }
+
+  /* Movimento é opcional (regra 5). */
+  @media (prefers-reduced-motion: reduce) {
+    .astro-voo {
+      animation: none;
+    }
+    .astro-hero {
+      transform: none !important;
+    }
+  }
+</style>

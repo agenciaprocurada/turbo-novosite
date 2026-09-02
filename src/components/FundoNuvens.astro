@@ -1,0 +1,156 @@
+---
+/**
+ * Fundo de nuvens que atravessam a tela devagar, em looping infinito.
+ *
+ * Como funciona
+ * -------------
+ * A arte já emenda consigo mesma (a última coluna encosta na primeira sem
+ * degrau — medido: desvio máximo de 6 níveis). Cada camada é uma faixa mais
+ * larga que a tela, com o ladrilho repetido no eixo X, deslocada por
+ * `translate` — só composição na GPU, zero repaint por quadro.
+ *
+ * O que faz o looping ser invisível: a largura do ladrilho é fixada em `vw`
+ * (`--ladrilho`), então uma volta desloca exatamente essa mesma medida. Se o
+ * tamanho do ladrilho dependesse da altura da seção, a volta não fecharia e
+ * apareceria um salto.
+ *
+ * A proporção da arte é respeitada: `background-size: var(--ladrilho) auto`
+ * deixa a altura sair sozinha (largura ÷ 3,997). A camada não estica nada — se
+ * a seção for mais alta que a arte, o excedente fica com o fundo da seção, o
+ * que funciona porque a arte tem transparência e as bordas já esmaecem.
+ *
+ * Duas camadas em velocidades diferentes dão profundidade: a de trás é maior e
+ * mais lenta, a da frente é menor, mais rápida e mais fraca. É a mesma ideia do
+ * parallax, sem depender de scroll.
+ */
+import ladrilho from '../assets/imagens/empresa-de-hospedagem-de-site-fundo-nuvem-lilas.webp'
+
+/** Proporção da arte, lida do próprio arquivo. É ela que define a altura da
+ *  faixa de nuvem — se a arte mudar de formato, isto acompanha sozinho. */
+const proporcao = (ladrilho.width / ladrilho.height).toFixed(4)
+
+interface Props {
+  /** Segundos que a camada de trás leva para andar um ladrilho. Maior = mais lento. */
+  velocidade?: number
+  /** Opacidade do conjunto, de 0 a 1. */
+  opacidade?: number
+  /** Inverte o sentido da passagem (da esquerda para a direita). */
+  inverso?: boolean
+  /** Onde a faixa de nuvem se apoia na altura da seção.
+   *
+   *  `centro` (padrão) serve quando a seção tem altura parecida com a da arte.
+   *  `topo-no-celular` centra no desktop e ancora no alto abaixo de 1024px —
+   *  é para seção que fica muito mais alta no celular, onde a faixa centrada
+   *  vai parar no meio do texto em vez de ficar no céu, acima da dobra. */
+  ancora?: 'centro' | 'topo-no-celular'
+  class?: string
+}
+
+const {
+  velocidade = 140,
+  opacidade = 1,
+  inverso = false,
+  ancora = 'centro',
+  class: classe = '',
+} = Astro.props
+---
+
+<div
+  class:list={['nuvens', ancora === 'topo-no-celular' && 'nuvens-topo-no-celular', classe]}
+  style={`--nuvens-dur:${velocidade}s;--nuvens-op:${opacidade};--nuvens-sentido:${inverso ? 'reverse' : 'normal'};--nuvens-proporcao:${proporcao}`}
+  aria-hidden="true"
+>
+  <div class="nuvens-camada nuvens-fundo" style={`background-image:url(${ladrilho.src})`}></div>
+  <div class="nuvens-camada nuvens-frente" style={`background-image:url(${ladrilho.src})`}></div>
+</div>
+
+<style>
+  .nuvens {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: var(--nuvens-op, 1);
+  }
+
+  .nuvens-camada {
+    /* A altura da faixa sai da largura do ladrilho pela proporção da arte, então
+       a camada tem exatamente o tamanho que a arte ocupa — não sobra elemento
+       vazio em volta. Com isso `background-size: ... 100%` preenche a altura
+       natural, ou seja, continua sem esticar nada. */
+    --altura-arte: calc(var(--ladrilho) / var(--nuvens-proporcao));
+
+    position: absolute;
+    top: var(--nuvens-y, 50%);
+    left: 0;
+    height: var(--altura-arte);
+    margin-top: var(--nuvens-desloca, calc(var(--altura-arte) / -2));
+    /* Larga o bastante para que, depois de andar um ladrilho inteiro, ainda
+       sobre imagem cobrindo a tela. */
+    width: calc(100vw + var(--ladrilho) + 2px);
+    background-repeat: repeat-x;
+    background-size: var(--ladrilho) 100%;
+    /* A arte tem nuvem até a borda de cima e de baixo. Sem esmaecer, o começo e
+       o fim da faixa viram duas linhas retas atravessando a seção — foi o que
+       aconteceu, e é a mesma armadilha anotada em `scripts/gera-arte-404.mjs`.
+       Medido antes da correção: salto de 2,3 níveis de luminância no topo e de
+       6,8 na base, numa área lisa onde qualquer degrau aparece. */
+    mask-image: linear-gradient(180deg, transparent 0, #000 16%, #000 84%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16%, #000 84%, transparent 100%);
+    animation: nuvens-passa var(--dur) linear infinite;
+    animation-direction: var(--nuvens-sentido, normal);
+    will-change: translate;
+  }
+
+  .nuvens-fundo {
+    --ladrilho: 128vw;
+    --dur: var(--nuvens-dur);
+  }
+
+  /* A da frente é menor e mais rápida: é essa diferença que cria a sensação de
+     profundidade. O espelho vertical evita que as duas camadas repitam o mesmo
+     desenho na mesma hora. */
+  .nuvens-frente {
+    --ladrilho: 82vw;
+    --dur: calc(var(--nuvens-dur) * 0.62);
+    opacity: 0.55;
+    transform: scaleY(-1);
+  }
+
+  @keyframes nuvens-passa {
+    from {
+      translate: 0 0;
+    }
+    to {
+      translate: calc(var(--ladrilho) * -1) 0;
+    }
+  }
+
+  /* Abaixo do desktop a seção costuma ficar bem mais alta que a arte, e a faixa
+     centrada vai parar no meio do conteúdo. Ancorada no alto, ela fica onde o
+     céu deve ficar: acima da dobra. */
+  @media (max-width: 1023.98px) {
+    .nuvens-topo-no-celular .nuvens-camada {
+      --nuvens-y: 0;
+      --nuvens-desloca: 0px;
+    }
+  }
+
+  /* Em tela estreita o ladrilho precisa ser proporcionalmente maior, senão a
+     arte fica uma tira fina no meio da seção e a repetição salta aos olhos. */
+  @media (max-width: 640px) {
+    .nuvens-fundo {
+      --ladrilho: 300vw;
+    }
+    .nuvens-frente {
+      --ladrilho: 200vw;
+    }
+  }
+
+  /* Movimento é opcional (regra 5): sem animação, fica um fundo estático. */
+  @media (prefers-reduced-motion: reduce) {
+    .nuvens-camada {
+      animation: none;
+    }
+  }
+</style>
