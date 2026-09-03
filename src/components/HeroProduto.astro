@@ -9,12 +9,19 @@
  * O `-mt` + `pt` repete o gesto da home: a seção passa por baixo do header
  * pílula em vez de começar depois dele.
  *
- * Sem imagem de propósito. A arte do hero da home é a peça mais pesada do
- * site; repeti-la em nove páginas estouraria o orçamento (regra 4).
+ * O fundo é a mesma nuvem em movimento do hero da home (`FundoNuvens`): 10 KB
+ * de ladrilho que emenda consigo mesmo, então repetir em nove páginas não pesa
+ * como repetir a arte antiga pesaria (regra 4).
+ *
+ * A arte em si é opcional e por página, via prop `astronauta`. A ideia é cada
+ * página ter o seu, temático — e enquanto a arte de uma página não existe, ela
+ * fica só com a nuvem, sem buraco no layout.
  */
+import { Image } from 'astro:assets'
 import Button from './Button.astro'
 import Trilha from './Trilha.astro'
 import SectionEyebrow from './SectionEyebrow.astro'
+import FundoNuvens from './FundoNuvens.astro'
 import { links } from '../data/site'
 
 interface Props {
@@ -28,6 +35,14 @@ interface Props {
   aPartirDe?: number
   ctaPrimario?: { label: string; href: string }
   ctaSecundario?: { label: string; href: string }
+  /** Arte temática da página, já tratada e recortada com fundo transparente.
+   *  Entra à direita no desktop e acima do texto no celular, com o mesmo voo
+   *  leve do astronauta da home. Sem ela, o hero fica só com a nuvem.
+   *
+   *  O tamanho vem do próprio arquivo: cada arte é gerada na maior largura em
+   *  que aparece (regra 7), então não há medida escrita aqui e formatos
+   *  diferentes — em pé ou deitado — convivem sem ajuste no componente. */
+  astronauta?: ImageMetadata
   trilha: readonly { label: string; href: string }[]
 }
 
@@ -40,6 +55,7 @@ const {
   aPartirDe,
   ctaPrimario = { label: 'Ver planos', href: '#planos' },
   ctaSecundario = { label: 'Falar no WhatsApp', href: links.whatsapp },
+  astronauta,
   trilha,
 } = Astro.props
 
@@ -49,6 +65,8 @@ const preco = aPartirDe?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
 <section
   class="relative overflow-clip bg-[#F6F1FA] -mt-[76px] pt-[76px] sm:-mt-[84px] sm:pt-[84px]"
 >
+  <FundoNuvens velocidade={60} ancora="topo-no-celular" />
+
   {/* Brilho verde bem de leve no canto direito — o mesmo acento da marca, sem peso de imagem */}
   <div
     class="pointer-events-none absolute inset-0"
@@ -66,10 +84,39 @@ const preco = aPartirDe?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
   </div>
 
   <div class="relative container-page pt-[clamp(20px,3vw,32px)] pb-[clamp(48px,7vw,88px)]">
+    {
+      astronauta && (
+        <div class="arte-hero" aria-hidden="true">
+          <Image src={astronauta} alt="" loading="eager" class="astro-voo h-auto w-full" />
+        </div>
+      )
+    }
+
     <Trilha itens={trilha} tone="light" />
 
     <div class="mt-8 grid gap-y-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-x-12">
-      <div class="reveal stagger mx-auto max-w-[54ch] text-center lg:mx-0 lg:text-left">
+      {/* No celular a mesma arte entra no fluxo, antes do texto. São dois
+          elementos apontando para o MESMO arquivo, e cada um só existe na sua
+          faixa de tela, então o navegador baixa uma vez só. */}
+      {
+        astronauta && (
+          <div class="arte-hero-fluxo lg:hidden" aria-hidden="true">
+            <Image
+              src={astronauta}
+              alt=""
+              loading="eager"
+              class="astro-voo h-auto w-full"
+            />
+          </div>
+        )
+      }
+
+      <div
+        class:list={[
+          'reveal stagger mx-auto max-w-[54ch] text-center lg:mx-0 lg:text-left',
+          astronauta && 'lg:col-start-1 lg:row-start-1',
+        ]}
+      >
         <SectionEyebrow>{eyebrow}</SectionEyebrow>
 
         <h1
@@ -122,7 +169,10 @@ const preco = aPartirDe?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
       {
         preco && (
           <div
-            class="reveal stagger w-full rounded-card border border-line bg-surface px-6 py-5 text-center shadow-soft lg:w-auto lg:min-w-[230px] lg:text-left"
+            class:list={[
+              'reveal stagger w-full rounded-card border border-line bg-surface px-6 py-5 text-center shadow-soft lg:w-auto lg:min-w-[230px] lg:text-left',
+              astronauta && 'relative z-10 lg:self-end',
+            ]}
             data-delay="2"
           >
             <p class="font-mono text-[11px] tracking-[0.12em] text-ink-soft uppercase">A partir de</p>

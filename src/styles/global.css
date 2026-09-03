@@ -437,6 +437,234 @@
     }
   }
 
+  /* Voo do astronauta do hero.
+   *
+   * Duas animações no mesmo elemento, o que só funciona porque cada uma mexe
+   * numa propriedade individual — `translate` e `rotate`, não `transform`.
+   * Com `transform` a segunda sobrescreveria a primeira, e `transform` aqui já
+   * está ocupado: é por onde o paralaxe de ponteiro entra (`--px/--py`).
+   *
+   * Os períodos são propositalmente desencontrados (7s e 9,4s, que não são
+   * múltiplos): a combinação leva minutos para se repetir igual, então o
+   * movimento não tem cadência de metrônomo — parece deriva, não balanço. */
+  .astro-voo {
+    animation:
+      astro-deriva 7s ease-in-out infinite alternate,
+      astro-inclina 9.4s ease-in-out infinite alternate;
+    will-change: translate, rotate;
+  }
+
+  /* O astronauta do desktop recebe o mesmo paralaxe de ponteiro que a arte
+     antiga do hero recebia — é o `[data-parallax]` do script da página. */
+  .astro-hero {
+    transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes astro-deriva {
+    from {
+      translate: 0 -9px;
+    }
+    to {
+      translate: -14px 13px;
+    }
+  }
+
+  @keyframes astro-inclina {
+    from {
+      rotate: -1.6deg;
+    }
+    to {
+      rotate: 2deg;
+    }
+  }
+
+  /* Palco da arte do hero: astronauta + painéis numa composição só.
+   *
+   * As medidas saem da arte de referência: o astronauta ocupa 385×530 e o
+   * bloco de painéis 402×442, começando 238px à direita e 20px abaixo do canto
+   * dele. O conjunto fecha em 640×530.
+   *
+   * O encaixe das duas peças foi medido no canal alfa da própria arte, faixa
+   * por faixa. O notebook é a parte que avança à direita, e só ele: entre
+   * y=205 e y=324 o recorte chega a x=384, enquanto na altura do painel de
+   * performance (y 0–199) para em x=229 e na altura da barra de números
+   * (y 403–462) para em x=258. Com o bloco em left:238 isso dá:
+   *
+   *   - painel de performance começa em 267, astronauta para em 229 → não toca;
+   *   - painel de carregamento começa em 328, notebook vai a 384 → 56px por
+   *     cima, que é a sobreposição que amarra as duas peças;
+   *   - barra de números começa em 238, a bota chega a 258 → encosta de leve.
+   *
+   * Por isso os `top` dos painéis dentro do bloco (0 / 205 / 383) não são
+   * arbitrários: é o afastamento que abre a diagonal e deixa o notebook cair
+   * na faixa do painel do meio, e não na do de cima.
+   *
+   * O palco é o mesmo em toda largura de tela: muda só o fator de escala e onde
+   * ele se apoia. É isso que mantém a relação de tamanho entre gráfico e
+   * astronauta idêntica no desktop e no celular.
+   *
+   * `scale` não ocupa espaço no layout, então quem reserva a altura é a caixa
+   * externa (`462px × fator`), e o palco fica `absolute` dentro dela.
+   *
+   * O fator é degrau em vez de conta, porque CSS não divide comprimento por
+   * comprimento: não existe `calc(100vw / 640px)`. Cada degrau é o maior valor
+   * em que o astronauta ainda começa depois do fim do texto, com folga. */
+  .palco-caixa {
+    --f: 0.52;
+    position: relative;
+    height: calc(530px * var(--f));
+  }
+  .palco {
+    position: absolute;
+    top: 0;
+    width: 640px;
+    height: 530px;
+    transform: scale(var(--f));
+  }
+  /* O astronauta fica ACIMA dos painéis: é o notebook passando por cima do
+     gráfico de carregamento que amarra as duas peças. Por baixo, a sobreposição
+     some e as duas voltam a parecer coladas lado a lado. */
+  .palco-astro {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 385px;
+    height: 530px;
+  }
+  .palco-paineis {
+    position: absolute;
+    top: 20px;
+    left: 238px;
+  }
+
+  /* Celular e tablet: o palco fica centrado na tela. */
+  @media (max-width: 1023.98px) {
+    .palco {
+      left: 50%;
+      margin-left: -320px;
+      transform-origin: top center;
+    }
+  }
+  @media (min-width: 420px) {
+    .palco-caixa {
+      --f: 0.6;
+    }
+  }
+  @media (min-width: 520px) {
+    .palco-caixa {
+      --f: 0.74;
+    }
+  }
+  @media (min-width: 700px) {
+    .palco-caixa {
+      --f: 0.95;
+    }
+  }
+
+  /* Desktop: o palco se apoia na borda direita da própria coluna e transborda
+     para a esquerda. Como os painéis já ficam colados à direita, é isso que põe
+     o astronauta no vão entre o texto e eles, sem passar por cima de nenhum
+     dos dois. Os degraus abaixo de 1280px existem porque a coluna encolhe mas
+     o texto não: sem eles o astronauta voltaria a cobrir o fim do parágrafo. */
+  @media (min-width: 1024px) {
+    .palco-caixa {
+      --f: 0.72;
+    }
+    .palco {
+      right: 0;
+      transform-origin: top right;
+    }
+  }
+  @media (min-width: 1100px) {
+    .palco-caixa {
+      --f: 0.85;
+    }
+  }
+  @media (min-width: 1280px) {
+    .palco-caixa {
+      --f: 1;
+    }
+  }
+
+  /* Arte temática do hero das páginas internas.
+   *
+   * No celular ela entra no fluxo, antes do texto. No desktop sai do fluxo e se
+   * apoia na borda direita do container, ocupando o vão que sobra ao lado do
+   * parágrafo — as larguras abaixo são o maior valor que ainda deixa folga
+   * entre o fim do texto e o começo do desenho, medido página a página.
+   *
+   * A centralização vertical usa `transform`, e a entrada usa `translate`,
+   * `scale` e `opacity` — propriedades individuais, então convivem sem uma
+   * apagar a outra. O voo fica na imagem de dentro, com `translate`/`rotate`
+   * próprios, e por isso também não briga com nada disto. */
+  .arte-hero-fluxo,
+  .arte-hero {
+    animation: arte-entra 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* No celular: no fluxo, centrada e limitada pela largura da tela. */
+  .arte-hero-fluxo {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* Abaixo do desktop a versão absoluta não existe — quem aparece é a do fluxo. */
+  .arte-hero {
+    display: none;
+  }
+
+  @keyframes arte-entra {
+    from {
+      opacity: 0;
+      translate: 40px 0;
+      scale: 0.94;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+  }
+
+  /* No desktop ela se apoia pela ESQUERDA, logo depois do texto — não pela
+     direita. Ancorada à direita, em tela larga a arte fugia para o canto e se
+     descolava do conteúdo; ancorada à esquerda ela acompanha o texto e o
+     excedente sangra para a margem que sobra ao lado do container.
+     Os `left` são medidos a partir da borda do container e saem do mesmo lugar
+     em toda a faixa: o texto tem largura máxima em `ch`, então termina sempre
+     na mesma posição relativa. */
+  @media (min-width: 1024px) {
+    .arte-hero {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 590px;
+      width: 430px;
+      transform: translateY(-50%);
+    }
+  }
+  @media (min-width: 1100px) {
+    .arte-hero {
+      left: 605px;
+      width: 490px;
+    }
+  }
+  @media (min-width: 1280px) {
+    .arte-hero {
+      left: 620px;
+      width: 620px;
+    }
+  }
+  @media (min-width: 1440px) {
+    .arte-hero {
+      left: 595px;
+      width: 725px;
+    }
+  }
+
   /* Preço troca com um fade curto ao mudar mensal/anual */
   [data-ciclo-mensal]:not([hidden]),
   [data-ciclo-anual]:not([hidden]) {
@@ -620,8 +848,18 @@ details[open]::details-content {
     mask-image: none !important;
     -webkit-mask-image: none !important;
   }
-  .hero-art {
+  .hero-art,
+  .astro-hero {
     transform: none !important;
+  }
+  .astro-voo,
+  .arte-hero,
+  .arte-hero-fluxo {
+    animation: none !important;
+  }
+  .arte-hero,
+  .arte-hero-fluxo {
+    opacity: 1;
   }
   .plans-grid > *,
   .plan-badge {

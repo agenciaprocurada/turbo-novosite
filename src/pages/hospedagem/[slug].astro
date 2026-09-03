@@ -23,6 +23,9 @@ import Faq from '../../components/secoes/Faq.astro'
 import Migracao from '../../components/secoes/Migracao.astro'
 import CtaFinal from '../../components/secoes/CtaFinal.astro'
 
+import astroSitesInstitucionais from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-pagespeed-sites-institucionais.webp'
+import astroLojaVirtual from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-loja-virtual-woocommerce.webp'
+
 import { produtos, seguranca } from '../../data/produtos'
 import type { Produto } from '../../data/produtos'
 import { abasPlanos, links } from '../../data/site'
@@ -34,6 +37,13 @@ export const getStaticPaths = (() =>
   }))) satisfies GetStaticPaths
 
 const { produto } = Astro.props as { produto: Produto }
+
+/** Arte do hero por produto. Cada página ganha a sua, temática; enquanto a de
+ *  um slug não existe, aquele hero fica só com a nuvem de fundo. */
+const artesHero: Partial<Record<string, ImageMetadata>> = {
+  'sites-institucionais': astroSitesInstitucionais,
+  'lojas-virtuais-woocommerce': astroLojaVirtual,
+}
 
 const abas = produto.abaPlanos ? abasPlanos.filter((aba) => aba.id === produto.abaPlanos) : []
 
@@ -58,6 +68,7 @@ const SECAO = 'py-[clamp(72px,9vw,132px)]'
       lead={produto.lead}
       badges={produto.badges}
       aPartirDe={produto.aPartirDe}
+      astronauta={artesHero[produto.slug]}
       trilha={trilha}
     />
 

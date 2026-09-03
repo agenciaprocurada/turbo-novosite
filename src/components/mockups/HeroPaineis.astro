@@ -13,6 +13,11 @@
 import { hero, provas } from '../../data/site'
 
 // Anel de uptime: 99,982% é, na prática, a volta inteira.
+
+// Dentro do anel só cabe a parte inteira — "99,982%" espremia contra a borda do
+// círculo. Continua saindo do dado, arredondado para baixo, em vez de virar
+// número escrito à mão: se `uptimeTier3` mudar, o anel acompanha.
+const uptimeCurto = `${provas.uptimeTier3.split(',')[0]}%`
 const R = 30
 const CIRC = +(2 * Math.PI * R).toFixed(1)
 const FALTA = +(CIRC * 0.06).toFixed(1) // recuo visível só para o anel não fechar
@@ -20,17 +25,17 @@ const FALTA = +(CIRC * 0.06).toFixed(1) // recuo visível só para o anel não f
 
 {/* Medidas tiradas da arte de referência: os painéis descem em diagonal — o de
     performance no topo, o gráfico deslocado à direita e a barra mais larga
-    embaixo, sobrepondo o gráfico. O bloco todo tem 402×392, **em qualquer
+    embaixo. O bloco todo tem 402×442, **em qualquer
     largura de tela**: é uma ilustração, não um layout que reflui. Quem precisa
     caber numa tela estreita escala o conjunto, para o tamanho relativo ao
     astronauta continuar igual ao do desktop. */}
 <div
   aria-hidden="true"
-  class="relative ml-auto block h-[392px] w-[402px] select-none"
+  class="relative ml-auto block h-[442px] w-[402px] select-none"
 >
   {/* 1 · Painel de performance */}
   <div
-    class="painel painel-flutua absolute top-0 left-[29px] w-[302px]"
+    class="painel painel-flutua absolute top-0 left-0 w-[302px]"
     data-flutua="1"
   >
     <p class="text-[14px] font-bold text-ink">Painel de Performance</p>
@@ -55,7 +60,7 @@ const FALTA = +(CIRC * 0.06).toFixed(1) // recuo visível só para o anel não f
         <div class="absolute inset-0 grid place-items-center text-center">
           <div>
             <span class="block font-mono text-[12.5px] leading-none font-bold text-ink tabular-nums">
-              {provas.uptimeTier3}
+              {uptimeCurto}
             </span>
             <span class="mt-1 block font-mono text-[8px] tracking-[0.12em] text-ink-soft uppercase">
               uptime
@@ -83,7 +88,7 @@ const FALTA = +(CIRC * 0.06).toFixed(1) // recuo visível só para o anel não f
 
   {/* 2 · Gráfico de carregamento */}
   <div
-    class="painel painel-flutua absolute top-[170px] left-[90px] w-[312px]"
+    class="painel painel-flutua absolute top-[205px] left-[126px] w-[276px]"
     data-flutua="2"
   >
     <div class="flex items-baseline justify-between gap-3">
@@ -128,7 +133,7 @@ const FALTA = +(CIRC * 0.06).toFixed(1) // recuo visível só para o anel não f
 
   {/* 3 · Barra de números */}
   <div
-    class="painel painel-flutua absolute top-[305px] left-0 z-10 w-[388px] !p-0"
+    class="painel painel-flutua absolute top-[383px] left-0 z-10 w-[388px] !p-0"
     data-flutua="3"
   >
     <ul class="grid grid-cols-4 divide-x divide-line">

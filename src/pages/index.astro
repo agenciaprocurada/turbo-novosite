@@ -19,14 +19,15 @@ import PorqueCard from '../components/PorqueCard.astro'
 import ChatMockup from '../components/ChatMockup.astro'
 import MapDots from '../components/MapDots.astro'
 
-import fundoHero from '../assets/fundo-topo-hero.webp'
+import FundoNuvens from '../components/FundoNuvens.astro'
+import HeroPaineis from '../components/mockups/HeroPaineis.astro'
+import astronautaHero from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-notebook-nuvem.webp'
 import fundoInfra from '../assets/fundo-site-01.webp'
 import InfraStatusCard from '../components/InfraStatusCard.astro'
 import ServiceCard from '../components/ServiceCard.astro'
 import { Image } from 'astro:assets'
 import foguete from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-caminho-turbo.webp'
 import planeta from '../assets/imagens/empresa-de-hospedagem-de-site-planeta-anel.webp'
-import heroMobile from '../assets/imagens/empresa-de-hospedagem-de-site-hero-astronauta-mobile.webp'
 import racksMobile from '../assets/imagens/empresa-de-hospedagem-de-site-datacenter-racks-mobile.webp'
 import iconeCaminho from '../assets/imagens/empresa-de-hospedagem-de-site-icone-caminho-turbo.webp'
 
@@ -64,22 +65,12 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
   <main id="conteudo">
     {/* ============================== S2 · HERO ============================== */}
     <section class="relative -mt-[76px] overflow-clip bg-[#F6F1FA] pt-[76px] sm:-mt-[84px] sm:pt-[84px]">
-      {/* Fundo do topo (astronauta + cartões já vêm na arte). No desktop cobre a
-          altura toda, encostado à direita; a esquerda funde com a cor da arte. */}
-      <div
-        class="hero-art pointer-events-none absolute inset-0 hidden bg-no-repeat lg:block"
-        data-parallax
-        style={`background-image:url(${fundoHero.src});background-size:auto;background-position:calc(50% + 120px) center`}
-        aria-hidden="true"
-      >
-      </div>
-      {/* Em telas mais largas que a arte (1698px), suaviza a emenda das bordas com a cor de fundo */}
-      <div
-        class="pointer-events-none absolute inset-0 hidden min-[1720px]:block"
-        style="background:linear-gradient(90deg,#F6F1FA 0,rgba(246,241,250,0) 12%,rgba(246,241,250,0) 88%,#F6F1FA 100%)"
-        aria-hidden="true"
-      >
-      </div>
+      {/* Fundo do topo: nuvens que atravessam a tela em looping. Entrou no lugar
+          da arte estática, que trazia o astronauta e os cartões gravados — o
+          astronauta agora é um recorte próprio e os cartões são HTML. O degradê
+          que existia nas laterais era só para esconder a emenda da arte de
+          1698px; a nuvem repete sem costura, então saiu junto. */}
+      <FundoNuvens velocidade={60} ancora="topo-no-celular" />
 
       {/* Degradê no pé do hero: a arte lilás some para a cor de fundo da página, sem linha dura */}
       <div
@@ -94,20 +85,33 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
       <div
         class="relative container-page grid gap-y-7 py-[clamp(40px,7vw,88px)] lg:min-h-[720px] lg:grid-cols-[minmax(0,616px)_1fr] lg:content-center lg:gap-x-6 lg:gap-y-0"
       >
-        {/* Recorte dedicado da arte (astronauta + painéis), 780px = 2× da tela. Entra antes
-            do título no celular; é lazy + display:none no desktop, então o desktop não baixa. */}
-        <div class="reveal relative -mx-5 -mt-6 -mb-2 lg:hidden">
-          <Image
-            src={heroMobile}
-            alt=""
-            loading="lazy"
-            fetchpriority="high"
-            class="h-auto w-full"
-            style="mask-image:linear-gradient(180deg,transparent,#000 10%,#000 88%,transparent);-webkit-mask-image:linear-gradient(180deg,transparent,#000 10%,#000 88%,transparent)"
-          />
+        {/* Palco da arte do hero: astronauta + painéis numa composição só, a
+            mesma em qualquer largura de tela — muda apenas o fator de escala.
+            No desktop ele se apoia na borda direita da coluna e transborda para
+            a esquerda, o que põe o astronauta no vão entre o texto e os
+            painéis; no celular fica centrado, acima do título.
+            O `data-parallax` move o astronauta com o ponteiro por `transform`,
+            enquanto o voo usa `translate`/`rotate` — as duas coisas convivem no
+            mesmo elemento sem uma apagar a outra. */}
+        <div
+          class="palco-caixa reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
+          data-delay="3"
+        >
+          <div class="palco">
+            <div
+              class="astro-voo astro-hero palco-astro bg-contain bg-no-repeat"
+              data-parallax
+              style={`background-image:url(${astronautaHero.src})`}
+              aria-hidden="true"
+            >
+            </div>
+            <div class="palco-paineis">
+              <HeroPaineis />
+            </div>
+          </div>
         </div>
 
-        <div class="reveal stagger text-center lg:text-left">
+        <div class="reveal stagger text-center lg:self-end lg:text-left">
           <SectionEyebrow class="justify-center lg:justify-start">{hero.eyebrow}</SectionEyebrow>
 
           <h1
@@ -118,13 +122,15 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
         </div>
 
 
-        <div class="reveal stagger text-center lg:col-start-1 lg:text-left" data-delay="2">
+        <div class="reveal stagger text-center lg:col-start-1 lg:self-start lg:text-left" data-delay="2">
           <p class="mx-auto max-w-[50ch] lg:mx-0 lg:mt-5 text-[clamp(1rem,1.6vw,1.125rem)] leading-relaxed text-ink-soft">
             <strong class="font-bold text-ink">{hero.subLead}</strong>
             {' '}{hero.sub}
           </p>
 
-          <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          {/* `text-center` do bloco não alinha filho flex, então a fila precisa do
+              seu próprio `justify-center`. */}
+          <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
             <Button href={hero.ctaPrimario.href} variant="green" size="lg" fullWidth class="sm:w-auto"
               >{hero.ctaPrimario.label}</Button
             >

@@ -100,40 +100,29 @@ const ICONES_GARANTIAS = {
       <div
         class="relative container-page grid gap-y-7 py-[clamp(40px,7vw,88px)] lg:min-h-[720px] lg:grid-cols-[minmax(0,616px)_1fr] lg:content-center lg:gap-x-6 lg:gap-y-0"
       >
-        {/* Astronauta do desktop, no ponto exato em que a arte antiga o
-            desenhava: centro da seção mais 74px, alinhado pelo meio da altura.
-            O `data-parallax` é o mesmo da arte anterior — o script do fim da
-            página escreve `--px/--py` conforme o ponteiro. Isso vai em
-            `transform` e o voo usa `translate`/`rotate`, então as duas coisas
-            convivem no mesmo elemento sem uma apagar a outra. */}
+        {/* Palco da arte do hero: astronauta + painéis numa composição só, a
+            mesma em qualquer largura de tela — muda apenas o fator de escala.
+            No desktop ele se apoia na borda direita da coluna e transborda para
+            a esquerda, o que põe o astronauta no vão entre o texto e os
+            painéis; no celular fica centrado, acima do título.
+            O `data-parallax` move o astronauta com o ponteiro por `transform`,
+            enquanto o voo usa `translate`/`rotate` — as duas coisas convivem no
+            mesmo elemento sem uma apagar a outra. */}
         <div
-          class="astro-hero astro-voo pointer-events-none absolute top-1/2 left-1/2 -mt-[206px] -ml-[76px] hidden aspect-[300/413] w-[300px] bg-contain bg-no-repeat lg:block"
-          data-parallax
-          style={`background-image:url(${astronautaHero.src})`}
-          aria-hidden="true"
+          class="palco-caixa reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
+          data-delay="3"
         >
-        </div>
-
-        {/* Palco da arte do hero: astronauta + painéis.
-            No desktop nada muda — `lg:contents` dissolve a caixa externa e o
-            palco volta a ser a célula da direita do grid, com o astronauta
-            entrando por fora (absoluto na seção, logo acima).
-            No celular os dois viram um bloco só, no topo e antes do título, com
-            o conjunto inteiro reduzido por `scale`. É o que mantém os painéis
-            do mesmo tamanho relativo ao astronauta que têm no desktop: as
-            medidas em px continuam idênticas, só o zoom do grupo muda. */}
-        <div class="palco-caixa lg:contents">
-          <div
-            class="palco reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
-            data-delay="3"
-          >
+          <div class="palco">
             <div
-              class="astro-voo palco-astro bg-contain bg-no-repeat lg:hidden"
+              class="astro-voo astro-hero palco-astro bg-contain bg-no-repeat"
+              data-parallax
               style={`background-image:url(${astronautaHero.src})`}
               aria-hidden="true"
             >
             </div>
-            <HeroPaineis />
+            <div class="palco-paineis">
+              <HeroPaineis />
+            </div>
           </div>
         </div>
 
@@ -919,113 +908,3 @@ const ICONES_GARANTIAS = {
     })
   }
 </script>
-
-<style>
-  /* Voo do astronauta do hero.
-   *
-   * Duas animações no mesmo elemento, o que só funciona porque cada uma mexe
-   * numa propriedade individual — `translate` e `rotate`, não `transform`. Com
-   * `transform` a segunda sobrescreveria a primeira, e `transform` aqui já está
-   * ocupado: é por onde o parallax de ponteiro entra (`--px/--py`).
-   *
-   * Os períodos são propositalmente desencontrados (7s e 9,4s, que não são
-   * múltiplos): a combinação leva minutos para se repetir igual, então o
-   * movimento não tem cadência de metrônomo — parece deriva, não balanço.
-   */
-  .astro-voo {
-    animation:
-      astro-deriva 7s ease-in-out infinite alternate,
-      astro-inclina 9.4s ease-in-out infinite alternate;
-    will-change: translate, rotate;
-  }
-
-  .astro-hero {
-    transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
-    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  @keyframes astro-deriva {
-    from {
-      translate: 0 -9px;
-    }
-    to {
-      translate: -14px 13px;
-    }
-  }
-
-  @keyframes astro-inclina {
-    from {
-      rotate: -1.6deg;
-    }
-    to {
-      rotate: 2deg;
-    }
-  }
-
-  /* Palco da arte no celular.
-   *
-   * As coordenadas saem do desktop, medido a 1440px: o astronauta ocupa
-   * 300×413 e o bloco de painéis 402×392, com o bloco 262px à direita e 13px
-   * abaixo do canto do astronauta. O conjunto fecha em 664×415, e é essa caixa
-   * que encolhe inteira — por isso a relação de tamanho entre gráfico e
-   * astronauta é a mesma nas duas telas.
-   *
-   * `scale` não ocupa espaço no layout, então quem reserva a altura é a caixa
-   * externa (`415px × fator`). O palco fica `absolute` dentro dela, centrado
-   * antes da escala (`left:50%` com metade da largura de recuo) e escalado a
-   * partir do topo — assim continua centrado depois.
-   *
-   * O fator é degrau em vez de conta, porque CSS não divide comprimento por
-   * comprimento: não existe `calc(100vw / 664px)`. Cada degrau é o maior valor
-   * que ainda cabe na tela daquela faixa. */
-  @media (max-width: 1023.98px) {
-    .palco-caixa {
-      --f: 0.52;
-      position: relative;
-      height: calc(415px * var(--f));
-    }
-    .palco {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 664px;
-      height: 415px;
-      margin-left: -332px;
-      transform: scale(var(--f));
-      transform-origin: top center;
-    }
-    .palco-astro {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 300px;
-      height: 413px;
-    }
-  }
-
-  @media (min-width: 420px) and (max-width: 1023.98px) {
-    .palco-caixa {
-      --f: 0.6;
-    }
-  }
-  @media (min-width: 520px) and (max-width: 1023.98px) {
-    .palco-caixa {
-      --f: 0.74;
-    }
-  }
-  @media (min-width: 700px) and (max-width: 1023.98px) {
-    .palco-caixa {
-      --f: 0.95;
-    }
-  }
-
-  /* Movimento é opcional (regra 5). */
-  @media (prefers-reduced-motion: reduce) {
-    .astro-voo {
-      animation: none;
-    }
-    .astro-hero {
-      transform: none !important;
-    }
-  }
-</style>

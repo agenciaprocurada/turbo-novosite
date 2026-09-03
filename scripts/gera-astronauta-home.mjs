@@ -27,7 +27,7 @@ import sharp from 'sharp'
 const ORIGEM = '_uploads-turbonovosite/astronauta-home.webp'
 const DESTINO =
   'src/assets/imagens/empresa-de-hospedagem-de-site-astronauta-notebook-nuvem.webp'
-const LARGURA = 300 // a maior largura em que ele aparece (w-[300px] no desktop)
+const LARGURA = 385 // a maior largura em que ele aparece (palco em escala 1)
 
 // Caixa útil, medida no canal alfa da própria arte a cada execução — assim não
 // há número escrito à mão para desatualizar quando a arte trocar.
