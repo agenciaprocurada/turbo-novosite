@@ -25,6 +25,7 @@ import CtaFinal from '../../components/secoes/CtaFinal.astro'
 
 import astroSitesInstitucionais from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-pagespeed-sites-institucionais.webp'
 import astroLojaVirtual from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-loja-virtual-woocommerce.webp'
+import astroPortalConteudo from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-portal-de-conteudo.webp'
 
 import { produtos, seguranca } from '../../data/produtos'
 import type { Produto } from '../../data/produtos'
@@ -43,6 +44,7 @@ const { produto } = Astro.props as { produto: Produto }
 const artesHero: Partial<Record<string, ImageMetadata>> = {
   'sites-institucionais': astroSitesInstitucionais,
   'lojas-virtuais-woocommerce': astroLojaVirtual,
+  'blogs-e-portais-de-conteudo': astroPortalConteudo,
 }
 
 const abas = produto.abaPlanos ? abasPlanos.filter((aba) => aba.id === produto.abaPlanos) : []

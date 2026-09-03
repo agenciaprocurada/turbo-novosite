@@ -10,7 +10,7 @@
  * 1. **Corte da caixa útil** — o arquivo tem 1672×941, mas o desenho ocupa
  *    1562×883 (medido pelo alfa: de 77,58 até 1638,940).
  *
- * 2. **Tamanho de exibição** — no desktop ela aparece com 740px de largura.
+ * 2. **Tamanho de exibição** — no desktop ela aparece com 725px de largura.
  *
  * Rodar de novo só se a arte de origem mudar:
  *   node scripts/gera-astronauta-loja-virtual.mjs
@@ -20,7 +20,7 @@ import sharp from 'sharp'
 const ORIGEM = '_uploads-turbonovosite/astronauta-loja.png'
 const DESTINO =
   'src/assets/imagens/empresa-de-hospedagem-de-site-astronauta-loja-virtual-woocommerce.webp'
-const LARGURA = 740 // a maior largura em que ela aparece no desktop
+const LARGURA = 725 // a maior largura em que ela aparece no desktop
 // O canal alfa é o que pesa nesta arte, não a cor: em qualidade 85 o arquivo
 // dava 118 KB, e baixar a qualidade da cor até 60 só tirava 24 KB. Comprimir o
 // alfa com perda (`alphaQuality`) resolve — 77 KB, sem artefato visível na

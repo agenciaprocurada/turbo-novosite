@@ -8,7 +8,7 @@
  *    1604×1149 (medido pelo alfa: de 50,35 até 1653,1183). O resto é margem
  *    transparente, pixel guardado à toa.
  *
- * 2. **Tamanho de exibição** — no desktop ela aparece com 740px de largura.
+ * 2. **Tamanho de exibição** — no desktop ela aparece com 725px de largura.
  *    Guardar os 1684px seria carregar quatro vezes mais pixel do que a tela usa.
  *
  * Nada a ver com `gera-astronauta-institucional.mjs`, que é outra arte (a
@@ -22,7 +22,7 @@ import sharp from 'sharp'
 const ORIGEM = '_uploads-turbonovosite/astronauta-institucional.webp'
 const DESTINO =
   'src/assets/imagens/empresa-de-hospedagem-de-site-astronauta-pagespeed-sites-institucionais.webp'
-const LARGURA = 740 // a maior largura em que ela aparece no desktop
+const LARGURA = 725 // a maior largura em que ela aparece no desktop
 // O canal alfa é o que pesa nesta arte, não a cor: em qualidade 85 o arquivo
 // dava 118 KB, e baixar a qualidade da cor até 60 só tirava 24 KB. Comprimir o
 // alfa com perda (`alphaQuality`) resolve — 77 KB, sem artefato visível na

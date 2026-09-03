@@ -171,7 +171,9 @@ const preco = aPartirDe?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
           <div
             class:list={[
               'reveal stagger w-full rounded-card border border-line bg-surface px-6 py-5 text-center shadow-soft lg:w-auto lg:min-w-[230px] lg:text-left',
-              astronauta && 'relative z-10 lg:self-end',
+              // recuado da borda direita: encostado nela o card caía em cima do
+              // painel principal da arte. O `mr` o tira de lá sem sair do vão.
+              astronauta && 'relative z-10 lg:mr-[70px] lg:self-end',
             ]}
             data-delay="2"
           >
