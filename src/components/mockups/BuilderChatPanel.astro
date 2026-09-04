@@ -1,0 +1,91 @@
+---
+/**
+ * Editor com IA, em duas colunas: o chat do assistente (comando → resposta →
+ * status) e a prévia da página com o topo já escurecido e o botão de
+ * WhatsApp adicionado. Vive dentro do bloco roxo, por isso os tons escuros.
+ */
+import { turboBuilder } from '../../data/turbobuilder'
+
+const e = turboBuilder.editor
+
+const dispositivos = [
+  'M3 5h18v11H3zM8 20h8M12 16v4',
+  'M5 3h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1ZM11 18h2',
+  'M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1ZM11 18h2',
+]
+---
+
+<div
+  class="grid overflow-hidden rounded-card border border-white/10 bg-purple-900 shadow-lift select-none sm:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]"
+  aria-hidden="true"
+>
+  {/* Chat */}
+  <div class="flex flex-col gap-2.5 border-b border-white/8 p-4 sm:border-r sm:border-b-0">
+    <p class="font-mono text-[10px] tracking-[0.12em] text-green uppercase">✦ {e.assistente}</p>
+
+    <div
+      class="max-w-[92%] self-end rounded-[14px] rounded-br-[6px] bg-green px-3 py-2 text-[12.5px] leading-snug text-purple-950"
+    >
+      {e.comando}
+    </div>
+    <div
+      class="max-w-[92%] self-start rounded-[14px] rounded-bl-[6px] bg-white/8 px-3 py-2 text-[12.5px] leading-snug text-white/85"
+    >
+      {e.resposta}{' '}
+      <svg viewBox="0 0 12 12" class="inline size-3 text-green" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M2.5 6.4L4.8 8.7L9.5 3.6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <p class="flex items-center gap-1.5 font-mono text-[10px] text-white/45">
+      <span class="pulse-dot"></span>{e.status} · <span class="text-white/70">↺ {e.restaurar}</span>
+    </p>
+
+    <div class="mt-auto flex items-center gap-2 rounded-[12px] border border-white/12 bg-white/5 px-3 py-2">
+      <span class="min-w-0 flex-1 truncate font-mono text-[11px] text-white/40">{e.placeholder}</span>
+      <span class="grid size-6 shrink-0 place-items-center rounded-full bg-green text-purple-950">
+        <svg viewBox="0 0 16 16" class="size-3" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 8h11M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  {/* Prévia */}
+  <div class="flex flex-col gap-3 bg-purple-950/60 p-4">
+    <div class="flex justify-center gap-3 text-white/40">
+      {
+        dispositivos.map((caminho, i) => (
+          <svg
+            viewBox="0 0 24 24"
+            class:list={['size-4', i === 0 && 'text-white/80']}
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d={caminho} />
+          </svg>
+        ))
+      }
+    </div>
+
+    <div class="flex items-center justify-between gap-3 rounded-[12px] border border-white/10 bg-purple-950 px-4 py-4">
+      <div class="flex flex-col gap-1.5">
+        <span class="block h-2 w-24 rounded-full bg-white/35"></span>
+        <span class="block h-1.5 w-16 rounded-full bg-white/15"></span>
+      </div>
+      <span class="block h-6 w-16 shrink-0 rounded-[8px] bg-green"></span>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <span class="block h-20 rounded-[12px] border border-white/10 bg-white/4"></span>
+      <span class="block h-20 rounded-[12px] border border-white/10 bg-white/4"></span>
+    </div>
+
+    <p class="rounded-[12px] border border-white/10 bg-white/4 px-3 py-2 font-mono text-[10px] text-white/40">
+      {e.rodapePreview}
+    </p>
+  </div>
+</div>

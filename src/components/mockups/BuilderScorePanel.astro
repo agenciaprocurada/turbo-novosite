@@ -1,0 +1,45 @@
+---
+/** Placar do Google PageSpeed do site de exemplo: barra com o domínio e o
+ *  seletor de dispositivo, quatro anéis de nota e a nota de rodapé. */
+import AnelNota from './AnelNota.astro'
+import { turboBuilder } from '../../data/turbobuilder'
+
+const { dominio, dispositivos, notas, rodape } = turboBuilder.performance
+---
+
+<div class="overflow-hidden rounded-card border border-line bg-surface shadow-lift select-none" aria-hidden="true">
+  <div class="flex items-center gap-2 border-b border-line bg-bg px-3.5 py-3 sm:px-4">
+    <span
+      class="min-w-0 flex-1 truncate rounded-[10px] border border-line bg-surface px-3 py-2 font-mono text-[11.5px] text-ink-soft"
+    >
+      {dominio}
+    </span>
+    {
+      dispositivos.map((nome, i) => (
+        <span
+          class:list={[
+            'shrink-0 rounded-[10px] px-2.5 py-1.5 font-mono text-[10.5px] tracking-[0.04em]',
+            i === 0 ? 'bg-purple-logo/10 text-purple-logo' : 'text-ink-soft',
+          ]}
+        >
+          {nome}
+        </span>
+      ))
+    }
+  </div>
+
+  <div class="grid grid-cols-2 gap-x-3 gap-y-6 px-4 py-6 sm:grid-cols-4 sm:px-6 sm:py-8">
+    {
+      notas.map((nota) => (
+        <div class="flex flex-col items-center gap-2.5 text-center">
+          <AnelNota valor={nota.valor} tamanho={64} />
+          <span class="text-[11.5px] leading-tight text-ink">{nota.label}</span>
+        </div>
+      ))
+    }
+  </div>
+
+  <p class="border-t border-line px-4 py-3 text-center font-mono text-[10px] tracking-[0.04em] text-ink-soft">
+    {rodape}
+  </p>
+</div>

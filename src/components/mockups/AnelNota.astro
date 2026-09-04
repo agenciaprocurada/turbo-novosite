@@ -1,0 +1,47 @@
+---
+/** Anel de nota (0–100) no estilo do PageSpeed: arco verde sobre trilho
+ *  neutro, número no meio. Só SVG, sem script. */
+interface Props {
+  valor: number
+  /** diâmetro em px */
+  tamanho?: number
+  tone?: 'light' | 'dark'
+  class?: string
+}
+
+const { valor, tamanho = 56, tone = 'light', class: className = '' } = Astro.props
+const R = 22
+const CIRC = 2 * Math.PI * R
+const offset = CIRC * (1 - Math.min(valor, 100) / 100)
+const escuro = tone === 'dark'
+---
+
+<span
+  class:list={['relative inline-grid shrink-0 place-items-center', className]}
+  style={`width:${tamanho}px;height:${tamanho}px`}
+  aria-hidden="true"
+>
+  <svg viewBox="0 0 56 56" class="absolute inset-0 size-full -rotate-90">
+    <circle
+      cx="28"
+      cy="28"
+      r={R}
+      fill="none"
+      stroke={escuro ? 'rgba(255,255,255,.12)' : 'var(--color-line)'}
+      stroke-width="4"></circle>
+    <circle
+      cx="28"
+      cy="28"
+      r={R}
+      fill="none"
+      stroke={escuro ? 'var(--color-green)' : 'var(--color-green-deep)'}
+      stroke-width="4"
+      stroke-linecap="round"
+      stroke-dasharray={CIRC}
+      stroke-dashoffset={offset}></circle>
+  </svg>
+  <span
+    class:list={['relative font-mono font-medium tabular-nums', escuro ? 'text-green' : 'text-green-deep']}
+    style={`font-size:${Math.round(tamanho * 0.3)}px`}>{valor}</span
+  >
+</span>

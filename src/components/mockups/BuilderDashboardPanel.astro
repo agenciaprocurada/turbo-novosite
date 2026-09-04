@@ -1,0 +1,77 @@
+---
+/**
+ * Painel de controle do Turbo Builder: barra lateral com o menu e os
+ * créditos de IA, e a tela "Minhas páginas" com os números e um card de
+ * página publicada com a nota do PageSpeed.
+ */
+import MockupFrame from '../MockupFrame.astro'
+import AnelNota from './AnelNota.astro'
+import { turboBuilder } from '../../data/turbobuilder'
+
+const p = turboBuilder.painel
+---
+
+<MockupFrame titulo="turbo builder · painel" class="shadow-lift" bodyClass="p-0! sm:p-0!">
+  <div class="grid sm:grid-cols-[150px_minmax(0,1fr)]">
+    <aside class="flex flex-col gap-1 border-b border-line bg-bg p-3 sm:border-r sm:border-b-0">
+      <p class="mb-2 flex items-center gap-1.5 px-2 font-mono text-[10px] tracking-[0.1em] text-purple-logo uppercase">
+        <span class="grid size-4 place-items-center rounded-[4px] bg-purple-logo text-[9px] font-bold text-white">T</span>
+        Turbo Builder
+      </p>
+      <div class="flex gap-1 sm:flex-col">
+        {
+          p.menu.map((item, i) => (
+            <span
+              class:list={[
+                'rounded-[8px] px-2.5 py-1.5 text-[11.5px] whitespace-nowrap',
+                i === 0 ? 'bg-purple-logo/10 font-semibold text-purple-logo' : 'text-ink-soft',
+              ]}
+            >
+              {item}
+            </span>
+          ))
+        }
+      </div>
+      <div class="mt-3 rounded-[10px] bg-purple-950 px-3 py-2.5 text-white">
+        <p class="font-mono text-[9px] tracking-[0.12em] text-white/50 uppercase">{p.creditosRotulo}</p>
+        <p class="mt-0.5 font-mono text-[12px] font-medium text-green">⚡ {p.creditos}</p>
+      </div>
+    </aside>
+
+    <div class="p-4">
+      <p class="text-[13.5px] font-bold text-ink">{p.tituloTela}</p>
+      <p class="mt-0.5 font-mono text-[9.5px] tracking-[0.04em] text-ink-soft">{p.resumo}</p>
+
+      <div class="mt-3 grid grid-cols-3 gap-2">
+        {
+          p.stats.map((s) => (
+            <div class="rounded-[10px] border border-line px-2.5 py-2">
+              <p class="text-[16px] leading-none font-bold text-ink">{s.valor}</p>
+              <p class="mt-1 font-mono text-[9px] text-ink-soft">{s.label}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-3 overflow-hidden rounded-[12px] border border-line">
+        <div class="flex flex-col gap-1.5 bg-purple-logo/8 p-3">
+          <span class="block h-2 w-3/5 rounded-full bg-purple-logo/45"></span>
+          <span class="block h-1.5 w-4/5 rounded-full bg-purple-logo/20"></span>
+          <span class="mt-1 block h-3 w-16 rounded-[4px] bg-green"></span>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-2.5">
+          <span class="truncate text-[12px] font-semibold text-ink">{p.pagina.nome}</span>
+          <span
+            class="flex shrink-0 items-center gap-1 rounded-full bg-green/14 px-2 py-0.5 font-mono text-[9px] tracking-[0.04em] text-green-deep uppercase"
+          >
+            <span class="pulse-dot" style="--pulse-color: var(--color-green-deep)"></span>{p.pagina.status}
+          </span>
+          <span class="ml-auto flex shrink-0 items-center gap-2">
+            <span class="text-right font-mono text-[9px] leading-tight text-ink-soft">PageSpeed<br />do Google</span>
+            <AnelNota valor={p.pagina.nota} tamanho={40} />
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</MockupFrame>

@@ -282,6 +282,7 @@ estão no `Base.astro`, porque valem para toda página.
 | `/afiliados/` | `src/pages/afiliados.astro` + `src/data/afiliados.ts` |
 | `/legal/` | `src/pages/legal.astro` — índice, não guarda texto |
 | `/hospedagem/openclaw/` | `src/pages/hospedagem/openclaw.astro` — rota própria, ver abaixo |
+| `/ferramentas-ia/turbo-builder/` | `src/pages/ferramentas-ia/turbo-builder.astro` + `src/data/turbobuilder.ts` — ver abaixo |
 
 **O hero das páginas internas é claro, não roxo.** `HeroProduto.astro` segue
 o mesmo sistema do hero da home: fundo `#F6F1FA`, título em duas cores
@@ -368,6 +369,19 @@ argumenta "por que escolher → planos → benefícios → segurança → FAQ"; 
 dela explica o que é o OpenClaw, mostra por que VPS genérica falha e só então
 apresenta o plano. Forçar no molde estragaria o texto, que é o melhor do site
 atual.
+
+**O Turbo Builder (`/ferramentas-ia/turbo-builder/`) espelha a página do
+produto, não o molde.** Categoria "Ferramentas IA" no menu e no rodapé. A
+ordem e os componentes das seções seguem a landing do produto em produção
+(hero com o editor ao lado, faixa de métricas, passos, placar PageSpeed,
+público, recursos, editor com IA, funcionalidades, modelos, painel, planos,
+banda da Turbo Cloud, FAQ) — só o visual é o do site. O que ela introduziu e
+outras páginas podem reaproveitar: slot `visual` no `HeroProduto` (mockup no
+lugar do card de preço), `FaixaProvas` (ícone + texto ao lado de cada CTA) e
+`mockups/AnelNota` (anel de nota 0–100). Ainda sem URL de checkout: os CTAs
+vão para `#planos` e os botões de assinar para o WhatsApp — está em `PENDENTE`.
+Sem hub `/ferramentas-ia/` enquanto for a única ferramenta: a trilha pula de
+Home para a página, porque um crumb sem destino seria link morto.
 
 **Por que `/contato/` não tem formulário.** O projeto é `output: 'static'`: não
 há servidor para processar POST. Em vez de pendurar o lead num serviço de

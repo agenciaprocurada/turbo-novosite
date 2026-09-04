@@ -36,7 +36,7 @@ const { titulo, tone = 'light', class: className = '', bodyClass = '' } = Astro.
     </span>
     <span
       class:list={[
-        'ml-1.5 truncate font-mono text-[10.5px] tracking-[0.06em] uppercase',
+        'ml-1.5 min-w-0 truncate font-mono text-[10.5px] tracking-[0.06em] uppercase',
         tone === 'dark' ? 'text-white/45' : 'text-ink-soft',
       ]}>{titulo}</span
     >

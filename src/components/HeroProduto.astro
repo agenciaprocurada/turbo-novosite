@@ -60,6 +60,10 @@ const {
 } = Astro.props
 
 const preco = aPartirDe?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+
+/* Slot `visual`: um mockup HTML/CSS no lugar do card de preço, à direita no
+   desktop e abaixo do texto no celular. Quem passa o visual não mostra o card. */
+const temVisual = Astro.slots.has('visual')
 ---
 
 <section
@@ -94,7 +98,12 @@ const preco = aPartirDe?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
 
     <Trilha itens={trilha} tone="light" />
 
-    <div class="mt-8 grid gap-y-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-x-12">
+    <div
+      class:list={[
+        'mt-8 grid gap-y-8 lg:items-center lg:gap-x-12',
+        temVisual ? 'lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]' : 'lg:grid-cols-[minmax(0,1fr)_auto]',
+      ]}
+    >
       {/* No celular a mesma arte entra no fluxo, antes do texto. São dois
           elementos apontando para o MESMO arquivo, e cada um só existe na sua
           faixa de tela, então o navegador baixa uma vez só. */}
@@ -177,7 +186,15 @@ const preco = aPartirDe?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
       </div>
 
       {
-        preco && (
+        temVisual && (
+          <div class="reveal min-w-0" data-delay="2">
+            <slot name="visual" />
+          </div>
+        )
+      }
+
+      {
+        preco && !temVisual && (
           <div
             class:list={[
               'reveal stagger w-full rounded-card border border-line bg-surface px-6 py-5 text-center shadow-soft lg:w-auto lg:min-w-[230px] lg:text-left',

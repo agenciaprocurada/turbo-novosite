@@ -1,0 +1,52 @@
+---
+/**
+ * Linha de provas curtas (ícone + texto) que acompanha cada CTA do Turbo
+ * Builder, separadas por régua vertical no desktop. `tone="dark"` para os
+ * blocos roxos.
+ */
+interface Props {
+  itens: readonly { icone: 'escudo' | 'cadeado' | 'bandeira'; texto: string }[]
+  tone?: 'light' | 'dark'
+  /** center = centrada sempre; auto = centrada no celular, à esquerda no desktop */
+  align?: 'center' | 'auto'
+  class?: string
+}
+
+const { itens, tone = 'light', align = 'center', class: className = '' } = Astro.props
+const escuro = tone === 'dark'
+
+const ICONES = {
+  escudo: 'M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3Zm-3 9 2 2 4-4',
+  cadeado: 'M6 11h12v9H6zM9 11V8a3 3 0 0 1 6 0v3M12 15v2',
+  bandeira: 'M6 21V4M6 4h11l-2.5 3.5L17 11H6',
+}
+---
+
+<ul
+  class:list={[
+    'flex flex-col items-center justify-center gap-y-2 sm:flex-row sm:flex-wrap sm:divide-x',
+    align === 'auto' && 'lg:justify-start',
+    escuro ? 'divide-white/15' : 'divide-line',
+    className,
+  ]}
+>
+  {
+    itens.map((item) => (
+      <li class="flex items-center gap-2.5 px-4 text-[13px] leading-snug first:pl-0 last:pr-0">
+        <svg
+          viewBox="0 0 24 24"
+          class:list={['size-5 shrink-0', escuro ? 'text-green' : 'text-green-deep']}
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d={ICONES[item.icone]} />
+        </svg>
+        <span class:list={['sm:max-w-[16ch]', escuro ? 'text-white/75' : 'text-ink-soft']}>{item.texto}</span>
+      </li>
+    ))
+  }
+</ul>

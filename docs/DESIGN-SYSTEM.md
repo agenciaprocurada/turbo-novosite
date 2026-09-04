@@ -186,6 +186,11 @@ Tamanhos: `md` (44px, texto 13px) e `lg` (52px, texto 14px).
 | `StatBlock` | número + rótulo |
 | `Avatar` | foto ou monograma |
 | `MockupFrame` | moldura de janela para ilustrações de UI |
+| `HeroProduto` | hero claro das internas; slot `visual` põe um mockup no lugar do card de preço |
+| `FaixaProvas` | ícone + texto curto, separados por régua, abaixo de um CTA; `tone="dark"` no bloco roxo |
+| `BeneficioCard` | ícone em quadrado lavanda + título + texto; `tone="dark"` no bloco roxo |
+| `mockups/AnelNota` | anel de nota 0–100 (estilo PageSpeed), só SVG |
+| `mockups/Builder*` | editor, placar, chat e painel do Turbo Builder — exemplos de mockup HTML/CSS |
 
 ---
 

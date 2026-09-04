@@ -66,6 +66,9 @@ export const links = {
     email: '/hospedagem/servidor-para-e-mail/',
     openclaw: '/hospedagem/openclaw/',
   },
+  ferramentasIa: {
+    turboBuilder: '/ferramentas-ia/turbo-builder/',
+  },
 } as const
 
 /** Carrinho do WHMCS. Cada plano leva direto para o seu produto — antes todos
@@ -179,9 +182,18 @@ export const nav = [
       },
     ],
   },
+  {
+    label: 'Ferramentas IA',
+    itens: [
+      {
+        label: 'Turbo Builder',
+        desc: 'Site criado por IA, publicado na hora',
+        href: links.ferramentasIa.turboBuilder,
+      },
+    ],
+  },
   { label: 'Estrutura', href: links.estrutura },
   { label: 'Planos', href: links.planos },
-  { label: 'Contato', href: links.contato },
 ] as const
 
 /* ------------------------------------------------------------------ */
@@ -851,6 +863,10 @@ export const footer = {
       ],
     },
     {
+      titulo: 'Ferramentas IA',
+      itens: [{ label: 'Turbo Builder', href: links.ferramentasIa.turboBuilder }],
+    },
+    {
       titulo: 'Empresa',
       itens: [
         { label: 'Estrutura', href: links.estrutura },
@@ -956,4 +972,5 @@ export const PENDENTE = [
   'Definir se a conversa da seção de suporte vira transcrição de um caso real (hoje é representação do fluxo).',
   'Programa de afiliados: a tabela de comissões publicada lista "Plano Elite 40", que não existe na tabela de planos (são 5, 10, 15, 20, 30 e 50). Confirmar se é o Elite 30 ou o Elite 50 — o valor foi mantido como está publicado.',
   'Sincronizar o package-lock: falta @emnapi/runtime e @emnapi/core no topo, e por isso npm ci quebra no Linux. O deploy usa npm install e não sente, mas qualquer CI com npm ci vai falhar. Precisa ser regenerado num Linux — regenerar no Windows não resolve.',
+  'URL real de checkout/assinatura do Turbo Builder. Os botões "Assinar Starter/Agência" em /ferramentas-ia/turbo-builder/ apontam para o WhatsApp por enquanto — trocar pelo link de loja assim que o produto tiver checkout próprio no WHMCS.',
 ] as const

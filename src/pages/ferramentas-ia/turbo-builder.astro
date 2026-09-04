@@ -1,0 +1,680 @@
+---
+/**
+ * /ferramentas-ia/turbo-builder/ — site criado por IA, publicado na Turbo Cloud.
+ *
+ * Rota estática própria, fora de `produtos.ts` e do `[slug].astro`, pelo
+ * mesmo motivo do OpenClaw (ver `hospedagem/openclaw.astro`): o molde de
+ * produto argumenta "por que escolher → planos → benefícios → segurança →
+ * FAQ", e o Turbo Builder pede outro caminho.
+ *
+ * A ordem e os componentes das seções seguem a página do produto em produção
+ * (hero com o editor ao lado → métricas → como funciona → performance →
+ * público → recursos → editor com IA → funcionalidades → modelos → painel →
+ * planos → por dentro da Turbo Cloud → FAQ → CTA). Só o visual muda: tokens,
+ * tipografia, botões e cards do design system do site.
+ *
+ * Sem hub `/ferramentas-ia/` ainda: é a única ferramenta da categoria, então
+ * a trilha pula direto de Home para Turbo Builder — um crumb do meio sem
+ * página própria seria link morto.
+ */
+import Base from '../../layouts/Base.astro'
+import TopBar from '../../components/TopBar.astro'
+import HeaderPill from '../../components/HeaderPill.astro'
+import FooterMega from '../../components/FooterMega.astro'
+
+import HeroProduto from '../../components/HeroProduto.astro'
+import BeneficioCard from '../../components/BeneficioCard.astro'
+import SectionEyebrow from '../../components/SectionEyebrow.astro'
+import HeadingDuo from '../../components/HeadingDuo.astro'
+import Button from '../../components/Button.astro'
+import PricingCard from '../../components/PricingCard.astro'
+import FaixaProvas from '../../components/FaixaProvas.astro'
+import BuilderHeroPanel from '../../components/mockups/BuilderHeroPanel.astro'
+import BuilderScorePanel from '../../components/mockups/BuilderScorePanel.astro'
+import BuilderChatPanel from '../../components/mockups/BuilderChatPanel.astro'
+import BuilderDashboardPanel from '../../components/mockups/BuilderDashboardPanel.astro'
+
+import Faq from '../../components/secoes/Faq.astro'
+import CtaFinal from '../../components/secoes/CtaFinal.astro'
+
+import { turboBuilder as tb } from '../../data/turbobuilder'
+import { links } from '../../data/site'
+
+const trilha = [
+  { label: 'Home', href: '/' },
+  { label: 'Turbo Builder', href: links.ferramentasIa.turboBuilder },
+]
+
+/* Ícones de traço desta página (24×24). Só usados aqui, por isso não entram
+   no conjunto compartilhado de `BeneficioCard`. */
+const ICONES: Record<string, string> = {
+  velocimetro: 'M12 20a8 8 0 1 1 8-8M12 12l4.5-4.5M12 12h.01',
+  escudo: 'M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3Zm-3 9 2 2 4-4',
+  codigo: 'M8 8l-4 4 4 4M16 8l4 4-4 4M14 5l-4 14',
+  bandeira: 'M6 21V4M6 4h11l-2.5 3.5L17 11H6',
+  documento: 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h5M10 17h5',
+  brilho:
+    'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3ZM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z',
+  foguete:
+    'M5 15c-1.5 1.5-2 4-2 6 2 0 4.5-.5 6-2M14 4c2-1.5 5-2 7-1 1 2 .5 5-1 7l-6 6-6-6 6-6Zm-4 8 2 2M15 8a1 1 0 1 0 0 .01',
+  raio: 'M13 3 5 13.5h6L10 21l9-11.5h-6L13 3Z',
+  cadeado: 'M6 11h12v9H6zM9 11V8a3 3 0 0 1 6 0v3M12 15v2',
+  celular: 'M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1ZM11 18h2',
+  historico: 'M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4M12 8v4l3 2',
+  nuvem: 'M7 18a4 4 0 0 1-.6-7.95A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5H7Z',
+  pessoa: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 21a8 8 0 0 1 16 0',
+  alvo: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-4a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0-4a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z',
+  arroba: 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm4-4v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-3.5 7.1',
+  enviar: 'M21 3 3 10.5l7.5 3L13.5 21 21 3ZM10.5 13.5 21 3',
+  lapis: 'M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3ZM13.5 6.5l3 3',
+  email: 'M3 6h18v12H3zM3 7l9 6 9-6',
+  paginas: 'M8 4h11v13H8zM5 8v12h11',
+  talheres: 'M6 3v8a2 2 0 0 0 2 2v8M8 3v6M10 3v6M17 3c-2 1-3 3-3 6v3h3v9',
+  bolo: 'M5 11h14l-1 9H6l-1-9ZM7 11a5 5 0 0 1 10 0M12 4v2',
+  chapeu: 'M2 9l10-4 10 4-10 4L2 9Zm5 3v4c0 1.5 2.5 3 5 3s5-1.5 5-3v-4M22 9v6',
+  livro: 'M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4V5Zm16 0h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6V5Z',
+  balanca: 'M12 3v18M4 7h16M6 7l-3 7a3 3 0 0 0 6 0L6 7Zm12 0-3 7a3 3 0 0 0 6 0l-3-7ZM8 21h8',
+  maleta: 'M4 8.5h16v10H4zM9 8.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2.5M4 13.5h16',
+  predio: 'M5 21V4h10v17M15 9h4v12M8 8h1M11 8h1M8 12h1M11 12h1M8 16h1M11 16h1M9 21v-3h2v3',
+  tesoura: 'M7 6.2a2.2 2.2 0 1 1 3 2L18.5 19M7 17.8a2.2 2.2 0 1 0 3-2L18.5 5',
+  mais: 'M6 12h.01M12 12h.01M18 12h.01',
+}
+
+const CHECK = 'M2.5 6.4L4.8 8.7L9.5 3.6'
+
+/* Topo colorido dos cards de modelo — só cores da paleta. */
+const TONS: Record<string, string> = {
+  roxo: 'from-purple-logo to-purple-800',
+  verde: 'from-green-deep to-green-ink',
+  escuro: 'from-purple-950 to-purple-800',
+  lima: 'from-green-ink to-green',
+}
+
+const PILAR_COR = ['bg-purple-logo', 'bg-green-deep', 'bg-purple-800']
+---
+
+<Base titulo={tb.titulo} descricao={tb.descricao} trilha={trilha} faq={tb.faq}>
+  <TopBar />
+  <HeaderPill />
+
+  <main id="conteudo">
+    <HeroProduto
+      eyebrow={tb.eyebrow}
+      titulo={tb.h1}
+      tituloVerde={tb.h1Verde}
+      lead={tb.lead}
+      badges={tb.provas.map((p) => p.texto)}
+      trilha={trilha}
+      ctaPrimario={tb.cta}
+      ctaSecundario={tb.ctaSecundario}
+    >
+      <BuilderHeroPanel slot="visual" />
+    </HeroProduto>
+
+    {/* ------------------------------ Métricas ------------------------------ */}
+    <section class="pt-[clamp(8px,1vw,16px)]">
+      <div class="container-page">
+        <div
+          class="reveal grid grid-cols-2 gap-x-4 gap-y-6 rounded-card border border-line bg-surface p-5 shadow-soft sm:grid-cols-4 sm:gap-x-0 sm:divide-x sm:divide-line sm:p-6"
+        >
+          {
+            tb.metricas.map((m) => (
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                <span
+                  class="grid size-11 shrink-0 place-items-center rounded-[13px] bg-purple-logo/8 text-purple-800"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" class="size-[22px]" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d={ICONES[m.icone]} />
+                  </svg>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-[24px] leading-none font-bold tracking-[-0.02em] text-ink">
+                    {m.valor}
+                    {m.unidade && <span class="ml-1 text-[13px] font-bold text-green-deep">{m.unidade}</span>}
+                  </p>
+                  <p class="mt-1.5 text-[13px] leading-snug text-ink-soft">{m.texto}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* --------------------------- Como funciona ---------------------------- */}
+    <section id="como-funciona" class="pt-[clamp(64px,8vw,110px)] pb-[clamp(40px,5vw,64px)]">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[640px] lg:mx-0">
+          <SectionEyebrow>{tb.comoFunciona.eyebrow}</SectionEyebrow>
+          <HeadingDuo parte1={tb.comoFunciona.titulo1} parte2={tb.comoFunciona.titulo2} class="mt-4" />
+        </div>
+
+        <ol class="mt-10 grid gap-8 md:grid-cols-3 md:gap-6">
+          {
+            tb.comoFunciona.passos.map((passo, i) => (
+              <li class="reveal" data-delay={String(i + 1)}>
+                <div class="flex items-center gap-3">
+                  <span class="grid h-10 w-11 shrink-0 place-items-center rounded-[12px] border border-purple-logo/15 bg-purple-logo/6 font-mono text-[12px] text-purple-logo">
+                    0{i + 1}
+                  </span>
+                  <span
+                    class="grid size-11 shrink-0 place-items-center rounded-full bg-purple-logo text-white shadow-soft"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                      <path d={ICONES[passo.icone]} />
+                    </svg>
+                  </span>
+                  {i < tb.comoFunciona.passos.length - 1 && (
+                    <span class="hidden flex-1 items-center gap-1 pl-2 md:flex" aria-hidden="true">
+                      <span class="h-0 flex-1 border-t-2 border-dashed border-purple-logo/25" />
+                      <span class="size-1.5 rounded-full bg-purple-logo/40" />
+                    </span>
+                  )}
+                </div>
+                <h3 class="mt-5 text-[17px] font-bold text-ink">{passo.titulo}</h3>
+                <p class="mt-2 max-w-[38ch] text-[14.5px] leading-relaxed text-ink-soft">{passo.texto}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    {/* ---------------------------- Performance ----------------------------- */}
+    <section class="py-[clamp(48px,6vw,88px)]">
+      <div
+        class="container-page grid gap-y-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-x-14"
+      >
+        <div class="reveal">
+          <SectionEyebrow>{tb.performance.eyebrow}</SectionEyebrow>
+          <HeadingDuo parte1={tb.performance.titulo1} parte2={tb.performance.titulo2} class="mt-4" />
+          <p class="mx-auto mt-4 max-w-[50ch] text-center text-[16px] leading-relaxed text-ink-soft lg:mx-0 lg:text-left">
+            {tb.performance.texto}
+          </p>
+          <ul class="mx-auto mt-6 flex max-w-[52ch] flex-col gap-3 lg:mx-0">
+            {
+              tb.performance.itens.map((item) => (
+                <li class="flex items-start gap-3">
+                  <span
+                    class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green-deep text-white"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 12 12" class="size-3" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d={CHECK} stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="text-[15px] leading-snug text-ink">{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="reveal min-w-0" data-delay="1">
+          <BuilderScorePanel />
+        </div>
+      </div>
+    </section>
+
+    {/* ------------------------------ Público -------------------------------- */}
+    <section class="py-[clamp(48px,6vw,88px)]">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[720px] text-center">
+          <span
+            class="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-[13.5px] font-bold text-purple-logo shadow-soft"
+          >
+            <span aria-hidden="true">✦</span>{tb.publico.selo}
+          </span>
+          <h2
+            class="mt-6 text-[clamp(1.8rem,3.8vw,2.5rem)] leading-[1.1] font-bold tracking-[-0.02em] text-balance text-ink"
+          >
+            {tb.publico.titulo1}<br /><span class="text-green-ink">{tb.publico.titulo2}</span>
+          </h2>
+          <p class="mx-auto mt-5 max-w-[60ch] text-[16px] leading-relaxed text-ink-soft">
+            {tb.publico.texto}{' '}<strong class="font-bold text-ink">{tb.publico.destaque}</strong>
+          </p>
+        </div>
+
+        {/* Pilares */}
+        <div
+          class="reveal mt-10 grid gap-y-6 rounded-card border border-line bg-surface p-5 shadow-soft sm:grid-cols-3 sm:gap-y-0 sm:divide-x sm:divide-line sm:p-0"
+          data-delay="1"
+        >
+          {
+            tb.publico.pilares.map((p, i) => (
+              <div class="flex items-center gap-4 sm:px-7 sm:py-7">
+                <span
+                  class:list={['grid size-14 shrink-0 place-items-center rounded-[16px] text-white shadow-soft', PILAR_COR[i]]}
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d={ICONES[p.icone]} />
+                  </svg>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-[12.5px] text-ink-soft">{p.rotulo}</p>
+                  <p class="text-[17px] leading-tight font-bold text-ink">{p.titulo}</p>
+                  <p class="mt-0.5 text-[12.5px] text-ink-soft">{p.texto}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        {/* Ideal para */}
+        <div
+          class="reveal mt-5 rounded-card border border-line bg-linear-to-b from-[#F6F1FA] to-surface p-6 shadow-soft sm:p-9"
+          data-delay="2"
+        >
+          <div class="flex items-center gap-4">
+            <span
+              class="grid size-14 shrink-0 place-items-center rounded-full bg-purple-logo text-white shadow-soft"
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d={ICONES.alvo} />
+              </svg>
+            </span>
+            <div>
+              <p class="text-[19px] leading-tight font-bold text-purple-logo">{tb.publico.idealTitulo}</p>
+              <p class="mt-0.5 text-[14.5px] leading-snug text-ink-soft">{tb.publico.idealTexto}</p>
+            </div>
+          </div>
+
+          <ul class="mt-8 grid grid-cols-3 gap-x-3 gap-y-6 text-center sm:grid-cols-5 lg:grid-cols-9">
+            {
+              tb.publico.segmentos.map((s, i) => (
+                <li class="flex flex-col items-center gap-2.5">
+                  <span
+                    class:list={[
+                      'grid size-16 place-items-center rounded-[18px]',
+                      i % 2 === 0 ? 'bg-purple-logo/8 text-purple-800' : 'bg-green/14 text-green-deep',
+                    ]}
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                      <path d={ICONES[s.icone]} />
+                    </svg>
+                  </span>
+                  <span class="text-[13px] leading-tight text-ink">{s.nome}</span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <p class="mt-8 flex justify-center">
+            <span
+              class="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-center text-[14px] font-bold text-purple-logo shadow-soft"
+            >
+              <span aria-hidden="true">✦</span>{tb.publico.remate}
+            </span>
+          </p>
+        </div>
+
+        {/* E o principal de tudo */}
+        <div class="reveal mx-auto mt-14 max-w-[760px] text-center">
+          <SectionEyebrow align="center">{tb.publico.principal.selo}</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.5rem,3vw,2rem)] leading-[1.18] font-bold tracking-[-0.018em] text-balance text-ink"
+          >
+            {tb.publico.principal.titulo1}{' '}<span class="text-green-ink">{tb.publico.principal.tituloVerde}</span>{' '}{tb.publico.principal.titulo2}
+          </h2>
+
+          <ul class="mt-8 flex flex-col items-center gap-5 sm:flex-row sm:items-start sm:justify-center sm:gap-10">
+            {
+              tb.publico.principal.itens.map((item) => (
+                <li class="flex items-center gap-4 text-left">
+                  <span
+                    class="grid size-14 shrink-0 place-items-center rounded-[16px] bg-purple-logo/8 text-purple-800"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                      <path d={ICONES[item.icone]} />
+                    </svg>
+                  </span>
+                  <div>
+                    <p class="text-[16px] font-bold text-ink">{item.titulo}</p>
+                    <p class="text-[14px] text-ink-soft">{item.texto}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+
+          <div class="mt-9 flex justify-center">
+            <Button href={tb.cta.href} variant="green" size="lg">{tb.cta.label}</Button>
+          </div>
+          <FaixaProvas itens={tb.provas} class="mt-6" />
+        </div>
+      </div>
+    </section>
+
+    {/* ------------------------------ Recursos ------------------------------- */}
+    <section class="py-[clamp(48px,6vw,88px)]">
+      <div class="container-page">
+        <div class="grid gap-y-8 lg:grid-cols-2 lg:items-center lg:gap-x-12">
+          <div class="reveal">
+            <SectionEyebrow>{tb.recursos.eyebrow}</SectionEyebrow>
+            <HeadingDuo parte1={tb.recursos.titulo1} parte2={tb.recursos.titulo2} class="mt-4" />
+            <p class="mx-auto mt-4 max-w-[46ch] text-center text-[16px] leading-relaxed text-ink-soft lg:mx-0 lg:text-left">
+              {tb.recursos.texto}
+            </p>
+          </div>
+
+          {/* Composição decorativa: um cartão central e quatro chips em volta */}
+          <div class="reveal relative hidden h-[250px] lg:block" data-delay="1" aria-hidden="true">
+            <div
+              class="absolute top-3 left-1/2 flex w-[230px] -translate-x-1/2 flex-col items-center gap-4 rounded-card border border-line bg-surface p-7 shadow-lift"
+            >
+              <span class="grid size-16 place-items-center rounded-[18px] bg-purple-logo/8 text-purple-logo">
+                <svg viewBox="0 0 24 24" class="size-8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d={ICONES.brilho} />
+                </svg>
+              </span>
+              <span class="block h-2 w-28 rounded-full bg-purple-logo/20"></span>
+              <span class="block h-2 w-20 rounded-full bg-purple-logo/10"></span>
+            </div>
+            {
+              [
+                { icone: 'documento', classe: 'top-0 left-[16%] bg-surface text-purple-logo shadow-soft border border-line' },
+                { icone: 'raio', classe: 'top-8 right-[10%] bg-purple-logo text-white shadow-lift' },
+                { icone: 'codigo', classe: 'bottom-2 left-[20%] bg-surface text-purple-logo shadow-soft border border-line' },
+                { icone: 'cadeado', classe: 'bottom-0 right-[14%] bg-surface text-purple-logo shadow-soft border border-line' },
+              ].map((chip) => (
+                <span class:list={['absolute grid size-14 place-items-center rounded-[16px]', chip.classe]}>
+                  <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d={ICONES[chip.icone]} />
+                  </svg>
+                </span>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            tb.recursos.itens.map((item, i) => (
+              <article
+                class="reveal flex flex-col rounded-card border border-line bg-surface p-6 shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift"
+                data-delay={String((i % 3) + 1)}
+              >
+                <div class="flex items-start justify-between">
+                  <span class="grid size-11 place-items-center rounded-[13px] bg-purple-logo/8 text-purple-800" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" class="size-[22px]" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                      <path d={ICONES[item.icone]} />
+                    </svg>
+                  </span>
+                  <span class="font-mono text-[11px] tracking-[0.08em] text-ink-soft/70">0{i + 1}</span>
+                </div>
+                <h3 class="mt-5 text-[16.5px] font-bold text-ink">{item.titulo}</h3>
+                <p class="mt-1.5 text-[14px] leading-relaxed text-ink-soft">{item.texto}</p>
+              </article>
+            ))
+          }
+        </div>
+
+        <div class="reveal mt-10 text-center">
+          <Button href={tb.cta.href} variant="green" size="lg">{tb.cta.label}</Button>
+          <FaixaProvas itens={tb.provas} class="mt-6" />
+        </div>
+      </div>
+    </section>
+
+    {/* --------------------------- Editor com IA ----------------------------- */}
+    <section class="py-2">
+      <div class="block-section block-dark bg-purple-950 py-[clamp(56px,7vw,96px)] text-white">
+        <div
+          class="container-page grid gap-y-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-x-14"
+        >
+          <div class="reveal">
+            <SectionEyebrow tone="dark">{tb.editor.eyebrow}</SectionEyebrow>
+            <h2
+              class="mt-4 text-center text-[clamp(1.7rem,3.6vw,2.3rem)] leading-[1.12] font-bold tracking-[-0.02em] text-balance lg:text-left"
+            >
+              {tb.editor.titulo1}<br /><span class="text-green">{tb.editor.titulo2}</span>
+            </h2>
+            <p class="mx-auto mt-5 max-w-[48ch] text-center text-[16px] leading-relaxed text-white/70 lg:mx-0 lg:text-left">
+              {tb.editor.texto}
+            </p>
+            <ul class="mx-auto mt-6 flex max-w-[48ch] flex-col gap-3 lg:mx-0">
+              {
+                tb.editor.itens.map((item) => (
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green text-purple-950"
+                      aria-hidden="true"
+                    >
+                      <svg viewBox="0 0 12 12" class="size-3" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d={CHECK} stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </span>
+                    <span class="text-[15px] leading-snug text-white/85">{item}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          <div class="reveal min-w-0" data-delay="1">
+            <BuilderChatPanel />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* --------------------------- Funcionalidades --------------------------- */}
+    <section class="pt-[clamp(64px,8vw,110px)] pb-[clamp(40px,5vw,64px)]">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[680px] text-center">
+          <SectionEyebrow align="center">{tb.funcionalidades.eyebrow}</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.8rem,3.8vw,2.5rem)] leading-[1.1] font-bold tracking-[-0.02em] text-balance text-ink"
+          >
+            {tb.funcionalidades.titulo1}<br /><span class="text-green-ink">{tb.funcionalidades.titulo2}</span>
+          </h2>
+          <p class="mx-auto mt-4 max-w-[54ch] text-[16px] leading-relaxed text-ink-soft">
+            {tb.funcionalidades.texto}
+          </p>
+        </div>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            tb.funcionalidades.grupos.map((grupo, i) => (
+              <article
+                class="reveal flex flex-col rounded-card border border-line bg-surface p-6 shadow-soft"
+                data-delay={String((i % 3) + 1)}
+              >
+                <span class="grid size-11 place-items-center rounded-[13px] bg-purple-logo/8 text-purple-800" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" class="size-[22px]" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d={ICONES[grupo.icone]} />
+                  </svg>
+                </span>
+                <h3 class="mt-5 text-[16.5px] font-bold text-ink">{grupo.titulo}</h3>
+                <ul class="mt-4 flex flex-col gap-2.5">
+                  {grupo.itens.map((item) => (
+                    <li class="flex items-start gap-2.5 text-[14px] leading-snug text-ink">
+                      <svg
+                        viewBox="0 0 12 12"
+                        class="mt-[3px] size-3.5 shrink-0 text-green-deep"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        aria-hidden="true"
+                      >
+                        <path d={CHECK} stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ------------------------------ Modelos -------------------------------- */}
+    <section class="py-[clamp(48px,6vw,88px)]">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[640px] lg:mx-0">
+          <SectionEyebrow>{tb.modelos.eyebrow}</SectionEyebrow>
+          <HeadingDuo parte1={tb.modelos.titulo1} parte2={tb.modelos.titulo2} class="mt-4" />
+          <p class="mt-4 max-w-[54ch] text-center text-[16px] leading-relaxed text-ink-soft lg:text-left">
+            {tb.modelos.texto}
+          </p>
+        </div>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            tb.modelos.itens.map((modelo, i) => (
+              <article
+                class="reveal overflow-hidden rounded-card border border-line bg-surface shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift"
+                data-delay={String((i % 4) + 1)}
+              >
+                <div class:list={['flex items-center gap-4 bg-linear-to-br px-5 py-7 text-white', TONS[modelo.tom]]} aria-hidden="true">
+                  <span class="grid size-14 shrink-0 place-items-center rounded-full bg-white/20">
+                    <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                      <path d={ICONES[modelo.icone]} />
+                    </svg>
+                  </span>
+                  <span class="flex min-w-0 flex-1 flex-col gap-2">
+                    <span class="block h-2 w-full rounded-full bg-white/80" />
+                    <span class="block h-2 w-3/4 rounded-full bg-white/50" />
+                    <span class="block h-2 w-1/2 rounded-full bg-white/35" />
+                  </span>
+                </div>
+                <div class="flex items-center justify-between gap-3 px-5 py-4">
+                  <div class="min-w-0">
+                    <h3 class="text-[16px] font-bold text-ink">{modelo.nome}</h3>
+                    <p class="text-[13.5px] text-ink-soft">{modelo.tagline}</p>
+                  </div>
+                  <span class="shrink-0 rounded-full bg-bg px-2.5 py-1 font-mono text-[10px] tracking-[0.06em] text-ink-soft">
+                    {modelo.categoria}
+                  </span>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+
+        <div class="reveal mt-10 text-center">
+          <Button href={tb.cta.href} variant="green" size="lg">{tb.cta.label}</Button>
+          <FaixaProvas itens={tb.provas} class="mt-6" />
+        </div>
+      </div>
+    </section>
+
+    {/* ------------------------------- Painel -------------------------------- */}
+    <section class="py-[clamp(48px,6vw,88px)]">
+      <div
+        class="container-page grid gap-y-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-x-14"
+      >
+        <div class="reveal order-2 min-w-0 lg:order-1" data-delay="1">
+          <BuilderDashboardPanel />
+        </div>
+
+        <div class="reveal order-1 lg:order-2">
+          <SectionEyebrow>{tb.painel.eyebrow}</SectionEyebrow>
+          <HeadingDuo parte1={tb.painel.titulo1} parte2={tb.painel.titulo2} class="mt-4" />
+          <p class="mx-auto mt-4 max-w-[46ch] text-center text-[16px] leading-relaxed text-ink-soft lg:mx-0 lg:text-left">
+            {tb.painel.texto}
+          </p>
+          <ul class="mx-auto mt-6 flex max-w-[52ch] flex-col gap-3 lg:mx-0">
+            {
+              tb.painel.itens.map((item) => (
+                <li class="flex items-start gap-3">
+                  <span
+                    class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green-deep text-white"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 12 12" class="size-3" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d={CHECK} stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="text-[15px] leading-snug text-ink">{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {/* ------------------------------- Planos -------------------------------- */}
+    <section id="planos" class="py-[clamp(64px,8vw,110px)]">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-[640px] text-center">
+          <SectionEyebrow align="center">{tb.planos.eyebrow}</SectionEyebrow>
+          <h2
+            class="mt-4 text-[clamp(1.8rem,3.8vw,2.5rem)] leading-[1.1] font-bold tracking-[-0.02em] text-balance text-ink"
+          >
+            {tb.planos.titulo1}<br /><span class="text-green-ink">{tb.planos.titulo2}</span>
+          </h2>
+          <p class="mx-auto mt-4 max-w-[54ch] text-[16px] leading-relaxed text-ink-soft">{tb.planos.texto}</p>
+        </div>
+
+        <div class="mx-auto mt-10 grid max-w-[860px] gap-5 sm:grid-cols-2">
+          {
+            tb.planos.itens.map((plano, i) => (
+              <div class="reveal" data-delay={String(i + 1)}>
+                <PricingCard plano={plano} icone={i === 0 ? 'foguete' : 'grupo'} />
+              </div>
+            ))
+          }
+        </div>
+
+        <p
+          class="reveal mx-auto mt-8 flex max-w-[760px] flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-card border border-line bg-surface px-5 py-3.5 text-center text-[14px] shadow-soft"
+        >
+          <svg viewBox="0 0 24 24" class="size-4 shrink-0 text-green-deep" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d={ICONES.escudo} />
+          </svg>
+          <span class="font-bold text-green-deep">{tb.planos.nota.titulo}</span>
+          <span class="text-ink-soft">· {tb.planos.nota.texto}</span>
+        </p>
+      </div>
+    </section>
+
+    {/* ------------------------ Por dentro da Turbo Cloud --------------------- */}
+    <section class="py-2">
+      <div class="block-section block-dark bg-purple-950 py-[clamp(56px,7vw,96px)] text-white">
+        <div
+          class="container-page grid gap-y-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-x-14"
+        >
+          <div class="reveal">
+            <SectionEyebrow tone="dark">{tb.infra.eyebrow}</SectionEyebrow>
+            <h2
+              class="mt-4 text-center text-[clamp(1.9rem,4.2vw,2.8rem)] leading-[1.08] font-bold tracking-[-0.02em] text-balance lg:text-left"
+            >
+              {tb.infra.titulo1}<br /><span class="text-green">{tb.infra.titulo2}</span>
+            </h2>
+            <p class="mx-auto mt-5 max-w-[52ch] text-center text-[16px] leading-relaxed text-white/70 lg:mx-0 lg:text-left">
+              {tb.infra.texto}
+            </p>
+            <div class="mt-7 flex justify-center lg:justify-start">
+              <Button href={tb.cta.href} variant="green" size="lg">{tb.cta.label}</Button>
+            </div>
+            <FaixaProvas itens={tb.provas} tone="dark" align="auto" class="mt-6" />
+          </div>
+
+          <div class="reveal grid gap-4 sm:grid-cols-2" data-delay="1">
+            {
+              tb.infra.selos.map((selo) => (
+                <BeneficioCard icone={selo.icone} titulo={selo.titulo} texto={selo.texto} tone="dark" />
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <Faq itens={tb.faq} class="pt-[clamp(64px,8vw,110px)] pb-[clamp(56px,7vw,100px)]" />
+
+    <CtaFinal titulo1={tb.ctaFinal.titulo1} titulo2={tb.ctaFinal.titulo2} texto={tb.ctaFinal.texto} />
+  </main>
+
+  <FooterMega />
+</Base>
