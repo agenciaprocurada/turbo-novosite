@@ -114,8 +114,14 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
         <div class="reveal stagger text-center lg:self-end lg:text-left">
           <SectionEyebrow class="justify-center lg:justify-start">{hero.eyebrow}</SectionEyebrow>
 
+          {/* O piso do clamp era 2,3rem: no celular a primeira metade do título
+              não cabia numa linha e o H1 ia para três. Medindo o quanto a frase
+              ocupa por px de fonte, 32,8px é o limite a 390px de tela — daí o
+              termo em vw, que acompanha da faixa de 320px até 580px, e um piso
+              baixo que na prática nunca entra. Acima de 580px o teto de 2,9rem
+              manda, então o desktop não mudou. */}
           <h1
-            class="mt-4 text-[clamp(2.3rem,5.2vw,2.9rem)] leading-[1.08] font-bold tracking-[-0.024em] text-ink lg:mt-5"
+            class="mt-4 text-[clamp(1.6rem,8vw,2.9rem)] leading-[1.08] font-bold tracking-[-0.024em] text-ink lg:mt-5"
           >
             <span>{hero.titulo1}</span><br /><span class="text-green-ink">{hero.titulo2}</span>
           </h1>

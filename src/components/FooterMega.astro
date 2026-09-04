@@ -1,18 +1,144 @@
 ---
+/**
+ * Rodapé. O desenho segue a referência visual da marca:
+ *
+ * - coluna de marca à esquerda, separada das colunas de links por uma régua
+ *   vertical (só no desktop — no celular tudo empilha e a régua some);
+ * - contatos com ícone em quadradinho lilás, um por linha;
+ * - título de cada coluna no roxo do wordmark (--color-purple-logo), com um
+ *   ponto verde antes; cada link com um
+ * *   chevron, que é o mesmo gesto dos menus do site;
+ * - faixa de quatro provas com ícone contornado, separadas por régua vertical;
+ * - versículo com aspa decorativa;
+ * - linha final com copyright, CNPJ e endereço separados por barra.
+ *
+ * Uma coisa que a referência traz e **não** entrou: ela mostra o WhatsApp
+ * atendendo "8h–18h". O horário real é 8h–1h e está em `atendimento`; vale o
+ * dado, não a arte (regra 1 do projeto). Pelo mesmo motivo o quarto selo diz o
+ * horário do suporte em vez de "rápido e eficiente", que seria elogio sem
+ * número por trás.
+ */
 import Logo from './Logo.astro'
 import { marca, links, footer, provas, atendimento } from '../data/site'
 
 const ano = new Date().getFullYear()
+
+/* O resumo do atendimento já existe pronto numa string só, com as duas metades
+   separadas por "·". Quebrar aqui evita repetir o horário no dado. */
+const [horarioWhatsapp, horarioTicket] = atendimento.resumo.split(' · ')
+
+/** Contatos da coluna de marca. `traco` é a linha menor que vem abaixo. */
+const contatos = [
+  {
+    rotulo: 'E-mail',
+    texto: marca.email,
+    href: `mailto:${marca.email}`,
+    icone:
+      'M3 7.5A2.5 2.5 0 0 1 5.5 5h13A2.5 2.5 0 0 1 21 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 16.5v-9Zm1.8-.3 6.5 4.8a1.2 1.2 0 0 0 1.4 0l6.5-4.8',
+  },
+  {
+    rotulo: 'Telefone',
+    texto: marca.telefone,
+    href: links.whatsapp,
+    icone:
+      'M7.5 4h2l1.5 3.6-1.8 1.3a11 11 0 0 0 4.9 4.9l1.3-1.8L19 13.5v2a2 2 0 0 1-2.2 2A13.5 13.5 0 0 1 5.5 6.2 2 2 0 0 1 7.5 4Z',
+  },
+  {
+    rotulo: 'WhatsApp',
+    texto: horarioWhatsapp,
+    href: links.whatsapp,
+    traco: horarioTicket,
+    icone:
+      'M12 3a9 9 0 0 0-7.7 13.7L3 21l4.4-1.2A9 9 0 1 0 12 3Zm4.5 12.3c-.2.6-1.1 1.1-1.6 1.1-.4 0-.9.2-3-.8-2.5-1.1-4.1-3.7-4.2-3.9-.1-.2-1-1.3-1-2.5s.6-1.7.9-2c.2-.2.5-.3.6-.3h.5c.2 0 .4 0 .5.4l.8 1.8c.1.2 0 .4 0 .5l-.3.4-.3.3c-.1.1-.2.3 0 .5.2.3.7 1.1 1.4 1.8.9.8 1.6 1 1.9 1.2.2.1.4 0 .5-.1l.7-.9c.2-.2.3-.2.5-.1l1.7.8c.2.1.4.2.4.3.1.1.1.6-.1 1.2Z',
+  },
+]
+
+/** Faixa de provas. Todo número aqui já estava em `provas`/`atendimento`. */
+const selos = [
+  {
+    titulo: `${provas.notaGoogle} no Google`,
+    texto: `${provas.avaliacoesGoogle.toLocaleString('pt-BR')} avaliações`,
+    estrelas: true,
+    icone: 'm12 3.5 2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8-4.2-4.1 5.9-.9L12 3.5Z',
+  },
+  {
+    titulo: 'TIER III',
+    texto: 'datacenter certificado',
+    icone:
+      'M12 3.5 5 6.2v5.3c0 4 3 7.7 7 8.9 4-1.2 7-4.9 7-8.9V6.2l-7-2.7Zm-2.6 8.2 1.9 1.9 3.5-3.6',
+  },
+  {
+    titulo: `${provas.anosDeCasa} anos`,
+    texto: 'de mercado',
+    icone:
+      'M4.5 7.5A1.5 1.5 0 0 1 6 6h12a1.5 1.5 0 0 1 1.5 1.5v11A1.5 1.5 0 0 1 18 20H6a1.5 1.5 0 0 1-1.5-1.5v-11Zm0 3.2h15M8.5 4v3.5m7-3.5v3.5',
+  },
+  {
+    titulo: 'Suporte humano',
+    texto: horarioWhatsapp,
+    icone:
+      'M4.5 14v-2a7.5 7.5 0 0 1 15 0v2m-15 0a1.5 1.5 0 0 0 1.5 1.5h.5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H6a1.5 1.5 0 0 0-1.5 1.5Zm15 0A1.5 1.5 0 0 1 18 15.5h-.5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h.5a1.5 1.5 0 0 1 1.5 1.5Zm0 1.5v.5a3 3 0 0 1-3 3h-3',
+  },
+]
 ---
 
-<footer class="border-t border-line bg-bg pt-14 pb-[max(2.5rem,env(safe-area-inset-bottom))]">
+<footer class="border-t border-line bg-bg pt-14 pb-[max(2rem,env(safe-area-inset-bottom))]">
   <div class="container-page">
-    <div class="grid grid-cols-2 gap-x-6 gap-y-9 max-lg:text-center lg:grid-cols-[1.5fr_1fr_1fr_1fr] lg:text-left">
-      <div class="col-span-2 lg:col-span-1">
-        <Logo height={26} class="mx-auto text-purple-logo lg:mx-0" />
-        <p class="mx-auto mt-4 max-w-[30ch] text-[14.5px] leading-relaxed text-ink-soft lg:mx-0">
+    {/* Marca + colunas. A régua vertical fica no bloco das colunas, não entre
+        as células do grid: assim ela some sozinha quando tudo empilha. */}
+    <div class="grid gap-y-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,2.4fr)] lg:gap-x-12">
+      <div class="max-lg:text-center">
+        <Logo height={28} class="mx-auto text-purple-logo lg:mx-0" />
+
+        <p class="text-ink-soft mx-auto mt-5 max-w-[34ch] text-[14.5px] leading-relaxed lg:mx-0">
           Hospedagem de alta performance com servidores no Brasil. Desde {marca.desde}.
         </p>
+
+        <dl class="mt-7 flex flex-col gap-3.5 max-lg:mx-auto max-lg:w-fit">
+          {
+            contatos.map((contato) => (
+              <div class="flex items-center gap-3">
+                <dt class="sr-only">{contato.rotulo}</dt>
+                <dd class="flex items-center gap-3">
+                  <span
+                    class="bg-purple-logo/8 text-purple-logo grid size-9 shrink-0 place-items-center rounded-[11px]"
+                    aria-hidden="true"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      class="size-[18px]"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d={contato.icone} />
+                    </svg>
+                  </span>
+                  <span class="min-w-0 text-left">
+                    <a
+                      href={contato.href}
+                      rel="noopener"
+                      class="text-ink-soft hover:text-ink block text-[14.5px] transition-colors"
+                    >
+                      {contato.texto}
+                    </a>
+                    {contato.traco && (
+                      <span class="text-ink-soft mt-0.5 flex items-center gap-1.5 text-[13px]">
+                        <span
+                          class="bg-ink-soft size-[3px] shrink-0 rounded-full"
+                          aria-hidden="true"
+                        />
+                        {contato.traco}
+                      </span>
+                    )}
+                  </span>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
 
         {/* Nasce neutro: só afirma que está tudo operacional depois de confirmar
             na status page. Se o fetch não acontecer, fica neste estado. */}
@@ -21,88 +147,112 @@ const ano = new Date().getFullYear()
           rel="noopener"
           data-status-pill
           data-status-url={links.statusApi}
-          class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 font-mono text-[11.5px] text-ink-soft transition-colors hover:border-ink/20 hover:text-ink"
+          class="rounded-btn border-line bg-surface text-ink-soft hover:border-ink/20 hover:text-ink mt-7 inline-flex items-center gap-2 border px-4 py-2 font-mono text-[11.5px] transition-colors"
           style="--pulse-color: var(--color-ink-soft)"
         >
           <span class="pulse-dot" data-pulse="off" aria-hidden="true"></span>
           <span data-status-texto>status dos serviços</span>
         </a>
-
-        <dl class="mt-5 flex flex-col items-center gap-1 text-[14px] lg:items-start">
-          <div class="flex gap-2">
-            <dt class="sr-only">E-mail</dt>
-            <dd>
-              <a href={`mailto:${marca.email}`} class="inline-block rounded-full border border-line bg-surface px-3.5 py-1.5 text-ink-soft transition-colors hover:border-ink/20 hover:text-ink lg:border-0 lg:bg-transparent lg:px-0"
-                >{marca.email}</a
-              >
-            </dd>
-          </div>
-          <div class="flex gap-2">
-            <dt class="sr-only">Telefone</dt>
-            <dd>
-              <a href={links.whatsapp} rel="noopener" class="inline-block rounded-full border border-line bg-surface px-3.5 py-1.5 text-ink-soft transition-colors hover:border-ink/20 hover:text-ink lg:border-0 lg:bg-transparent lg:px-0"
-                >{marca.telefone}</a
-              >
-            </dd>
-          </div>
-        </dl>
-        <p class="mt-2 font-mono text-[11.5px] text-ink-soft">{atendimento.resumo}</p>
       </div>
 
+      <div class="lg:border-line grid grid-cols-2 gap-x-6 gap-y-9 sm:grid-cols-3 lg:border-l lg:pl-12">
+        {
+          footer.colunas.map((coluna) => (
+            <nav aria-label={coluna.titulo}>
+              <h2 class="text-purple-logo flex items-center gap-2 text-[15px] font-bold tracking-[-0.01em]">
+                <span class="bg-green size-[5px] shrink-0 rounded-full" aria-hidden="true" />
+                {coluna.titulo}
+              </h2>
+              <ul class="mt-4 flex flex-col gap-0.5">
+                {coluna.itens.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      rel="noopener"
+                      class="group text-ink-soft hover:text-ink flex items-start gap-2 py-1.5 text-[14.5px] leading-[1.45] transition-colors"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        class="text-ink-soft/60 group-hover:text-green-deep mt-[3px] size-3.5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m9 5 7 7-7 7" />
+                      </svg>
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))
+        }
+      </div>
+    </div>
+
+    {/* Faixa de provas. `divide-x` desenha a régua entre as colunas sem sobrar
+        uma na ponta, e some sozinho quando o grid deixa de ter quatro colunas. */}
+    <div
+      class="border-line lg:divide-line mt-14 grid gap-y-8 border-t pt-10 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x"
+    >
       {
-        footer.colunas.map((coluna) => (
-          <nav aria-label={coluna.titulo}>
-            <h2 class="border-b border-line pb-2 text-[13px] font-bold tracking-[0.02em] text-ink lg:border-0 lg:pb-0 lg:text-[14px]">
-              {coluna.titulo}
-            </h2>
-            <ul class="mt-3 flex flex-col gap-0.5">
-              {coluna.itens.map((item) => (
-                <li>
-                  <a
-                    href={item.href}
-                    rel="noopener"
-                    class="block py-1.5 text-[14px] text-ink-soft transition-colors hover:text-ink"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+        selos.map((selo) => (
+          <div class="mx-auto flex w-[250px] max-w-full items-center gap-4 sm:w-auto sm:justify-center lg:px-8 lg:first:pl-0 lg:last:pr-0">
+            <span class="text-purple-logo shrink-0" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                class="size-9"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d={selo.icone} />
+              </svg>
+            </span>
+            <span class="min-w-0">
+              <span class="text-ink block text-[15px] font-bold tracking-[-0.01em]">
+                {selo.titulo}
+              </span>
+              <span class="text-ink-soft block text-[13.5px]">{selo.texto}</span>
+              {selo.estrelas && (
+                <span
+                  class="text-star mt-1 block text-[15px] tracking-[0.1em]"
+                  aria-hidden="true"
+                >
+                  ★★★★★
+                </span>
+              )}
+            </span>
+          </div>
         ))
       }
     </div>
 
-    <!-- Selos de reputação -->
-    <div class="mt-12 grid gap-3 border-t border-line pt-8 sm:grid-cols-3">
-      <div class="flex items-center justify-center gap-3 rounded-card border border-line bg-surface px-4 py-3 sm:justify-start">
-        <span class="text-[15px] tracking-[0.08em] text-star" aria-hidden="true">★★★★★</span>
-        <span>
-          <span class="block text-[14px] font-medium text-ink"
-            >{provas.notaGoogle} no Google</span
-          >
-          <span class="block font-mono text-[11.5px] text-ink-soft"
-            >{provas.avaliacoesGoogle.toLocaleString('pt-BR')} avaliações · Trustindex</span
-          >
-        </span>
-      </div>
-      <div class="flex items-center justify-center gap-3 rounded-card border border-line bg-surface px-4 py-3 sm:justify-start">
-        <span class="font-mono text-[13px] text-green-deep">TIER III</span>
-        <span class="block font-mono text-[11.5px] text-ink-soft">datacenter certificado</span>
-      </div>
-      <div class="flex items-center justify-center gap-3 rounded-card border border-line bg-surface px-4 py-3 sm:justify-start">
-        <span class="font-mono text-[13px] text-green-deep">{provas.anosDeCasa} anos</span>
-        <span class="block font-mono text-[11.5px] text-ink-soft">de mercado</span>
-      </div>
-    </div>
-
-    <!-- Versículo — marca da casa, mantido -->
-    <p class="mt-10 text-center text-[14px] text-ink-soft italic">
-      “{marca.versiculo.texto}” — <span class="not-italic">{marca.versiculo.referencia}</span>
+    {/* Versículo — marca da casa, mantido */}
+    <p
+      class="border-line text-ink-soft mt-12 flex items-start justify-center gap-2.5 border-t pt-10 text-center text-[15px]"
+    >
+      <span class="text-purple-logo/45 text-[26px] leading-none" aria-hidden="true">“</span>
+      <span class="italic">
+        {marca.versiculo.texto}”
+        <span class="ml-1 not-italic">— {marca.versiculo.referencia}</span>
+      </span>
     </p>
 
-    <p class="mt-8 border-t border-line pt-6 text-center text-[12.5px] leading-relaxed text-ink-soft">
-      © Turbo Cloud {ano}. Todos os direitos reservados. CNPJ {marca.cnpj} · {marca.endereco}
+    <p
+      class="border-line text-ink-soft mt-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-t pt-6 text-center text-[12.5px] leading-relaxed"
+    >
+      <span>© Turbo Cloud {ano}. Todos os direitos reservados.</span>
+      <span class="text-line max-sm:hidden" aria-hidden="true">|</span>
+      <span>CNPJ {marca.cnpj}</span>
+      <span class="text-line max-sm:hidden" aria-hidden="true">|</span>
+      <span>{marca.endereco}</span>
     </p>
   </div>
 </footer>
