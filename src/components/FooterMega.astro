@@ -221,12 +221,22 @@ const selos = [
               </span>
               <span class="text-ink-soft block text-[13.5px]">{selo.texto}</span>
               {selo.estrelas && (
-                <span
-                  class="text-star mt-1 block text-[15px] tracking-[0.1em]"
-                  aria-hidden="true"
-                >
-                  ★★★★★
-                </span>
+                <>
+                  <span
+                    class="text-star mt-1 block text-[15px] tracking-[0.1em]"
+                    aria-hidden="true"
+                  >
+                    ★★★★★
+                  </span>
+                  <a
+                    href={links.avaliacoes}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-purple-logo hover:text-purple-950 inline-flex min-h-11 items-center gap-1.5 py-2 text-[12.5px] font-semibold underline underline-offset-4 transition-colors"
+                  >
+                    Avaliações no Trustindex <span aria-hidden="true">↗</span>
+                  </a>
+                </>
               )}
             </span>
           </div>

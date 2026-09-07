@@ -1,0 +1,250 @@
+---
+/**
+ * Widget de atendimento: 3 perguntas (nome, WhatsApp, objetivo) e então abre o
+ * WhatsApp já com a mensagem pronta. O número de WhatsApp digitado só entra no
+ * texto que o próprio visitante manda pelo WhatsApp dele — nada é salvo nem
+ * enviado a servidor nenhum (o site é estático). Captura de lead de verdade
+ * fica para quando o time decidir onde esse dado vai morar.
+ *
+ * Ícone/texto roxo sobre o verde: regra de contraste do projeto — verde nunca
+ * carrega branco. Ver docs/DESIGN-SYSTEM.md.
+ */
+import { links } from '../data/site'
+
+const objetivos = [
+  'Quero contratar hospedagem',
+  'Preciso migrar meu site pra Turbo Cloud',
+  'Já sou cliente e preciso de suporte',
+  'Quero falar com o time comercial',
+  'Outros assuntos',
+]
+---
+
+<div class="fixed right-5 bottom-5 z-50 flex flex-col items-end gap-3 print:hidden sm:right-6 sm:bottom-6" data-whats-widget data-numero={links.whatsapp}>
+  <div
+    class="hidden w-[min(360px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-card bg-surface shadow-lift ring-1 ring-ink/10"
+    data-whats-panel
+    role="dialog"
+    aria-label="Atendimento Turbo Cloud"
+  >
+    <header class="block-dark flex items-center gap-2.5 bg-purple-950 px-3.5 py-3">
+      <span
+        class="grid size-9 shrink-0 place-items-center rounded-full bg-linear-to-br from-green-soft to-green font-medium text-purple-950"
+        aria-hidden="true">TC</span
+      >
+      <span class="min-w-0 flex-1">
+        <span class="block truncate text-[14px] font-medium text-white">Turbo Cloud · Atendimento</span>
+        <span class="flex items-center gap-1.5 font-mono text-[11px] text-green">
+          <span class="pulse-dot"></span> online agora
+        </span>
+      </span>
+      <button
+        type="button"
+        data-whats-fechar
+        aria-label="Fechar atendimento"
+        class="grid size-8 shrink-0 place-items-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+      >
+        <svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M3.5 3.5l9 9m0-9l-9 9" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </header>
+
+    <div class="flex max-h-[360px] flex-col gap-2 overflow-y-auto p-3.5" data-whats-log aria-live="polite"></div>
+
+    <div class="hidden flex-col gap-2 border-t border-line px-3.5 py-3" data-whats-opcoes>
+      {objetivos.map((objetivo) => (
+        <button
+          type="button"
+          data-objetivo={objetivo}
+          class="rounded-btn border border-green-deep/35 px-3.5 py-2.5 text-left text-[13px] font-medium text-green-deep transition-colors hover:border-green-deep hover:bg-green-deep/6"
+        >
+          {objetivo}
+        </button>
+      ))}
+    </div>
+
+    <form data-whats-form class="flex items-center gap-2 border-t border-line p-3">
+      <input
+        type="text"
+        data-whats-input
+        autocomplete="off"
+        class="h-10 flex-1 rounded-btn border border-line bg-white px-3.5 text-[13.5px] text-ink outline-none placeholder:text-ink-soft focus:border-green-deep/50"
+      />
+      <button
+        type="submit"
+        data-whats-enviar
+        aria-label="Enviar"
+        class="grid size-10 shrink-0 place-items-center rounded-full bg-green text-purple-950 transition-transform hover:-translate-y-0.5"
+      >
+        <svg viewBox="0 0 16 16" class="size-4" fill="currentColor" aria-hidden="true">
+          <path d="M1 8l13.2-6.4a.6.6 0 0 1 .84.74L11.8 15a.6.6 0 0 1-1.1.06L8.3 9.7 3 8z"></path>
+        </svg>
+      </button>
+    </form>
+
+    <p class="border-t border-line px-3.5 py-2.5 text-center font-mono text-[10.5px] text-ink-soft">
+      Atendimento pelo WhatsApp · Turbo Cloud
+    </p>
+  </div>
+
+  <button
+    type="button"
+    data-whats-toggle
+    aria-expanded="false"
+    aria-label="Falar no WhatsApp com a Turbo Cloud"
+    class="group relative flex h-14 w-14 items-center justify-center rounded-full bg-green text-purple-950 shadow-lift transition-transform duration-200 hover:-translate-y-0.5"
+  >
+    <span class="whats-ping" aria-hidden="true" data-whats-anel></span>
+    <svg data-icon-chat viewBox="0 0 16 16" class="h-7 w-7" fill="currentColor" aria-hidden="true">
+      <path
+        d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.337-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"
+      ></path>
+    </svg>
+    <svg data-icon-close viewBox="0 0 16 16" class="hidden h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M3.5 3.5l9 9m0-9l-9 9" stroke-linecap="round"></path>
+    </svg>
+    <span
+      data-whats-tooltip
+      class="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-btn bg-purple-950 px-3 py-2 text-[13px] font-bold text-white opacity-0 shadow-lift transition-opacity duration-200 group-hover:opacity-100 sm:block"
+    >
+      Fale conosco
+    </span>
+  </button>
+</div>
+
+<script>
+  const widget = document.querySelector<HTMLElement>('[data-whats-widget]')
+  if (widget) {
+    const numeroWhats = widget.dataset.numero!
+    const painel = widget.querySelector<HTMLElement>('[data-whats-panel]')!
+    const toggle = widget.querySelector<HTMLButtonElement>('[data-whats-toggle]')!
+    const fechar = widget.querySelector<HTMLButtonElement>('[data-whats-fechar]')!
+    const log = widget.querySelector<HTMLElement>('[data-whats-log]')!
+    const form = widget.querySelector<HTMLFormElement>('[data-whats-form]')!
+    const input = widget.querySelector<HTMLInputElement>('[data-whats-input]')!
+    const opcoes = widget.querySelector<HTMLElement>('[data-whats-opcoes]')!
+    const iconeChat = widget.querySelector<HTMLElement>('[data-icon-chat]')!
+    const iconeFechar = widget.querySelector<HTMLElement>('[data-icon-close]')!
+    const anel = widget.querySelector<HTMLElement>('[data-whats-anel]')!
+    const tooltip = widget.querySelector<HTMLElement>('[data-whats-tooltip]')!
+
+    const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
+    const dados = { nome: '', objetivo: '' }
+    let etapa = 'nome' // nome -> whatsapp -> objetivo -> feito
+    let iniciado = false
+
+    const bolha = (texto: string, de: 'bot' | 'visitante') => {
+      const linha = document.createElement('div')
+      linha.className = `flex ${de === 'visitante' ? 'justify-end' : 'justify-start'}`
+      const corpo = document.createElement('div')
+      corpo.className = [
+        'max-w-[85%] rounded-[14px] px-3.5 py-2.5 text-[13.5px] leading-snug',
+        de === 'visitante' ? 'rounded-br-[6px] bg-green/15 text-ink' : 'rounded-bl-[6px] bg-ink/6 text-ink',
+        reduzido ? '' : 'animate-[msg-in_0.35s_cubic-bezier(0.22,1,0.36,1)_both]',
+      ].join(' ')
+      corpo.textContent = texto
+      linha.append(corpo)
+      log.append(linha)
+      log.scrollTop = log.scrollHeight
+    }
+
+    const abrirWhatsapp = () => {
+      const mensagem = `Olá, eu me chamo ${dados.nome} e gostaria de falar sobre ${dados.objetivo}`
+      const url = `${numeroWhats}?text=${encodeURIComponent(mensagem)}`
+      bolha('Perfeito! Já estou te encaminhando para o nosso WhatsApp com essa informação. 👍', 'bot')
+      window.open(url, '_blank', 'noopener')
+      window.setTimeout(() => {
+        const linha = document.createElement('div')
+        linha.className = 'flex justify-start'
+        const link = document.createElement('a')
+        link.href = url
+        link.target = '_blank'
+        link.rel = 'noopener'
+        link.textContent = 'Não abriu? Clique aqui para abrir o WhatsApp'
+        link.className =
+          'rounded-btn border border-green-deep/35 px-3.5 py-2.5 text-[13px] font-medium text-green-deep transition-colors hover:border-green-deep hover:bg-green-deep/6'
+        linha.append(link)
+        log.append(linha)
+        log.scrollTop = log.scrollHeight
+      }, 400)
+    }
+
+    const mostrarOpcoes = () => {
+      form.classList.add('hidden')
+      opcoes.classList.remove('hidden')
+      opcoes.classList.add('flex')
+    }
+
+    const iniciar = () => {
+      if (iniciado) return
+      iniciado = true
+      bolha('Olá! Sou o assistente da Turbo Cloud. Vou te encaminhar para o nosso WhatsApp. 😊', 'bot')
+      bolha('Para começar, qual é o seu nome?', 'bot')
+      input.placeholder = 'Escreva seu nome...'
+    }
+
+    const abrirPainel = () => {
+      painel.classList.remove('hidden')
+      painel.classList.add('flex')
+      toggle.setAttribute('aria-expanded', 'true')
+      iconeChat.classList.add('hidden')
+      iconeFechar.classList.remove('hidden')
+      anel.classList.add('hidden')
+      tooltip.classList.add('hidden')
+      iniciar()
+      input.focus()
+    }
+
+    const fecharPainel = () => {
+      painel.classList.add('hidden')
+      painel.classList.remove('flex')
+      toggle.setAttribute('aria-expanded', 'false')
+      iconeChat.classList.remove('hidden')
+      iconeFechar.classList.add('hidden')
+      anel.classList.remove('hidden')
+      tooltip.classList.remove('hidden')
+    }
+
+    toggle.addEventListener('click', () => {
+      const aberto = toggle.getAttribute('aria-expanded') === 'true'
+      aberto ? fecharPainel() : abrirPainel()
+    })
+    fechar.addEventListener('click', fecharPainel)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') fecharPainel()
+    })
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const valor = input.value.trim()
+      if (!valor) return
+      bolha(valor, 'visitante')
+      input.value = ''
+
+      if (etapa === 'nome') {
+        dados.nome = valor
+        etapa = 'whatsapp'
+        input.placeholder = 'Escreva seu WhatsApp com DDD...'
+        input.type = 'tel'
+        window.setTimeout(() => bolha(`Prazer, ${dados.nome}! Qual é o seu WhatsApp com DDD?`, 'bot'), 250)
+      } else if (etapa === 'whatsapp') {
+        etapa = 'objetivo'
+        window.setTimeout(() => {
+          bolha('Anotado! Por último: qual é o objetivo do seu contato?', 'bot')
+          mostrarOpcoes()
+        }, 250)
+      }
+    })
+
+    opcoes.querySelectorAll<HTMLButtonElement>('[data-objetivo]').forEach((botao) => {
+      botao.addEventListener('click', () => {
+        dados.objetivo = botao.dataset.objetivo ?? ''
+        bolha(dados.objetivo, 'visitante')
+        opcoes.classList.add('hidden')
+        opcoes.classList.remove('flex')
+        window.setTimeout(abrirWhatsapp, 250)
+      })
+    })
+  }
+</script>

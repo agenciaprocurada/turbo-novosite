@@ -1,0 +1,209 @@
+---
+import Button from '../Button.astro'
+import SectionEyebrow from '../SectionEyebrow.astro'
+import { abasPlanos, links } from '../../data/site'
+import { homeAstra } from '../../data/home-astra'
+
+const texto = homeAstra.planos
+const brl = (valor: number) => valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+---
+
+<section id="planos" class="astra-plans" aria-labelledby="astra-plan-title">
+  <div class="container-page">
+    <div class="plans-heading">
+      <div>
+        <SectionEyebrow>{texto.eyebrow}</SectionEyebrow>
+        <h2 id="astra-plan-title">{texto.titulo}<br /><span>{texto.destaque}</span></h2>
+      </div>
+      <p>{texto.texto}</p>
+    </div>
+
+    <div class="plan-controls">
+      <div class="plan-tabs" role="tablist" aria-label="Tipo de hospedagem">
+        {abasPlanos.map((aba, i) => (
+          <button type="button" role="tab" id={`astra-tab-${aba.id}`} aria-controls={`astra-panel-${aba.id}`}
+            aria-selected={i === 0} tabindex={i === 0 ? 0 : -1} data-astra-tab={aba.id}>
+            {aba.labelCurto ?? aba.label}
+          </button>
+        ))}
+      </div>
+      <div class="billing" role="group" aria-label="Ciclo de cobrança" data-astra-billing>
+        <button type="button" aria-pressed="true" data-astra-cycle="mensal">Mensal</button>
+        <button type="button" aria-pressed="false" data-astra-cycle="anual">Anual <span>economize</span></button>
+      </div>
+    </div>
+
+    {abasPlanos.map((aba) => (
+      <div id={`astra-panel-${aba.id}`} role="tabpanel" aria-labelledby={`astra-tab-${aba.id}`}
+        data-astra-panel={aba.id} tabindex="0">
+        <p class="category-description">{aba.descricao}</p>
+        {aba.nota && <p class="category-note">{aba.nota}</p>}
+        <div class="plan-track" data-astra-track aria-label={`Planos ${aba.label}`}>
+          {aba.planos.map((plano) => (
+            <article class:list={['astra-plan', plano.destaque && 'featured block-dark']}>
+              <div class="plan-label">
+                <span>{plano.selo ?? 'Turbo Cloud'}</span>
+                {plano.destaque && <span aria-hidden="true">✦</span>}
+              </div>
+              <h3>{plano.nome}</h3>
+              <p class="persona">{plano.persona}</p>
+              <div class="price" data-astra-monthly>
+                <p><span>R$</span> <strong>{brl(plano.precoMensal)}</strong><span>/mês</span></p>
+                <small>Cobrança mensal</small>
+              </div>
+              {plano.precoAnualMes && plano.precoAnualTotal && (
+                <div class="price" data-astra-yearly hidden>
+                  <p><span>R$</span> <strong>{brl(plano.precoAnualMes)}</strong><span>/mês</span></p>
+                  <small>R$ {brl(plano.precoAnualTotal)} cobrados no ano</small>
+                </div>
+              )}
+              <Button href={plano.href} variant={plano.destaque ? 'green' : 'outline-purple'} fullWidth>Escolher {plano.nome.startsWith('Revenda') ? 'Revenda' : aba.id === 'hospedagem' ? plano.nome : 'plano'}</Button>
+              {texto.recursos[plano.nome] && <p class="resource-note">{texto.recursos[plano.nome]}</p>}
+              <ul class="plan-features">
+                {plano.grupos[0]?.itens.map((item) => <li><span aria-hidden="true">✓</span>{item}</li>)}
+              </ul>
+              {plano.grupos.length > 1 && (
+                <details class="plan-details">
+                  <summary>Todos os recursos <span aria-hidden="true">+</span></summary>
+                  <div class="extra-features">
+                    {plano.grupos.slice(1).map((grupo) => (
+                      <div><h4>{grupo.titulo}</h4><ul>{grupo.itens.map((item) => <li>{item}</li>)}</ul></div>
+                    ))}
+                  </div>
+                </details>
+              )}
+            </article>
+          ))}
+        </div>
+        <div class="track-navigation">
+          <span>Deslize para comparar os planos</span>
+          <div>
+            <button type="button" data-astra-prev aria-label="Plano anterior">←</button>
+            <button type="button" data-astra-next aria-label="Próximo plano">→</button>
+          </div>
+        </div>
+        {aba.id === 'hospedagem' && <p class="comparison-note">{texto.comparacao}</p>}
+      </div>
+    ))}
+
+    <div class="plan-help"><p>{texto.ajuda}</p><a href={links.whatsapp} target="_blank" rel="noopener">Fale com um especialista <span aria-hidden="true">↗</span></a></div>
+    <p class="catalog-note">{texto.nota}</p>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.astra-plans')
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-astra-tab]')]
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-astra-panel]')]
+    const billing = root.querySelector<HTMLElement>('[data-astra-billing]')!
+    const cycles = [...root.querySelectorAll<HTMLButtonElement>('[data-astra-cycle]')]
+    const activate = (tab: HTMLButtonElement) => {
+      tabs.forEach((item) => { item.setAttribute('aria-selected', String(item === tab)); item.tabIndex = item === tab ? 0 : -1 })
+      panels.forEach((panel) => { panel.hidden = panel.dataset.astraPanel !== tab.dataset.astraTab })
+      billing.hidden = tab.dataset.astraTab !== 'hospedagem'
+    }
+    activate(tabs[0]!)
+    root.dataset.astraReady = ''
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => activate(tab))
+      tab.addEventListener('keydown', (event) => {
+        const next = event.key === 'ArrowRight' ? (i + 1) % tabs.length : event.key === 'ArrowLeft' ? (i + tabs.length - 1) % tabs.length : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : -1
+        if (next < 0) return
+        event.preventDefault(); tabs[next]!.focus(); activate(tabs[next]!)
+      })
+    })
+    cycles.forEach((button) => button.addEventListener('click', () => {
+      const yearly = button.dataset.astraCycle === 'anual'
+      cycles.forEach((item) => item.setAttribute('aria-pressed', String(item === button)))
+      root.querySelectorAll<HTMLElement>('[data-astra-yearly]').forEach((el) => { el.hidden = !yearly })
+      root.querySelectorAll<HTMLElement>('[data-astra-monthly]').forEach((el) => { el.hidden = yearly && !!el.parentElement?.querySelector('[data-astra-yearly]') })
+    }))
+    panels.forEach((panel) => {
+      const track = panel.querySelector<HTMLElement>('[data-astra-track]')!
+      const previous = panel.querySelector<HTMLButtonElement>('[data-astra-prev]')!
+      const next = panel.querySelector<HTMLButtonElement>('[data-astra-next]')!
+      const update = () => {
+        previous.disabled = track.scrollLeft < 4
+        next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 4
+      }
+      const scroll = (direction: number) => track.scrollBy({ left: direction * ((track.firstElementChild?.getBoundingClientRect().width ?? 300) + 16), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
+      previous.addEventListener('click', () => scroll(-1)); next.addEventListener('click', () => scroll(1))
+      track.addEventListener('scroll', update, { passive: true })
+      new ResizeObserver(update).observe(track)
+      update()
+    })
+  }
+</script>
+
+<style>
+  .astra-plans { padding-block: clamp(56px, 6.5vw, 88px); scroll-margin-top: 100px; }
+  .plans-heading { display: flex; align-items: end; justify-content: space-between; gap: 32px; }
+  h2 { margin-top: 16px; font-size: clamp(30px, 3.5vw, 42px); font-weight: 700; letter-spacing: -.02em; }
+  h2 span { color: var(--color-green-ink); }
+  .plans-heading > p { max-width: 320px; font-size: 16px; color: var(--color-ink-soft); }
+  .plan-controls { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; padding-block: 16px; border-block: 1px solid var(--color-line); }
+  .plan-tabs, .billing { display: flex; align-items: center; gap: 4px; }
+  .plan-controls button { min-height: 44px; padding: 10px 18px; border-radius: var(--radius-btn); font-size: 14px; font-weight: 700; cursor: pointer; }
+  .plan-tabs button[aria-selected='true'] { background: var(--color-purple-logo); color: white; }
+  .billing { background: #f0edf3; padding: 4px; border-radius: var(--radius-btn); }
+  .billing button[aria-pressed='true'] { background: white; box-shadow: var(--shadow-soft); }
+  .billing span { font-size: 12px; color: var(--color-green-deep); margin-left: 3px; }
+  [hidden] { display: none !important; }
+  .category-description { margin-block: 20px; font-size: 14px; color: var(--color-ink-soft); }
+  .category-note, .comparison-note { padding: 16px 20px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); font-size: 14px; line-height: 1.6; }
+  .category-note { margin-bottom: 20px; }
+  .comparison-note { margin-top: 24px; background: #f5f1f8; color: var(--color-purple-950); }
+  .plan-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .astra-plan { min-width: 0; border: 1px solid var(--color-line); border-radius: var(--radius-card); background: white; padding: 22px 20px 12px; }
+  .featured { background: var(--color-purple-950); border-color: var(--color-purple-950); color: white; box-shadow: 0 12px 32px #300c511c; }
+  .plan-label { min-height: 24px; display: flex; justify-content: space-between; font-size: 11px; font-family: var(--font-mono); color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: .07em; }
+  .featured .plan-label { color: var(--color-green); }
+  h3 { min-height: 54px; margin-top: 14px; font-size: 24px; font-weight: 700; line-height: 1.15; }
+  .persona { min-height: 83px; font-size: 14px; line-height: 1.5; color: var(--color-ink-soft); }
+  .price { margin: 22px 0; }
+  .price p { display: flex; align-items: baseline; gap: 4px; white-space: nowrap; }
+  .price strong { font-size: clamp(29px, 2.8vw, 40px); line-height: 1.2; letter-spacing: -.035em; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .price p > span { font-size: 12px; }
+  .price small { display: block; min-height: 20px; margin-top: 6px; font-size: 12px; color: var(--color-ink-soft); }
+  .resource-note { min-height: 58px; margin-top: 18px; font-size: 13px; font-weight: 700; line-height: 1.5; color: var(--color-purple-logo); }
+  .plan-features { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--color-line); min-height: 178px; }
+  .plan-features li { display: flex; gap: 9px; font-size: 13px; line-height: 1.5; }
+  .plan-features li span { color: var(--color-green-deep); font-weight: 700; }
+  .featured .persona, .featured .price small { color: #d7cbe1; }
+  .featured .resource-note { color: #e5d9ee; }
+  .featured .plan-features { border-color: #ffffff26; }
+  .featured .plan-features li span { color: var(--color-green); }
+  .plan-details { margin-top: 18px; border-top: 1px solid var(--color-line); }
+  .plan-details summary { min-height: 48px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; list-style: none; font-size: 13px; font-weight: 700; }
+  .plan-details summary span { font-size: 22px; transition: rotate .2s; }
+  .plan-details[open] summary span { rotate: 45deg; }
+  .extra-features { padding-bottom: 16px; font-size: 13px; }
+  .extra-features h4 { font-weight: 700; margin: 16px 0 8px; }
+  .extra-features li { margin-top: 6px; }
+  .featured .plan-details { border-color: #ffffff26; }
+  .plan-help { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px 16px; margin-top: 28px; font-size: 15px; }
+  .plan-help a { padding-block: 10px; font-weight: 700; color: var(--color-green-deep); text-decoration: underline; text-underline-offset: 4px; }
+  .catalog-note { max-width: 760px; margin: 12px auto 0; text-align: center; font-size: 12px; color: var(--color-ink-soft); }
+  .track-navigation { display: none; }
+  :global(.no-js) .plan-controls, :global(.no-js) .track-navigation { display: none; }
+  :global(.js) .astra-plans:not([data-astra-ready]) [data-astra-panel]:not(#astra-panel-hospedagem) { display: none; }
+  :global(.no-js) [data-astra-panel] + [data-astra-panel] { margin-top: 40px; }
+  @media (max-width: 1023px) {
+    .plan-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding: 4px 20px 20px; margin-inline: -20px; scroll-padding-inline: 20px; }
+    .astra-plan { flex: 0 0 min(310px, 85vw); scroll-snap-align: start; }
+    .price strong { font-size: 38px; }
+    .track-navigation { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 12px; color: var(--color-ink-soft); }
+    .track-navigation > div { display: flex; gap: 8px; }
+    .track-navigation button { width: 44px; height: 44px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); cursor: pointer; background: white; color: var(--color-purple-950); font-size: 20px; }
+    .track-navigation button:disabled { opacity: .4; cursor: default; }
+  }
+  @media (max-width: 639px) {
+    .plans-heading { display: block; text-align: center; }
+    .plans-heading > p { max-width: none; margin-top: 20px; }
+    .plan-controls { flex-direction: column; align-items: center; }
+    .plan-tabs { width: 100%; }
+    .plan-tabs button { flex: 1; padding-inline: 12px; }
+    .catalog-note { text-align: left; }
+  }
+</style>

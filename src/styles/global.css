@@ -231,6 +231,18 @@
     opacity: 0;
   }
 
+  /* Anel do botão flutuante do WhatsApp — mesmo turbo-ping do pulse-dot, em
+     escala de botão. z-index negativo: fica atrás do ícone e só aparece
+     quando o anel cresce além do círculo do botão. */
+  .whats-ping {
+    position: absolute;
+    inset: 0;
+    z-index: -10;
+    border-radius: 999px;
+    background: var(--color-green);
+    animation: turbo-ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
   @keyframes turbo-ping {
     75%,
     100% {
