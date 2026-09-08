@@ -175,11 +175,6 @@ export const nav = [
         desc: 'E-mail separado do site',
         href: links.produtos.email,
       },
-      {
-        label: 'OpenClaw VPS',
-        desc: 'Infraestrutura para agente de IA',
-        href: links.produtos.openclaw,
-      },
     ],
   },
   {

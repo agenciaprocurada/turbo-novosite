@@ -11,7 +11,6 @@ import Migracao from '../components/secoes/Migracao.astro'
 import CtaFinal from '../components/secoes/CtaFinal.astro'
 
 import Button from '../components/Button.astro'
-import Badge from '../components/Badge.astro'
 import SectionEyebrow from '../components/SectionEyebrow.astro'
 import HeadingDuo from '../components/HeadingDuo.astro'
 import StatBlock from '../components/StatBlock.astro'
@@ -20,11 +19,12 @@ import ChatMockup from '../components/ChatMockup.astro'
 import MapDots from '../components/MapDots.astro'
 
 import FundoNuvens from '../components/FundoNuvens.astro'
-import HeroPaineis from '../components/mockups/HeroPaineis.astro'
-import astronautaHero from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-notebook-nuvem.webp'
+import HeroVisualAstra from '../components/home-astra/HeroVisualAstra.astro'
+import HeroAcoes from '../components/home-astra/HeroAcoes.astro'
+import HeroTrust from '../components/home-astra/HeroTrust.astro'
+import Solucoes from '../components/home-astra/Solucoes.astro'
 import fundoInfra from '../assets/fundo-site-01.webp'
 import InfraStatusCard from '../components/InfraStatusCard.astro'
-import ServiceCard from '../components/ServiceCard.astro'
 import { Image } from 'astro:assets'
 import foguete from '../assets/imagens/empresa-de-hospedagem-de-site-foguete-caminho-turbo.webp'
 import planeta from '../assets/imagens/empresa-de-hospedagem-de-site-planeta-anel.webp'
@@ -33,8 +33,6 @@ import iconeCaminho from '../assets/imagens/empresa-de-hospedagem-de-site-icone-
 
 import {
   hero,
-  provas,
-  servicos,
   infraLista,
   porque,
   bannerTurbo,
@@ -43,14 +41,11 @@ import {
   brasil,
   faq,
   atendimento,
-  marca,
 } from '../data/site'
 
 const SECAO = 'py-[clamp(72px,9vw,132px)]'
 
 const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar, rápido e seguro.'
-
-// Fundo do hero: WebP já otimizado (1698×1006, ~38 KB), servido como está.
 ---
 
 <Base
@@ -83,32 +78,13 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
       {/* No celular a ordem é: imagem → título → texto e botões. No desktop os dois blocos de
           texto ficam empilhados na coluna da esquerda (lg:col-start-1) e a imagem some. */}
       <div
-        class="relative container-page grid gap-y-7 py-[clamp(40px,7vw,88px)] lg:min-h-[720px] lg:grid-cols-[minmax(0,616px)_1fr] lg:content-center lg:gap-x-6 lg:gap-y-0"
+        class="relative container-page grid gap-y-7 pt-[clamp(40px,7vw,88px)] pb-[clamp(32px,4vw,54px)] lg:grid-cols-[minmax(0,616px)_1fr] lg:content-center lg:gap-x-6 lg:gap-y-0"
       >
-        {/* Palco da arte do hero: astronauta + painéis numa composição só, a
-            mesma em qualquer largura de tela — muda apenas o fator de escala.
-            No desktop ele se apoia na borda direita da coluna e transborda para
-            a esquerda, o que põe o astronauta no vão entre o texto e os
-            painéis; no celular fica centrado, acima do título.
-            O `data-parallax` move o astronauta com o ponteiro por `transform`,
-            enquanto o voo usa `translate`/`rotate` — as duas coisas convivem no
-            mesmo elemento sem uma apagar a outra. */}
-        <div
-          class="palco-caixa reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
-          data-delay="3"
-        >
-          <div class="palco">
-            <div
-              class="astro-voo astro-hero palco-astro bg-contain bg-no-repeat"
-              data-parallax
-              style={`background-image:url(${astronautaHero.src})`}
-              aria-hidden="true"
-            >
-            </div>
-            <div class="palco-paineis">
-              <HeroPaineis />
-            </div>
-          </div>
+        {/* Visual da proposta Astra: astronauta com órbitas, cartão do TTFB e
+            selo do datacenter. No desktop ocupa a coluna da direita nas duas
+            linhas; no celular fica centrado, acima do título. */}
+        <div class="reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" data-delay="3">
+          <HeroVisualAstra />
         </div>
 
         <div class="reveal stagger text-center lg:self-end lg:text-left">
@@ -134,83 +110,23 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
             {' '}{hero.sub}
           </p>
 
-          {/* `text-center` do bloco não alinha filho flex, então a fila precisa do
-              seu próprio `justify-center`. */}
-          <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
-            <Button href={hero.ctaPrimario.href} variant="green" size="lg" fullWidth class="sm:w-auto"
-              >{hero.ctaPrimario.label}</Button
-            >
-            <Button href={hero.ctaSecundario.href} variant="white" size="lg" fullWidth class="sm:w-auto"
-              >{hero.ctaSecundario.label}</Button
-            >
-          </div>
-
-          {/* No celular os três chips cabem numa linha só: texto, ícone e respiro
-              encolhem até 640px. Abaixo de 375px não há largura para os três, então
-              ali eles voltam a quebrar em vez de sair da tela. */}
-          <ul class="mt-8 flex flex-wrap justify-center gap-1 min-[375px]:flex-nowrap sm:flex-wrap sm:gap-1.5 lg:justify-start">
-            {
-              hero.beneficios.map((item) => (
-                <li class="inline-flex items-center gap-1 rounded-btn border border-line bg-surface/80 py-1.5 pr-1.5 pl-1 text-[9.5px] font-semibold whitespace-nowrap text-ink shadow-soft sm:gap-2 sm:pr-3 sm:pl-1.5 sm:text-[12.5px]">
-                  <span
-                    class="grid size-4 place-items-center rounded-full bg-green-deep text-white sm:size-5"
-                    aria-hidden="true"
-                  >
-                    <svg viewBox="0 0 12 12" class="size-2.5 sm:size-3" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M2.5 6.4L4.8 8.7L9.5 3.6" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                  </span>
-                  {item}
-                </li>
-              ))
-            }
-          </ul>
-
-          <p class="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 font-mono text-[11.5px] tracking-[0.06em] text-ink-soft uppercase lg:justify-start">
-            <span class="text-[14px] tracking-[0.08em] text-green-deep" aria-hidden="true">★★★★★</span>
-            <span>
-              {provas.notaGoogle} no Google · {provas.avaliacoesGoogle.toLocaleString('pt-BR')} avaliações · desde {marca.desde}
-            </span>
-          </p>
+          {/* CTAs, "a partir de" e benefícios no padrão da proposta Astra */}
+          <HeroAcoes />
         </div>
+      </div>
+
+      {/* Faixa de confiança da Astra: nota do Google, uptime e "desde 2013".
+          `relative` para ficar por cima do degradê do pé do hero. */}
+      <div class="relative container-page reveal" data-delay="4">
+        <HeroTrust />
       </div>
     </section>
 
-    <ProvaSocial texto={provasTexto} />
+    {/* ===================== S3 · SOLUÇÕES (dobra da Astra) ================= */}
+    <Solucoes />
 
-    {/* ============================ S4 · SERVIÇOS =========================== */}
-    <section class="pt-[clamp(40px,5vw,64px)] pb-[clamp(72px,9vw,132px)]" id="servicos">
-      <div class="container-page">
-        <div class="reveal mx-auto max-w-[680px] text-center">
-          <SectionEyebrow class="justify-center">Recursos</SectionEyebrow>
-          <h2
-            class="mt-4 text-[clamp(1.9rem,4.2vw,2.6rem)] leading-[1.1] font-bold tracking-[-0.018em] text-ink"
-          >
-            Um único lugar para tudo<br class="hidden sm:block" /> o que <span class="text-green-ink">você precisa no ar.</span>
-          </h2>
-        </div>
-
-        <div
-          class="mt-10 -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4"
-        >
-          {
-            servicos.map((servico, i) => (
-              <div class="reveal flex w-[82vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none" data-delay={String(i + 1)}>
-                <ServiceCard
-                  icone={servico.icone}
-                  titulo={servico.titulo}
-                  texto={servico.texto}
-                  itens={servico.itens}
-                  rodape={servico.rodape}
-                  href={servico.href}
-                  class="w-full"
-                />
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </section>
+    {/* ============================ S4 · PROVA SOCIAL ======================== */}
+    <ProvaSocial texto={provasTexto} class="pt-[clamp(48px,6vw,80px)] pb-[clamp(72px,9vw,132px)]" />
 
     {/* ========================= S5 · INFRAESTRUTURA ======================== */}
     <section class="block-dark relative overflow-hidden bg-purple-950 text-white" id="estrutura">
@@ -469,24 +385,3 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
   <FooterMega />
 </Base>
 
-<script>
-  const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  // Hero (desktop, mouse): a arte acompanha o ponteiro com um deslocamento leve
-  const arte = document.querySelector<HTMLElement>('[data-parallax]')
-  const heroSec = arte?.closest('section')
-  if (arte && heroSec && !reduzido && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    heroSec.addEventListener('pointermove', (e) => {
-      const r = heroSec.getBoundingClientRect()
-      const x = (e.clientX - r.left) / r.width - 0.5
-      const y = (e.clientY - r.top) / r.height - 0.5
-      arte.style.setProperty('--px', `${(-x * 14).toFixed(1)}px`)
-      arte.style.setProperty('--py', `${(-y * 10).toFixed(1)}px`)
-    })
-    heroSec.addEventListener('pointerleave', () => {
-      arte.style.setProperty('--px', '0px')
-      arte.style.setProperty('--py', '0px')
-    })
-  }
-
-</script>

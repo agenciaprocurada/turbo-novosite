@@ -1,0 +1,84 @@
+---
+/**
+ * Segunda dobra da proposta Astra: "Cada projeto tem seu jeito" com os três
+ * cards de solução e o atalho para o Turbo Builder. Compartilhada entre a
+ * home e /home-astra. Preços vêm do catálogo, via `home-astra.ts`.
+ */
+import SectionEyebrow from '../SectionEyebrow.astro'
+import { homeAstra as copy } from '../../data/home-astra'
+import { links } from '../../data/site'
+
+interface Props {
+  class?: string
+}
+const { class: className = '' } = Astro.props
+const brl = (valor: number) => valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+const icones = {
+  wordpress: 'M4 5h16v14H4zM4 9h16M7 7h.01M10 7h.01M8 12l2 4 2-4 2 4 2-4',
+  servidor: 'M4 4h16v6H4zM4 14h16v6H4zM7 7h.01M7 17h.01M11 7h6M11 17h6',
+  email: 'M3 6h18v12H3zM3 7l9 6 9-6',
+}
+---
+
+<section class:list={['solutions', className]} id="solucoes" aria-labelledby="solutions-title">
+  <div class="container-page">
+    <div class="section-heading reveal">
+      <SectionEyebrow align="center">{copy.solucao.eyebrow}</SectionEyebrow>
+      <h2 id="solutions-title">{copy.solucao.titulo}<br /><span>{copy.solucao.destaque}</span></h2>
+    </div>
+    <div class="solution-grid">
+      {copy.solucao.itens.map((item) => (
+        <a class="solution-card" href={item.href}>
+          <div class="solution-top"><span class="solution-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d={icones[item.icone]} /></svg></span><span class="solution-number">{item.numero}</span></div>
+          <p class="solution-detail">{item.detalhe}</p>
+          <h3>{item.titulo}</h3>
+          <p class="solution-description">{item.texto}</p>
+          <p class="solution-price">A partir de <strong>R$ {brl(item.preco)}</strong>/mês</p>
+          <span class="solution-cta">{item.cta}<span aria-hidden="true">↗</span></span>
+        </a>
+      ))}
+    </div>
+    <a class="builder-link" href={links.ferramentasIa.turboBuilder}><span aria-hidden="true">✦</span><span>Ainda não tem um site? <strong>Crie com IA no Turbo Builder.</strong></span><span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<style>
+  .solutions { padding-block: clamp(60px, 6.5vw, 92px) 20px; scroll-margin-top: 96px; --tint: var(--astra-purple-tint, #f5effa); }
+  .section-heading { text-align: center; }
+  h2 { margin-top: 16px; font-size: clamp(30px, 3.5vw, 42px); font-weight: 700; line-height: 1.12; letter-spacing: -.02em; }
+  h2 span { color: var(--color-purple-logo); }
+  .solution-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 36px; }
+  .solution-card { display: flex; flex-direction: column; padding: 26px 26px 0; border: 1px solid var(--color-line); border-radius: var(--radius-card); background: white; transition: border-color .2s, box-shadow .2s, transform .2s; }
+  .solution-card:hover { border-color: #5c1f8555; box-shadow: var(--shadow-soft); transform: translateY(-3px); }
+  .solution-top { display: flex; align-items: center; justify-content: space-between; }
+  .solution-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: var(--radius-btn); color: var(--color-green); background: var(--color-purple-logo); }
+  .solution-icon svg { width: 25px; }
+  .solution-number { font-size: 12px; font-family: var(--font-mono); color: var(--color-ink-soft); }
+  .solution-detail { margin-top: 24px; font-size: 11px; letter-spacing: .025em; font-family: var(--font-mono); color: var(--color-purple-logo); }
+  .solution-card h3 { margin-top: 9px; font-size: 23px; font-weight: 700; }
+  .solution-description { margin-top: 12px; font-size: 15px; line-height: 1.65; color: var(--color-ink-soft); }
+  .solution-price { margin-top: auto; padding-top: 24px; font-size: 13px; color: var(--color-ink-soft); }
+  .solution-price strong { font-size: 19px; color: var(--color-ink); }
+  .solution-cta { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-block: 18px; margin-top: 18px; border-top: 1px solid var(--color-line); font-size: 13px; font-weight: 700; color: var(--color-purple-logo); }
+  .solution-cta > span { font-size: 21px; }
+  .builder-link { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 20px; margin-top: 20px; background: var(--tint); border-radius: var(--radius-btn); font-size: 14px; }
+  .builder-link > span:first-child { color: var(--color-purple-logo); font-size: 23px; }
+  .builder-link strong { color: var(--color-purple-logo); }
+  @media (max-width: 1023px) {
+    .solution-grid { gap: 14px; }
+    .solution-card { padding: 20px 18px 0; }
+    .solution-card h3 { font-size: 21px; }
+    .solution-detail { font-size: 10px; }
+  }
+  @media (max-width: 639px) {
+    .solution-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 28px; }
+    .solution-card { padding: 22px 22px 0; }
+    .solution-top { float: right; }
+    .solution-detail { font-size: 11px; margin-top: 16px; }
+    .solution-card h3 { font-size: 23px; }
+    .solution-description { font-size: 15px; }
+    .solution-cta { font-size: 14px; }
+    .builder-link { font-size: 13px; line-height: 1.6; padding: 16px; }
+    .builder-link strong { display: block; }
+  }
+</style>

@@ -1,0 +1,49 @@
+---
+/**
+ * Faixa de confiança no pé do hero Astra: nota do Google, uptime do
+ * datacenter e ano de fundação. Todo número sai de `provas` e `marca`.
+ */
+import { provas, marca, links } from '../../data/site'
+
+interface Props {
+  class?: string
+}
+const { class: className = '' } = Astro.props
+---
+
+<div class:list={['hero-trust', className]}>
+  <a href={links.avaliacoes} target="_blank" rel="noopener" class="rating">
+    <span class="stars" aria-hidden="true">★★★★★</span>
+    <span><strong>{provas.notaGoogle} no Google</strong><small>{provas.avaliacoesGoogle.toLocaleString('pt-BR')} avaliações de clientes <span aria-hidden="true">↗</span></small></span>
+  </a>
+  <div><strong>{provas.uptimeTier3}</strong><span>Disponibilidade do datacenter</span></div>
+  <div><strong>Desde {marca.desde}</strong><span>Hospedando histórias no Brasil</span></div>
+</div>
+
+<style>
+  .hero-trust { position: relative; display: grid; grid-template-columns: 1.3fr 1fr 1fr; align-items: center; border-top: 1px solid #5c1f851f; padding-block: 26px 30px; }
+  .hero-trust > * { padding-inline: 32px; border-left: 1px solid #5c1f851f; }
+  .hero-trust > :first-child { padding-left: 0; border: 0; }
+  .hero-trust strong { display: block; font-size: 19px; font-weight: 700; }
+  .hero-trust > div > span, .hero-trust small { display: block; font-size: 13px; color: var(--color-ink-soft); }
+  .rating { display: flex; align-items: center; gap: 18px; }
+  .stars { letter-spacing: .08em; color: var(--color-purple-logo); font-size: 17px; }
+  @media (max-width: 1100px) and (min-width: 1024px) {
+    .hero-trust > * { padding-inline: 20px; }
+    .rating { gap: 10px; }
+  }
+  @media (max-width: 1023px) {
+    .hero-trust { grid-template-columns: 1fr 1fr; gap: 20px 0; }
+    .hero-trust .rating { grid-column: 1 / -1; justify-content: center; }
+    .hero-trust > div { text-align: center; }
+    .hero-trust > div:nth-child(2) { border-left: 0; }
+  }
+  @media (max-width: 639px) {
+    .hero-trust { padding-block: 24px; gap: 24px 0; }
+    .hero-trust > * { padding-inline: 8px; }
+    .hero-trust strong { font-size: 17px; }
+    .hero-trust > div > span, .hero-trust small { font-size: 11px; line-height: 1.5; }
+    .rating { gap: 12px; }
+    .stars { font-size: 16px; }
+  }
+</style>
