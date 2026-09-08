@@ -26,6 +26,9 @@ import CtaFinal from '../../components/secoes/CtaFinal.astro'
 import astroSitesInstitucionais from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-pagespeed-sites-institucionais.webp'
 import astroLojaVirtual from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-loja-virtual-woocommerce.webp'
 import astroPortalConteudo from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-portal-de-conteudo.webp'
+import astroContainers from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-containers-isolados.webp'
+import astroCloudVps from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-cloud-vps.webp'
+import astroServidorEmail from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-servidor-email.webp'
 
 import { produtos, seguranca } from '../../data/produtos'
 import type { Produto } from '../../data/produtos'
@@ -39,12 +42,14 @@ export const getStaticPaths = (() =>
 
 const { produto } = Astro.props as { produto: Produto }
 
-/** Arte do hero por produto. Cada página ganha a sua, temática; enquanto a de
- *  um slug não existe, aquele hero fica só com a nuvem de fundo. */
+/** Astronautas temáticos dos seis produtos, sobre as nuvens animadas do hero. */
 const artesHero: Partial<Record<string, ImageMetadata>> = {
   'sites-institucionais': astroSitesInstitucionais,
   'lojas-virtuais-woocommerce': astroLojaVirtual,
   'blogs-e-portais-de-conteudo': astroPortalConteudo,
+  'containers': astroContainers,
+  'cloud-vps': astroCloudVps,
+  'servidor-para-e-mail': astroServidorEmail,
 }
 
 const abas = produto.abaPlanos ? abasPlanos.filter((aba) => aba.id === produto.abaPlanos) : []
