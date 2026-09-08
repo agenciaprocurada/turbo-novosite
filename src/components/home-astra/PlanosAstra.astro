@@ -140,23 +140,24 @@ const brl = (valor: number) => valor.toLocaleString('pt-BR', { minimumFractionDi
   .astra-plans { padding-block: clamp(56px, 6.5vw, 88px); scroll-margin-top: 100px; }
   .plans-heading { display: flex; align-items: end; justify-content: space-between; gap: 32px; }
   h2 { margin-top: 16px; font-size: clamp(30px, 3.5vw, 42px); font-weight: 700; letter-spacing: -.02em; }
-  h2 span { color: var(--color-green-ink); }
+  h2 span { color: var(--color-purple-logo); }
   .plans-heading > p { max-width: 320px; font-size: 16px; color: var(--color-ink-soft); }
   .plan-controls { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; padding-block: 16px; border-block: 1px solid var(--color-line); }
   .plan-tabs, .billing { display: flex; align-items: center; gap: 4px; }
   .plan-controls button { min-height: 44px; padding: 10px 18px; border-radius: var(--radius-btn); font-size: 14px; font-weight: 700; cursor: pointer; }
   .plan-tabs button[aria-selected='true'] { background: var(--color-purple-logo); color: white; }
-  .billing { background: #f0edf3; padding: 4px; border-radius: var(--radius-btn); }
+  .billing { background: var(--astra-purple-tint); padding: 4px; border-radius: var(--radius-btn); }
   .billing button[aria-pressed='true'] { background: white; box-shadow: var(--shadow-soft); }
-  .billing span { font-size: 12px; color: var(--color-green-deep); margin-left: 3px; }
+  .billing span { font-size: 12px; color: var(--color-purple-logo); margin-left: 3px; }
   [hidden] { display: none !important; }
   .category-description { margin-block: 20px; font-size: 14px; color: var(--color-ink-soft); }
   .category-note, .comparison-note { padding: 16px 20px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); font-size: 14px; line-height: 1.6; }
   .category-note { margin-bottom: 20px; }
-  .comparison-note { margin-top: 24px; background: #f5f1f8; color: var(--color-purple-950); }
+  .comparison-note { margin-top: 24px; background: var(--astra-purple-tint); color: var(--color-purple-logo); }
   .plan-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: start; }
   .astra-plan { min-width: 0; border: 1px solid var(--color-line); border-radius: var(--radius-card); background: white; padding: 22px 20px 12px; }
-  .featured { background: var(--color-purple-950); border-color: var(--color-purple-950); color: white; box-shadow: 0 12px 32px #300c511c; }
+  .featured { background: var(--color-purple-logo); border-color: var(--color-purple-logo); color: white; box-shadow: 0 12px 32px #5c1f851c; }
+  .astra-plan:not(.featured) :global(a) { color: var(--color-purple-logo); border-color: #5c1f8566; }
   .plan-label { min-height: 24px; display: flex; justify-content: space-between; font-size: 11px; font-family: var(--font-mono); color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: .07em; }
   .featured .plan-label { color: var(--color-green); }
   h3 { min-height: 54px; margin-top: 14px; font-size: 24px; font-weight: 700; line-height: 1.15; }
@@ -169,9 +170,9 @@ const brl = (valor: number) => valor.toLocaleString('pt-BR', { minimumFractionDi
   .resource-note { min-height: 58px; margin-top: 18px; font-size: 13px; font-weight: 700; line-height: 1.5; color: var(--color-purple-logo); }
   .plan-features { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--color-line); min-height: 178px; }
   .plan-features li { display: flex; gap: 9px; font-size: 13px; line-height: 1.5; }
-  .plan-features li span { color: var(--color-green-deep); font-weight: 700; }
-  .featured .persona, .featured .price small { color: #d7cbe1; }
-  .featured .resource-note { color: #e5d9ee; }
+  .plan-features li span { color: var(--color-purple-logo); font-weight: 700; }
+  .featured .persona, .featured .price small { color: var(--astra-on-purple); }
+  .featured .resource-note { color: var(--astra-on-purple); }
   .featured .plan-features { border-color: #ffffff26; }
   .featured .plan-features li span { color: var(--color-green); }
   .plan-details { margin-top: 18px; border-top: 1px solid var(--color-line); }
@@ -183,7 +184,7 @@ const brl = (valor: number) => valor.toLocaleString('pt-BR', { minimumFractionDi
   .extra-features li { margin-top: 6px; }
   .featured .plan-details { border-color: #ffffff26; }
   .plan-help { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px 16px; margin-top: 28px; font-size: 15px; }
-  .plan-help a { padding-block: 10px; font-weight: 700; color: var(--color-green-deep); text-decoration: underline; text-underline-offset: 4px; }
+  .plan-help a { padding-block: 10px; font-weight: 700; color: var(--color-purple-logo); text-decoration: underline; text-underline-offset: 4px; }
   .catalog-note { max-width: 760px; margin: 12px auto 0; text-align: center; font-size: 12px; color: var(--color-ink-soft); }
   .track-navigation { display: none; }
   :global(.no-js) .plan-controls, :global(.no-js) .track-navigation { display: none; }
@@ -195,7 +196,7 @@ const brl = (valor: number) => valor.toLocaleString('pt-BR', { minimumFractionDi
     .price strong { font-size: 38px; }
     .track-navigation { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 12px; color: var(--color-ink-soft); }
     .track-navigation > div { display: flex; gap: 8px; }
-    .track-navigation button { width: 44px; height: 44px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); cursor: pointer; background: white; color: var(--color-purple-950); font-size: 20px; }
+    .track-navigation button { width: 44px; height: 44px; border: 1px solid var(--color-line); border-radius: var(--radius-btn); cursor: pointer; background: white; color: var(--color-purple-logo); font-size: 20px; }
     .track-navigation button:disabled { opacity: .4; cursor: default; }
   }
   @media (max-width: 639px) {
