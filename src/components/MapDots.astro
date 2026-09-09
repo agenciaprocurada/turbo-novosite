@@ -2,9 +2,8 @@
 import { regioes } from '../data/site'
 
 /**
- * Mapa-múndi pontilhado, gerado em build. Os continentes são contornos
- * simplificados em [lon, lat]; os pontos saem de um `<pattern>` SVG, então o
- * desenho inteiro custa alguns contornos em vez de milhares de <circle>.
+ * Globo pontilhado gerado no build por projeção ortográfica de contornos
+ * simplificados em [lon, lat]. Sem dependências ou renderização em JavaScript.
  *
  * Aproximação intencional: é decoração, não cartografia.
  *
@@ -14,25 +13,18 @@ import { regioes } from '../data/site'
  */
 
 /* ------------------------------------------------------------------ */
-/* Projeção equiretangular                                             */
+/* Projeção ortográfica                                               */
 /* ------------------------------------------------------------------ */
 
-const LON0 = -168
-const LON1 = 180
-const LAT0 = 74 // topo
-const LAT1 = -56 // base (corta a Antártida)
-
-const W = 700
-const ESCALA = W / (LON1 - LON0)
-const H = Math.round((LAT0 - LAT1) * ESCALA)
-
-const px = (lon: number, lat: number): [number, number] => [
-  Math.round((lon - LON0) * ESCALA),
-  Math.round((LAT0 - lat) * ESCALA),
-]
-
-const contorno = (pts: [number, number][]) =>
-  'M' + pts.map(([lo, la]) => px(lo, la).join(' ')).join('L') + 'Z'
+const W = 600
+const H = 560
+const R = 232
+// Projeção ortográfica centrada no Atlântico: as três regiões ficam visíveis.
+const px = (lon: number, lat: number): [number, number] => {
+  const a = (lon + 30) * Math.PI / 180
+  const b = lat * Math.PI / 180
+  return [+(300 + R * Math.cos(b) * Math.sin(a)).toFixed(2), +(270 - R * Math.sin(b)).toFixed(2)]
+}
 
 /* ------------------------------------------------------------------ */
 /* Continentes — contornos grosseiros, só o suficiente para reconhecer */
@@ -90,11 +82,26 @@ const MADAGASCAR: [number, number][] = [
   [44, -12], [50, -15], [50, -21], [47, -25], [44, -22], [43, -16],
 ]
 
-const terra = [
-  AMERICA_NORTE, AMERICA_SUL, EUROPA, ASIA, AFRICA, OCEANIA, MADAGASCAR,
-]
-  .map(contorno)
-  .join('')
+const continents = [AMERICA_NORTE, AMERICA_SUL, EUROPA, ASIA, AFRICA, OCEANIA, MADAGASCAR]
+const inside = (lon: number, lat: number, polygon: [number, number][]) => {
+  let hit = false
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [x, y] = polygon[i]!
+    const [u, v] = polygon[j]!
+    if ((y > lat) !== (v > lat) && lon < (u - x) * (lat - y) / (v - y) + x) hit = !hit
+  }
+  return hit
+}
+const dots: { x: number; y: number; opacity: number }[] = []
+for (let lat = -76; lat < 78; lat += 1.7) {
+  for (let lon = -180; lon < 180; lon += 1.7 / Math.max(.25, Math.cos(lat * Math.PI / 180))) {
+    const depth = Math.cos((lon + 30) * Math.PI / 180) * Math.cos(lat * Math.PI / 180)
+    if (depth > .02 && continents.some(p => inside(lon, lat, p))) {
+      const [x, y] = px(lon, lat)
+      dots.push({ x, y, opacity: .35 + depth * .5 })
+    }
+  }
+}
 
 /* ------------------------------------------------------------------ */
 /* Pontos de presença e rotas dos visitantes                           */
@@ -177,98 +184,34 @@ const espinha = [
 })
 ---
 
-<div class="w-full" aria-hidden="true">
-  {/* O wrapper relativo envolve SÓ o SVG: os % dos marcadores são em relação
-      ao mapa. (Com a legenda dentro da conta, o marcador descia.) */}
-  <div class="relative">
-    <svg viewBox={`0 0 ${W} ${H}`} class="block h-auto w-full" style={`aspect-ratio:${W}/${H}`}>
+<div class="turbo-globe" role="img" aria-label="Infraestrutura Turbo Cloud no Brasil, nos Estados Unidos e na Europa, com conexões animadas entre as regiões.">
+  <div class="globe-scene" aria-hidden="true">
+    <svg viewBox="0 0 600 560" class="globe-svg">
       <defs>
-        {/* Os pontos do mapa saem daqui — um <circle> só, repetido pelo browser */}
-        <pattern id="mapDots" width="9" height="9" patternUnits="userSpaceOnUse">
-          <circle cx="4.5" cy="4.5" r="1.7" fill="currentColor"></circle>
-        </pattern>
+        <radialGradient id="globe-light"><stop offset="0" stop-color="#faf7ff"/><stop offset=".75" stop-color="#f4effb"/><stop offset="1" stop-color="#e7dbf5" stop-opacity=".2"/></radialGradient>
       </defs>
-
-      <path d={terra} fill="url(#mapDots)" opacity=".3" fill-rule="evenodd"></path>
-
-      {/* espinha da rede: PoP ↔ PoP */}
-      <g fill="none" stroke="#6BDD12" stroke-opacity=".28" stroke-width="1.2" stroke-dasharray="5 6" stroke-linecap="round">
-        {espinha.map((r) => <path d={r.d} />)}
-      </g>
-
-      {/* rotas dos visitantes */}
-      <g fill="none" stroke="#6BDD12" stroke-opacity=".16" stroke-width="1" stroke-linecap="round">
-        {rotas.map((r) => <path d={r.d} />)}
-      </g>
-
-      {/* origens */}
-      <g fill="#FFFFFF" fill-opacity=".4">
-        {rotas.map((r) => <circle cx={r.o.x} cy={r.o.y} r="1.9" />)}
-      </g>
-
-      {/* pacotes em movimento */}
-      <g fill="#6BDD12">
-        {
-          rotas.map((r) => (
-            <circle
-              class="map-packet"
-              r="2.4"
-              style={`offset-path:path('${r.d}');animation-duration:${r.dur}s;animation-delay:-${r.delay}s`}
-            />
-          ))
-        }
-        {
-          espinha.map((r) => (
-            <circle
-              class="map-packet"
-              r="3"
-              style={`offset-path:path('${r.d}');animation-duration:${r.dur}s;animation-delay:-${r.delay}s`}
-            />
-          ))
-        }
-      </g>
+      <circle cx="300" cy="270" r="232" fill="url(#globe-light)"/>
+      <g fill="#9669c5">{dots.map(p => <circle cx={p.x} cy={p.y} r="1.5" opacity={p.opacity}/>)}</g>
+      <g fill="none" stroke="#5c1f85" stroke-width="1" opacity=".15">{rotas.map(r => <path d={r.d}/> )}</g>
+      <g fill="none" stroke="#5c1f85" stroke-width="1.4" stroke-dasharray="4 6" opacity=".3">{espinha.map(r => <path d={r.d}/> )}</g>
+      <g fill="#5c1f85">{[...rotas, ...espinha].map(r => <circle class="globe-packet" r="2.5" style={`offset-path:path('${r.d}');animation-duration:${r.dur}s;animation-delay:-${r.delay}s`}/>)}</g>
+      {pops.map(p => <g><circle class="globe-pulse" cx={p.x} cy={p.y} r="10" fill="#6bdd12" opacity=".25"/><circle cx={p.x} cy={p.y} r="4.5" fill="#5c1f85" stroke="white" stroke-width="2"/></g>)}
     </svg>
-
-    {
-      pops.map((pop) => (
-        <span
-          class="map-marker absolute -translate-x-1/2 -translate-y-1/2"
-          style={`left:${pop.xPct}%;top:${pop.yPct}%`}
-        >
-          <span
-            class:list={['block rounded-full', pop.principal ? 'size-3 bg-green' : 'size-2 bg-green/70']}
-            style={pop.principal ? 'animation: turbo-marker 2.4s ease-in-out infinite' : ''}
-          />
-          {pop.principal ? (
-            <span class="absolute top-full left-1/2 mt-2 hidden -translate-x-1/2 items-center gap-1.5 rounded-full border border-green/25 bg-green/12 px-2 py-1 font-mono text-[9.5px] leading-none tracking-[0.08em] whitespace-nowrap text-green uppercase backdrop-blur-sm sm:inline-flex">
-              <span class="size-1 rounded-full bg-green" />
-              São Paulo ({pop.detalhe})
-            </span>
-          ) : (
-            <span class="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 font-mono text-[9.5px] leading-none tracking-[0.1em] whitespace-nowrap text-white/60 uppercase sm:block">
-              {pop.detalhe}
-            </span>
-          )}
-        </span>
-      ))
-    }
+    {pops.map(pop => <span class={`globe-label globe-label--${pop.detalhe}`} style={`left:${pop.xPct}%;top:${pop.yPct}%`}><span class="label-dot"></span>{pop.principal ? 'São Paulo · Brasil' : pop.nome}</span>)}
   </div>
-
-  {/* No celular o rótulo não cabe sobre o mapa — vira legenda */}
-  <ul class="mt-4 flex flex-wrap justify-center gap-2 sm:hidden">
-    {
-      regioes.map((regiao) => (
-        <li
-          class:list={[
-            'rounded-full border px-2.5 py-1.5 font-mono text-[11px] tracking-[0.08em] uppercase',
-            regiao.principal
-              ? 'border-green/30 bg-green/12 text-green'
-              : 'border-white/12 text-white/45',
-          ]}
-        >
-          {regiao.nome} ({regiao.detalhe})
-        </li>
-      ))
-    }
-  </ul>
 </div>
+<style>
+  .turbo-globe { width: 100%; max-width: 650px; margin-inline: auto; }
+  .globe-scene { position: relative; animation: globe-float 9s ease-in-out infinite; }
+  .globe-svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .globe-label { position: absolute; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; padding: 10px 13px; border: 1px solid #5c1f8526; border-radius: 11px; background: #ffffffed; box-shadow: 0 8px 26px #300c5110; color: #300c51; font: 11px/1.3 var(--font-mono); transform: translate(10px,-130%); }
+  .globe-label--EU { transform: translate(-30%,-140%); }
+  .label-dot { width: 6px; height: 6px; border-radius: 50%; background: #5c1f85; }
+  .globe-packet { animation: globe-travel 4s linear infinite; }
+  .globe-pulse { animation: globe-pulse 3s ease-in-out infinite; }
+  @keyframes globe-travel { to { offset-distance: 100%; } }
+  @keyframes globe-float { 50% { transform: translateY(-8px) rotate(1deg); } }
+  @keyframes globe-pulse { 50% { opacity: .65; } }
+  @media(max-width:540px) { .globe-label { font-size: 9px; padding: 7px 8px; gap: 5px; } }
+  @media(prefers-reduced-motion:reduce) { .globe-scene,.globe-packet,.globe-pulse { animation: none; } .globe-packet { display: none; } }
+</style>

@@ -40,6 +40,7 @@ export const links = {
   statusApi: 'https://status.turbocloud.com.br/en/index.json',
   /** Página pública das avaliações (Trustindex — fonte dos depoimentos). */
   avaliacoes: 'https://www.trustindex.io/reviews/turbocloud.com.br',
+  reclameAqui: 'https://www.reclameaqui.com.br/empresa/turbo-cloud/',
   /* Ainda no WordPress — entram na onda 2 e 3 do mapa de páginas.
      Enquanto forem absolutos, apontam para o site antigo de propósito:
      link quebrado é pior que link para a versão velha. */
@@ -95,7 +96,7 @@ export const atendimento = {
 /* ------------------------------------------------------------------ */
 
 export const provas = {
-  ttfb: '18 ms',
+  ttfb: '5 ms',
   uptimeTier3: '99,982%',
   backup: '12/12h',
   notaGoogle: '5,0',
@@ -106,20 +107,64 @@ export const provas = {
   anosDeCasa: new Date().getFullYear() - 2013,
 } as const
 
+/** Números e organizações informados pelo cliente em 09/09/2026.
+ * Os clientes privados são apresentados separadamente dos sites governamentais. */
+export const confiancaInfra = {
+  eyebrow: 'Organizações que confiam na Turbo Cloud',
+  organizacoes: [
+    { nome: 'Banco Cora', logo: '/imagens/logos/cora.svg', largura: 90, altura: 24, marca: 'cora' },
+    { nome: 'OAB', logo: '/imagens/logos/oab.webp', largura: 280, altura: 152, marca: 'oab' },
+    { nome: 'Tallos', logo: '/imagens/logos/tallos.svg', largura: 184, altura: 44, marca: 'tallos' },
+    { nome: 'Unimed Mercosul', logo: '/imagens/logos/unimed.webp', largura: 360, altura: 133, marca: 'unimed' },
+    { nome: 'Fiocruz – Fundação Oswaldo Cruz', logo: '/imagens/logos/fiocruz.webp', largura: 360, altura: 63, marca: 'fiocruz' },
+    { nome: 'FENAPAF – Federação Nacional dos Atletas Profissionais de Futebol', logo: '/imagens/logos/fenapaf.svg', largura: 122, altura: 87, marca: 'fenapaf' },
+    { nome: 'ABRINT', logo: '/imagens/logos/abrint.webp', largura: 360, altura: 135, marca: 'abrint' },
+    { nome: 'ABCFARMA', logo: '/imagens/logos/abcfarma.webp', largura: 360, altura: 90, marca: 'abcfarma' },
+    { nome: 'ANPEI', logo: '/imagens/logos/anpei.webp', largura: 128, altura: 28, marca: 'anpei' },
+    { nome: 'CREF8', logo: '/imagens/logos/cref8.webp', largura: 283, altura: 94, marca: 'cref8' },
+    { nome: 'Instituto Carlos Chagas', logo: '/imagens/logos/carloschagas.webp', largura: 184, altura: 180, marca: 'carloschagas' },
+    { nome: 'Febracis', logo: '/imagens/logos/febracis.svg', largura: 857, altura: 216, marca: 'febracis' },
+    { nome: 'Liv Up', logo: '/imagens/logos/livup.svg', largura: 49, altura: 56, marca: 'livup' },
+    { nome: 'Fecomércio', logo: '/imagens/logos/fecomercio.svg', largura: 171, altura: 43, marca: 'fecomercio' },
+    { nome: 'Sinduscon', logo: '/imagens/logos/sinduscon.svg', largura: 224, altura: 45, marca: 'sinduscon' },
+    { nome: 'CRECI', logo: '/imagens/logos/creci.webp', largura: 360, altura: 67, marca: 'creci' },
+    { nome: 'ADEMI', logo: '/imagens/logos/ademi.svg', largura: 156, altura: 60, marca: 'ademi' },
+    { nome: 'IAB Brasil', logo: '/imagens/logos/iab.webp', largura: 117, altura: 57, marca: 'iab' },
+  ],
+  aplicacoes: '155 mil',
+  titulo: 'aplicações hospedadas.',
+  destaque: 'Uma infraestrutura para ir mais longe.',
+  descricao: 'De empresas a instituições públicas, a confiança de quem precisa de velocidade e estabilidade todos os dias.',
+  governo: '150',
+  governoTexto: 'prefeituras e sites oficiais do governo federal',
+  governoDetalhe: 'Governo do Brasil',
+  governoLogo: '/imagens/logos/brasao-brasil.webp',
+  alcance: 'Clientes em',
+  paises: 'mais de 70 países',
+  maisDe: 'Mais de',
+} as const
+
+/** Verificação conferida no perfil do Reclame AQUI em 09/09/2026. */
+export const seloReclameAqui = {
+  texto: 'Verificada por',
+  marca: 'ReclameAQUI',
+  acessibilidade: 'Turbo Cloud verificada pelo Reclame AQUI — abre em nova aba',
+} as const
+
 /** S9 · faixa de números. Ícone + número + rótulo curto. */
 export const stats = [
   { icone: 'uptime', valor: '99,982%', label: 'Uptime do datacenter' },
-  { icone: 'latencia', valor: '18 ms', label: 'Latência média' },
+  { icone: 'latencia', valor: '5 ms', label: 'Latência média' },
   { icone: 'backup', valor: '12 / 12h', label: 'Backups diários' },
   { icone: 'estrela', valor: '5,0', sufixo: '★', label: 'Nota no Google' },
 ] as const
 
 /** S9 · Servidores no Brasil */
 export const brasil = {
-  eyebrow: 'Servidores no Brasil',
-  titulo1: 'Servidores no Brasil,',
-  titulo2: 'perto de quem te visita.',
-  texto: 'Menor latência, mais velocidade e mais conversões para seu site e sua loja.',
+  eyebrow: 'Infraestrutura Global TURBO',
+  titulo1: 'Seu projeto no mundo.',
+  titulo2: 'Velocidade TURBO em cada conexão.',
+  texto: 'Hospedagem na Europa, nos Estados Unidos e no Brasil. Infraestrutura para sites, apps e automações, com a estabilidade e a velocidade que seu projeto precisa para crescer.',
   link: { label: 'Conheça nossos data centers', href: links.estrutura },
 } as const
 
@@ -206,10 +251,10 @@ export const nav = [
 
 export const hero = {
   eyebrow: marca.tagline,
-  titulo1: 'Seu site no modo Turbo.',
-  titulo2: 'Sem sair do Brasil.',
-  subLead: 'Do WordPress ao WooCommerce:',
-  sub: `memória e processamento dedicados, TTFB de ${provas.ttfb} e suporte humano no WhatsApp. Migração grátis, feita pela nossa equipe.`,
+  titulo1: 'Publique mais rápido.',
+  titulo2: 'Cresça sem trocar de cloud.',
+  subLead: 'Sua próxima ideia, em modo TURBO:',
+  sub: 'sites, apps e automações em uma infraestrutura rápida, estável e pronta para crescer. Você cria o próximo projeto. A Turbo cuida da base para ele ir mais longe.',
   ctaPrimario: { label: 'Ver planos', href: '#planos' },
   ctaSecundario: { label: 'Falar com especialista', href: links.whatsapp },
   /** Selos abaixo dos botões. "Suporte 24h" não entra — o horário real é 8h–1h. */

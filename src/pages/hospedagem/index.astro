@@ -17,6 +17,7 @@ import CtaFinal from '../../components/secoes/CtaFinal.astro'
 
 import { produtos, hub, urlProduto } from '../../data/produtos'
 import { links } from '../../data/site'
+import astronautaHospedagem from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-solucoes-nuvem.webp'
 
 const trilha = [
   { label: 'Home', href: '/' },
@@ -31,15 +32,18 @@ const precoFmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigit
   <HeaderPill />
 
   <main id="conteudo">
+    <div class="hosting-hero">
     <HeroProduto
       eyebrow={hub.eyebrow}
       titulo={hub.h1}
       tituloVerde={hub.h1Verde}
       lead={hub.lead}
       trilha={trilha}
+      astronauta={astronautaHospedagem}
       ctaPrimario={{ label: 'Ver as soluções', href: '#solucoes' }}
       ctaSecundario={{ label: 'Falar no WhatsApp', href: links.whatsapp }}
     />
+    </div>
 
     <section class="pt-[clamp(56px,7vw,96px)] pb-[clamp(56px,7vw,96px)]" id="solucoes">
       <div class="container-page">
@@ -108,3 +112,10 @@ const precoFmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigit
 
   <FooterMega />
 </Base>
+
+<style>
+  /* A arte foi gerada sobre branco. A fusão preserva as nuvens e evita uma
+     moldura opaca; fica na camada externa para acompanhar o fundo do hero. */
+  .hosting-hero :global(.arte-hero),
+  .hosting-hero :global(.arte-hero-fluxo) { mix-blend-mode: multiply; }
+</style>

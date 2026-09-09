@@ -1,0 +1,90 @@
+---
+import { confiancaInfra as copy } from '../data/site'
+---
+
+<section class="trust-infra" aria-labelledby="trust-infra-title">
+  <div class="container-page">
+    <div class="trust-organizations">
+      <p class="trust-eyebrow">{copy.eyebrow}</p>
+      <div class="trust-carousel" tabindex="0" role="region" aria-label={copy.eyebrow}>
+        <div class="trust-track">
+          {[false, true].map(duplicate => (
+            <ul class="trust-logo-group" aria-hidden={duplicate ? 'true' : undefined}>
+              <li class="trust-government-client">
+                <img class="government-logo" src={copy.governoLogo} alt={duplicate ? '' : 'Brasão da República Federativa do Brasil'} width="179" height="180" decoding="async" />
+                <p><strong>+{copy.governo}</strong><span>{copy.governoTexto}</span></p>
+              </li>
+              {copy.organizacoes.map(({ nome, logo, largura, altura, marca }) => (
+                <li title={nome}><img class={`trust-logo trust-logo--${marca}`} src={logo} alt={duplicate ? '' : nome} width={largura} height={altura} decoding="async" /></li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div class="trust-message">
+      <h2 id="trust-infra-title"><span class="trust-count"><span class="sr-only">{copy.maisDe} </span><span aria-hidden="true">+</span>{copy.aplicacoes}</span> {copy.titulo}<br /><span class="trust-tagline">{copy.destaque}</span></h2>
+      <p class="trust-description">{copy.descricao}</p>
+      <div class="trust-facts">
+      <div class="trust-government">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><ellipse cx="12" cy="12" rx="4" ry="9" /><path d="M3 12h18M5 6.5h14M5 17.5h14" /></svg>
+        <p>{copy.alcance} <strong>{copy.paises}</strong></p>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust-infra { background: var(--color-bg); padding: 34px 0 54px; }
+  .trust-organizations { text-align: center; padding: 0 0 32px; }
+  .trust-eyebrow { font: 11px/1.8 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--color-ink-soft); }
+  .trust-carousel { overflow: hidden; margin-top: 28px; mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent); }
+  .trust-carousel:focus-visible { outline: 2px solid var(--color-purple-logo); outline-offset: 4px; }
+  .trust-track { display: flex; width: max-content; animation: trust-scroll 95s linear infinite; }
+  .trust-logo-group { display: flex; align-items: center; gap: 40px; padding-right: 40px; flex-shrink: 0; }
+  .trust-logo-group li { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 160px; height: 100px; padding: 8px; }
+  .trust-logo-group .trust-government-client { width: 330px; gap: 16px; text-align: left; }
+  .trust-government-client p { max-width: 220px; font-size: 12px; line-height: 1.5; color: var(--color-ink-soft); }
+  .trust-government-client strong { display: block; font: 800 24px/1.2 var(--font-sans); color: var(--color-ink); }
+  .trust-government-client span { display: block; margin-top: 4px; }
+  .trust-carousel:hover .trust-track, .trust-carousel:focus-within .trust-track { animation-play-state: paused; }
+  @keyframes trust-scroll { to { transform: translateX(-50%); } }
+  .trust-logo { display: block; width: 155px; max-width: 100%; max-height: 65px; height: auto; object-fit: contain; filter: grayscale(1); opacity: .8; }
+  .trust-logo--cora { width: 145px; }
+  .trust-logo--oab { width: 112px; }
+  .trust-logo--tallos { width: 160px; filter: brightness(0); opacity: .6; }
+  .trust-logo--fiocruz, .trust-logo--abrint, .trust-logo--carloschagas { filter: brightness(0); opacity: .6; }
+  .trust-logo--carloschagas { max-height: 80px; }
+  .trust-logo--anpei { width: 128px; }
+  .trust-logo--iab { width: 100px; }
+  .trust-logo--livup { width: 55px; }
+  .government-logo { width: 58px; height: 58px; object-fit: contain; flex-shrink: 0; opacity: .8; }
+  .trust-message { text-align: center; padding-top: 38px; }
+  .trust-message h2 { font-size: clamp(1.7rem, 3.6vw, 2.7rem); font-weight: 700; line-height: 1.25; letter-spacing: -.025em; color: var(--color-ink); }
+  .trust-count { color: var(--color-purple-logo); white-space: nowrap; }
+  .trust-tagline { font-size: .87em; }
+  .trust-description { max-width: 65ch; margin: 18px auto 0; color: var(--color-ink-soft); font-size: 15px; line-height: 1.8; }
+  .trust-facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 24px; }
+  .trust-government { display: inline-flex; align-items: center; gap: 13px; padding: 13px 22px; border-radius: var(--radius-btn); background: #5c1f8507; border: 1px solid #5c1f8518; text-align: left; }
+  .trust-government svg { width: 25px; height: 25px; flex-shrink: 0; color: var(--color-purple-logo); }
+  .trust-government p { font-size: 14px; color: var(--color-ink); line-height: 1.6; }
+  .trust-government strong { color: var(--color-purple-logo); font-weight: 800; }
+  .trust-government-detail { display: block; color: var(--color-ink-soft); font-size: 12px; }
+  @media (max-width: 540px) { .trust-infra { padding: 28px 0 38px; } .trust-organizations ul { gap: 28px; } .trust-organizations li { font-size: 22px; } .trust-eyebrow { font-size: 10px; } .trust-message { padding-top: 28px; } .trust-message h2 { font-size: 27px; } .trust-description { font-size: 14px; } .trust-government { padding: 12px 15px; } .trust-government p { font-size: 13px; } }
+  @media (max-width: 540px) {
+    .trust-logo-group { gap: 24px; padding-right: 24px; }
+    .trust-logo-group li { width: 130px; height: 88px; padding: 5px; }
+    .trust-logo-group .trust-government-client { width: 270px; gap: 12px; }
+    .trust-logo { max-height: 52px; }
+    .trust-logo--carloschagas { max-height: 65px; }
+    .trust-logo--livup { width: 40px; }
+    .trust-logo--oab { width: 82px; }
+    .government-logo { width: 48px; height: 48px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .trust-track { animation: none; }
+    .trust-carousel { overflow-x: auto; mask-image: none; }
+    .trust-logo-group[aria-hidden="true"] { display: none; }
+  }
+</style>

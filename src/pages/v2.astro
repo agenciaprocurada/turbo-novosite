@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro'
 import TopBar from '../components/TopBar.astro'
 import HeaderPill from '../components/HeaderPill.astro'
 import FooterMega from '../components/FooterMega.astro'
+import ConfiancaInfra from '../components/ConfiancaInfra.astro'
 
 import Button from '../components/Button.astro'
 import Badge from '../components/Badge.astro'
@@ -72,7 +73,7 @@ const ICONES_GARANTIAS = {
 
 <Base
   titulo="Turbo Cloud — hospedagem de alta performance no Brasil"
-  descricao="Hospedagem WordPress e WooCommerce com CPU e memória dedicadas, TTFB de 18 ms, backup a cada 12 horas e suporte humano no WhatsApp. Servidores em datacenter TIER III no Brasil. Migração grátis."
+  descricao="Hospedagem WordPress e WooCommerce com CPU e memória dedicadas, TTFB de 5 ms, backup a cada 12 horas e suporte humano no WhatsApp. Servidores em datacenter TIER III no Brasil. Migração grátis."
 >
   <TopBar />
   <HeaderPill ctaPlanos="#planos" />
@@ -193,6 +194,8 @@ const ICONES_GARANTIAS = {
         </div>
       </div>
     </section>
+
+    <ConfiancaInfra />
 
     {/* ========================= S3 · PROVA SOCIAL ========================== */}
     <section class="pt-[clamp(48px,6vw,80px)] pb-[clamp(40px,5vw,64px)]">
@@ -500,7 +503,7 @@ const ICONES_GARANTIAS = {
           </div>
 
           <div class="reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" data-delay="1">
-            <div class="rounded-block bg-purple-950 p-5 text-white sm:p-9">
+            <div class="rounded-block p-2 sm:p-4">
               <MapDots />
             </div>
           </div>
@@ -789,7 +792,7 @@ const ICONES_GARANTIAS = {
 <script>
   const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  // Números contam do zero até o valor real quando entram na tela (99,982%, 18 ms, 1.366…)
+  // Números contam do zero até o valor real quando entram na tela (99,982%, 5 ms, 1.366…)
   const contadores = document.querySelectorAll<HTMLElement>('[data-count]')
   if (contadores.length && !reduzido && 'IntersectionObserver' in window) {
     const anima = (el: HTMLElement) => {

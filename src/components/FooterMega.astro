@@ -19,6 +19,7 @@
  * número por trás.
  */
 import Logo from './Logo.astro'
+import SeloReclameAqui from './SeloReclameAqui.astro'
 import { marca, links, footer, provas, atendimento } from '../data/site'
 
 const ano = new Date().getFullYear()
@@ -153,6 +154,7 @@ const selos = [
           <span class="pulse-dot" data-pulse="off" aria-hidden="true"></span>
           <span data-status-texto>status dos serviços</span>
         </a>
+        <div class="mt-5"><SeloReclameAqui /></div>
       </div>
 
       <div class="lg:border-line grid grid-cols-2 gap-x-6 gap-y-9 sm:grid-cols-3 lg:border-l lg:pl-12">

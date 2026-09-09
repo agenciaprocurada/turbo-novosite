@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro'
 import TopBar from '../components/TopBar.astro'
 import HeaderPill from '../components/HeaderPill.astro'
 import FooterMega from '../components/FooterMega.astro'
+import ConfiancaInfra from '../components/ConfiancaInfra.astro'
 
 import ProvaSocial from '../components/secoes/ProvaSocial.astro'
 import Planos from '../components/secoes/Planos.astro'
@@ -50,7 +51,7 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
 
 <Base
   titulo="Turbo Cloud — hospedagem de alta performance no Brasil"
-  descricao="Hospedagem WordPress e WooCommerce com CPU e memória dedicadas, TTFB de 18 ms, backup a cada 12 horas e suporte humano no WhatsApp. Servidores em datacenter TIER III no Brasil. Migração grátis."
+  descricao="Hospedagem WordPress e WooCommerce com CPU e memória dedicadas, TTFB de 5 ms, backup a cada 12 horas e suporte humano no WhatsApp. Servidores em datacenter TIER III no Brasil. Migração grátis."
   faq={faq}
   comProduto
 >
@@ -121,6 +122,8 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
         <HeroTrust />
       </div>
     </section>
+
+    <ConfiancaInfra />
 
     {/* ===================== S3 · SOLUÇÕES (dobra da Astra) ================= */}
     <Solucoes />
@@ -342,7 +345,7 @@ const provasTexto = 'Clientes que confiam na Turbo Cloud para manter tudo no ar,
           </div>
 
           <div class="reveal lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" data-delay="1">
-            <div class="rounded-block bg-purple-950 p-5 text-white sm:p-9">
+            <div class="rounded-block p-2 sm:p-4">
               <MapDots />
             </div>
           </div>
