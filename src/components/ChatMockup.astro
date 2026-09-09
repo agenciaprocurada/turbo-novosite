@@ -1,25 +1,23 @@
 ---
 import { suporte } from '../data/site'
+import Logo from './Logo.astro'
 ---
 
 <div
-  class="overflow-hidden rounded-card border border-white/10 bg-purple-900 shadow-lift"
+  class="whatsapp-chat overflow-hidden rounded-card border border-[#dfe4e7] bg-[#efeae2] shadow-lift"
   aria-hidden="true"
 >
-  <div class="flex items-center gap-2.5 border-b border-white/8 bg-white/4 px-3.5 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
-    <span
-      class="grid size-8 shrink-0 sm:size-9 place-items-center rounded-full bg-linear-to-br from-green-soft to-green font-medium text-purple-950"
-      >TC</span
-    >
+  <div class="flex items-center gap-2.5 border-b border-[#e1e5e8] bg-[#f0f2f5] px-3.5 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
+    <span class="chat-avatar"><Logo height={10} /></span>
     <span class="min-w-0 flex-1">
-      <span class="block truncate text-[14px] font-medium text-white">Suporte Turbo Cloud</span>
-      <span class="flex items-center gap-1.5 font-mono text-[11px] text-green">
-        <span class="pulse-dot"></span> online agora
+      <span class="block truncate text-[14px] font-bold text-[#111b21]">Suporte Turbo Cloud</span>
+      <span class="flex items-center gap-1.5 text-[11px] text-[#667781]">
+        <span class="chat-online"></span> online agora
       </span>
     </span>
   </div>
 
-  <div class="flex flex-col gap-2 p-3 sm:gap-2.5 sm:p-4">
+  <div class="chat-wallpaper flex flex-col gap-2 p-3 sm:gap-2.5 sm:p-4">
     {
       suporte.conversa.map((msg, i) => (
         <div class:list={['chat-msg flex', i === 2 && 'max-sm:hidden', msg.de === 'cliente' ? 'justify-end' : 'justify-start']} style={`--i:${i}`}>
@@ -27,18 +25,19 @@ import { suporte } from '../data/site'
             class:list={[
               'max-w-[88%] rounded-[14px] px-3 py-2 text-[12.5px] leading-snug sm:max-w-[85%] sm:rounded-[16px] sm:px-3.5 sm:py-2.5 sm:text-[13.5px]',
               msg.de === 'cliente'
-                ? 'rounded-br-[6px] bg-green text-purple-950'
-                : 'rounded-bl-[6px] bg-white/8 text-white/85',
+                ? 'rounded-br-[6px] bg-[#d9fdd3] text-[#111b21] shadow-sm'
+                : 'rounded-bl-[6px] bg-white text-[#111b21] shadow-sm',
             ]}
           >
             <p>{msg.texto}</p>
             <span
               class:list={[
-                'mt-1 block font-mono text-[10px]',
-                msg.de === 'cliente' ? 'text-purple-950/55' : 'text-white/35',
+                'mt-1 flex items-center justify-end gap-1 text-[10px]',
+                'text-[#667781]',
               ]}
             >
               {msg.hora}
+              {msg.de === 'cliente' && <svg width="17" height="12" viewBox="0 0 20 12" fill="none" stroke="#53bdeb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m1 6 4 4 8-8M8 7l3 3 8-8" /></svg>}
             </span>
           </div>
         </div>
@@ -46,10 +45,17 @@ import { suporte } from '../data/site'
     }
   </div>
 
-  <div class="chat-msg flex items-center gap-2 border-t border-white/8 bg-green/10 px-3.5 py-2.5 sm:px-4 sm:py-3" style={`--i:${suporte.conversa.length}`}>
-    <svg viewBox="0 0 16 16" class="size-4 shrink-0 text-green" fill="none" stroke="currentColor" stroke-width="1.8">
+  <div class="chat-msg flex items-center gap-2 border-t border-[#dfe4e7] bg-[#f0f2f5] px-3.5 py-2.5 sm:px-4 sm:py-3" style={`--i:${suporte.conversa.length}`}>
+    <svg viewBox="0 0 16 16" class="size-4 shrink-0 text-[#008069]" fill="none" stroke="currentColor" stroke-width="1.8">
       <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke-linecap="round" stroke-linejoin="round"></path>
     </svg>
-    <span class="font-mono text-[11.5px] tracking-[0.06em] text-green uppercase">{suporte.selo}</span>
+    <span class="font-mono text-[11.5px] tracking-[0.06em] text-[#008069] uppercase">{suporte.selo}</span>
   </div>
 </div>
+
+<style>
+  .chat-avatar { display: grid; place-items: center; flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; background: #fff; border: 1px solid #e5e7eb; color: var(--color-purple-logo); }
+  .chat-online { width: 6px; height: 6px; border-radius: 50%; background: #25d366; }
+  .chat-wallpaper { background-color: #efeae2; background-image: radial-gradient(#c8bfb34a .8px, transparent .8px); background-size: 18px 18px; }
+  @media (max-width: 540px) { .chat-avatar { width: 58px; height: 58px; } }
+</style>
