@@ -206,6 +206,10 @@ export const turboDeploy = {
   },
 
   tecnologias: {
+    hub: 'Turbo Deploy',
+    hubStatus: 'Tecnologias suportadas',
+    grupoFrontend: 'Frameworks e runtimes suportados',
+    grupoBackend: 'Linguagens e configuração personalizada',
     eyebrow: 'Compatibilidade',
     titulo1: 'Sites, aplicações web e APIs,',
     titulo2: 'nas tecnologias que você já usa.',

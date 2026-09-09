@@ -26,6 +26,7 @@ import Trilha from '../../components/Trilha.astro'
 import FundoNuvens from '../../components/FundoNuvens.astro'
 import DeployPaths from '../../components/DeployPaths.astro'
 import DeployPlans from '../../components/DeployPlans.astro'
+import DeployTechnologies from '../../components/DeployTechnologies.astro'
 import BeneficioCard from '../../components/BeneficioCard.astro'
 import SectionEyebrow from '../../components/SectionEyebrow.astro'
 import HeadingDuo from '../../components/HeadingDuo.astro'
@@ -236,22 +237,7 @@ const ICONES: Record<string, string> = {
             </p>
           </div>
 
-          <ul class="reveal flex flex-wrap justify-center gap-2.5 lg:justify-start" data-delay="1">
-            {
-              td.tecnologias.frameworks.map((f, i) => (
-                <li
-                  class:list={[
-                    'rounded-btn border px-4 py-2.5 font-mono text-[12.5px] tracking-[0.02em]',
-                    i === td.tecnologias.frameworks.length - 1
-                      ? 'border-purple-logo/30 bg-purple-logo/6 text-purple-logo'
-                      : 'border-line bg-surface text-ink shadow-soft',
-                  ]}
-                >
-                  {f}
-                </li>
-              ))
-            }
-          </ul>
+          <div class="reveal" data-delay="1"><DeployTechnologies /></div>
         </div>
 
         <p class="reveal mx-auto mt-8 max-w-[860px] text-center text-[14px] leading-relaxed text-ink-soft lg:mx-0 lg:text-left">
