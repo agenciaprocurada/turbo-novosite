@@ -1,6 +1,6 @@
 ---
 import { suporte } from '../data/site'
-import Logo from './Logo.astro'
+import foguete from '../../public/favicon.svg?url'
 ---
 
 <div
@@ -8,7 +8,7 @@ import Logo from './Logo.astro'
   aria-hidden="true"
 >
   <div class="flex items-center gap-2.5 border-b border-[#e1e5e8] bg-[#f0f2f5] px-3.5 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
-    <span class="chat-avatar"><Logo height={10} /></span>
+    <span class="chat-avatar"><img src={foguete} alt="" width="36" height="36" /></span>
     <span class="min-w-0 flex-1">
       <span class="block truncate text-[14px] font-bold text-[#111b21]">Suporte Turbo Cloud</span>
       <span class="flex items-center gap-1.5 text-[11px] text-[#667781]">
@@ -54,7 +54,8 @@ import Logo from './Logo.astro'
 </div>
 
 <style>
-  .chat-avatar { display: grid; place-items: center; flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; background: #fff; border: 1px solid #e5e7eb; color: var(--color-purple-logo); }
+  .chat-avatar { display: grid; place-items: center; flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; background: var(--color-purple-logo); }
+  .chat-avatar img { width: 36px; height: 36px; object-fit: contain; }
   .chat-online { width: 6px; height: 6px; border-radius: 50%; background: #25d366; }
   .chat-wallpaper { background-color: #efeae2; background-image: radial-gradient(#c8bfb34a .8px, transparent .8px); background-size: 18px 18px; }
   @media (max-width: 540px) { .chat-avatar { width: 58px; height: 58px; } }
