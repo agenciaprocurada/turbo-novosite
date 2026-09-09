@@ -43,7 +43,7 @@ export const links = {
   /* Ainda no WordPress — entram na onda 2 e 3 do mapa de páginas.
      Enquanto forem absolutos, apontam para o site antigo de propósito:
      link quebrado é pior que link para a versão velha. */
-  calculadora: 'https://turbocloud.com.br/calculadora-perda-de-trafego/',
+  calculadora: '/calculadora/',
 
   /* Já reconstruídas aqui */
   /** A página /planos/ foi descontinuada e redireciona para a home. Os links
@@ -68,7 +68,11 @@ export const links = {
   },
   ferramentasIa: {
     turboBuilder: '/ferramentas-ia/turbo-builder/',
+    turboDeploy: '/ferramentas-ia/turbo-deploy/',
   },
+  /** Plataforma do Turbo Deploy. Os projetos publicados vivem em
+   *  `*.up.turbo.cloud`; a URL de cadastro/login está em `PENDENTE`. */
+  turboDeploy: 'https://up.turbo.cloud',
 } as const
 
 /** Carrinho do WHMCS. Cada plano leva direto para o seu produto — antes todos
@@ -967,5 +971,8 @@ export const PENDENTE = [
   'Definir se a conversa da seção de suporte vira transcrição de um caso real (hoje é representação do fluxo).',
   'Programa de afiliados: a tabela de comissões publicada lista "Plano Elite 40", que não existe na tabela de planos (são 5, 10, 15, 20, 30 e 50). Confirmar se é o Elite 30 ou o Elite 50 — o valor foi mantido como está publicado.',
   'Sincronizar o package-lock: falta @emnapi/runtime e @emnapi/core no topo, e por isso npm ci quebra no Linux. O deploy usa npm install e não sente, mas qualquer CI com npm ci vai falhar. Precisa ser regenerado num Linux — regenerar no Windows não resolve.',
+  'Turbo Deploy (/ferramentas-ia/turbo-deploy/): confirmar a URL de cadastro/login da plataforma. Enquanto isso, os CTAs levam ao WhatsApp e a página informa que o produto está em preparação para lançamento. https://up.turbo.cloud permanece apenas como referência não confirmada em links.turboDeploy.',
+  'Turbo Deploy: preço, ciclo de cobrança e condições do plano Turbo (o card mostra "Sob consulta" e o botão manda para o WhatsApp), condições públicas do plano Grátis, canal e horário de suporte do produto. Os limites da tabela são os de referência do produto (PLAN_LIMITS), não oferta homologada.',
+  'Turbo Deploy: a página está noindex e fora do menu até o lançamento. Para liberar, tirar `noindex` em turbo-deploy.astro e acrescentar o item em `nav` (Ferramentas IA) e `footer`.',
   'URL real de checkout/assinatura do Turbo Builder. Os botões "Assinar Starter/Agência" em /ferramentas-ia/turbo-builder/ apontam para o WhatsApp por enquanto — trocar pelo link de loja assim que o produto tiver checkout próprio no WHMCS.',
 ] as const

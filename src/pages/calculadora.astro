@@ -1,0 +1,238 @@
+---
+import Base from '../layouts/Base.astro'
+import TopBar from '../components/TopBar.astro'
+import HeaderPill from '../components/HeaderPill.astro'
+import FooterMega from '../components/FooterMega.astro'
+import Trilha from '../components/Trilha.astro'
+import SectionEyebrow from '../components/SectionEyebrow.astro'
+import Button from '../components/Button.astro'
+import { links } from '../data/site'
+import { calculadora as copy } from '../data/calculadora'
+
+const trilha = [{ label: 'Home', href: '/' }, { label: 'Calculadora', href: '/calculadora/' }]
+---
+
+<Base titulo={copy.titulo} descricao={copy.descricao} trilha={trilha}>
+  <TopBar />
+  <HeaderPill />
+  <main id="conteudo">
+    <section class="calculator-section">
+      <div class="container-page">
+        <Trilha itens={trilha} />
+        <div class="calculator-intro">
+          <SectionEyebrow align="center">{copy.eyebrow}</SectionEyebrow>
+          <h1>{copy.titulo1}<br /><span>{copy.titulo2}</span></h1>
+          <p>{copy.lead}</p>
+        </div>
+
+        <div class="calculator-grid">
+          <form id="calculator" class="input-panel" novalidate>
+            <div class="panel-heading"><span class="step-number" aria-hidden="true">01</span><h2>{copy.formulario}</h2></div>
+            <p class="form-intro">{copy.instrucao}</p>
+            {copy.campos.map((campo) => (
+              <div class="field">
+                <label for={campo.id}>{campo.label}<span>{campo.tecnico}</span></label>
+                <div class="input-wrap">
+                  <input id={campo.id} name={campo.id} type="text" inputmode="decimal" required autocomplete="off" maxlength="20" placeholder={campo.placeholder} value={campo.valor} aria-describedby={`${campo.id}-help ${campo.id}-error`} />
+                  <span aria-hidden="true">{campo.unidade}</span>
+                </div>
+                <p id={`${campo.id}-help`} class="field-help">{campo.ajuda}</p>
+                <p id={`${campo.id}-error`} class="field-error" hidden></p>
+              </div>
+            ))}
+            <button type="submit" class="calculate-button">{copy.calcular}<span aria-hidden="true">→</span></button>
+            <button type="button" id="example" class="example-button">{copy.exemplo}</button>
+            <p class="privacy">{copy.privacidade}</p>
+            <noscript><p class="field-error">{copy.semJs}</p></noscript>
+          </form>
+
+          <section class="result-panel block-dark" aria-labelledby="result-heading">
+            <div class="panel-heading"><span class="step-number" aria-hidden="true">02</span><h2 id="result-heading">{copy.resultado}</h2></div>
+            <div id="empty-result" class="empty-result">
+              <div class="empty-orbit" aria-hidden="true"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 32a18 18 0 1 1 32 0M24 24l10-10M12 24h3M24 9v3M33 24h3" stroke-linecap="round"/><circle cx="24" cy="24" r="3"/><path d="M16 37h16" stroke-linecap="round"/></svg></div>
+              <h3>{copy.estadoInicial}</h3>
+              <p>{copy.ajudaInicial}</p>
+              <span class="empty-caption">{copy.legendaInicial}</span>
+            </div>
+            <div id="result" hidden>
+              <div class="result-topline"><span>{copy.perda}</span><span id="result-badge"></span></div>
+              <p class="loss-value" id="loss-value"></p>
+              <p class="investment-base">{copy.base}: <strong id="investment-value"></strong></p>
+              <div class="breakdown">
+                <div class="result-ring" id="result-ring" aria-hidden="true"><div><strong id="loss-percent"></strong><span>{copy.perda}</span></div></div>
+                <dl class="legend">
+                  <div><dt><i class="loss-dot"></i>{copy.perda}</dt><dd id="legend-loss"></dd></div>
+                  <div><dt><i class="remaining-dot"></i>{copy.restante}</dt><dd id="remaining-value"></dd></div>
+                </dl>
+              </div>
+              <div class="diagnosis"><h3 id="diagnosis-title"></h3><p id="diagnosis-text"></p></div>
+              <p id="result-inputs" class="result-inputs"></p>
+            </div>
+            <p id="calculator-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+            <p class="result-note">{copy.nota}</p>
+          </section>
+        </div>
+
+        <details class="methodology"><summary>{copy.metodologia}<span aria-hidden="true">+</span></summary><div><p>{copy.formula}</p><p>{copy.ressalva}</p></div></details>
+        <div class="next-steps">{copy.passos.map((passo, i) => <article><span class="step-label">0{i + 1}</span><h2>{passo.titulo}</h2><p>{passo.texto}</p></article>)}</div>
+        <aside class="calculator-cta"><div><h2>{copy.ctaTitulo}</h2><p>{copy.ctaTexto}</p></div><Button href={links.whatsapp}>{copy.cta}<span aria-hidden="true">↗</span></Button></aside>
+      </div>
+    </section>
+  </main>
+  <FooterMega />
+</Base>
+
+<script>
+  import { calculadora as copy } from '../data/calculadora'
+
+  const form = document.querySelector<HTMLFormElement>('#calculator')!
+  const inputs = copy.campos.map(({ id }) => document.getElementById(id) as HTMLInputElement)
+  const result = document.getElementById('result')!
+  const status = document.getElementById('calculator-status')!
+  const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+  const number = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2, minimumFractionDigits: 2 })
+  const setText = (id: string, value: string) => { document.getElementById(id)!.textContent = value }
+
+  function parseValue(input: HTMLInputElement) {
+    let value = input.value.trim()
+    // Tempos aceitam vírgula ou ponto decimal; investimento também aceita agrupamento brasileiro.
+    if (input.id === 'investimento' && /^\d{1,3}(\.\d{3})+(,\d{1,2})?$/.test(value)) value = value.replace(/\./g, '')
+    if (!/^\d+(?:[.,]\d+)?$/.test(value)) return NaN
+    return Number(value.replace(',', '.'))
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault()
+    const values = inputs.map(parseValue)
+    let firstInvalid: HTMLInputElement | undefined
+    inputs.forEach((input, index) => {
+      const value = values[index]!
+      const invalid = !Number.isFinite(value) || value < 0 || (input.id === 'investimento' && value <= 0)
+      const error = document.getElementById(`${input.id}-error`)!
+      error.hidden = !invalid
+      input.setAttribute('aria-invalid', String(invalid))
+      error.textContent = invalid ? (input.id === 'investimento' ? copy.erroInvestimento : copy.erroTempo) : ''
+      if (invalid && !firstInvalid) firstInvalid = input
+    })
+    if (firstInvalid) { firstInvalid.focus(); return }
+
+    const [ti, ttc, investment] = values as [number, number, number]
+    // Mesma fórmula de https://turbocloud.com.br/calculadora-perda-de-trafego/
+    const total = ti + ttc
+    const percent = Math.min(total * 3.14 + Math.max(0, total - 3) * 8, 100)
+    const loss = Math.round(investment * percent) / 100
+    const remaining = Math.max(0, investment - loss)
+    const diagnosis = copy.faixas.find(({ limite }) => percent <= limite)!
+    const percentage = `${number.format(percent)}%`
+    setText('loss-value', money.format(loss))
+    setText('investment-value', money.format(investment))
+    setText('loss-percent', percentage)
+    setText('result-badge', percentage)
+    setText('legend-loss', money.format(loss))
+    setText('remaining-value', money.format(remaining))
+    setText('diagnosis-title', diagnosis.titulo)
+    setText('diagnosis-text', diagnosis.texto)
+    setText('result-inputs', `Time to Interactive: ${number.format(ti)} s · Fully Loaded Time: ${number.format(ttc)} s`)
+    document.getElementById('result-ring')!.style.setProperty('--loss', `${percent}%`)
+    document.getElementById('empty-result')!.hidden = true
+    result.hidden = false
+    status.classList.add('sr-only')
+    status.textContent = `${copy.resumo}: ${copy.perda} de ${money.format(loss)}, ou ${percentage}, sobre ${money.format(investment)}. ${diagnosis.titulo}.`
+  })
+
+  inputs.forEach((input) => input.addEventListener('input', () => {
+    input.removeAttribute('aria-invalid')
+    document.getElementById(`${input.id}-error`)!.hidden = true
+    if (!result.hidden) {
+      status.classList.remove('sr-only')
+      status.textContent = copy.atualizado
+    }
+  }))
+  document.getElementById('example')!.addEventListener('click', () => {
+    inputs[0]!.value = '3,5'
+    inputs[1]!.value = '5,2'
+    inputs[2]!.value = '1000'
+    form.requestSubmit()
+  })
+</script>
+
+<style>
+  .calculator-section { padding: 28px 0 80px; background: radial-gradient(ellipse at 85% 12%, #5c1f8509, transparent 42%); }
+  .calculator-intro { text-align: center; margin: 40px auto 42px; max-width: 780px; }
+  h1 { margin-top: 16px; font-size: clamp(2.1rem, 4.8vw, 3.6rem); font-weight: 700; letter-spacing: -.022em; }
+  h1 span { color: var(--color-green-ink); }
+  .calculator-intro > p { max-width: 570px; margin: 20px auto 0; color: var(--color-ink-soft); }
+  .calculator-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 20px; align-items: stretch; }
+  .input-panel, .result-panel { border-radius: var(--radius-block); padding: 32px; min-width: 0; }
+  .input-panel { background: var(--color-surface); border: 1px solid var(--color-line); box-shadow: var(--shadow-soft); }
+  .panel-heading { display: flex; align-items: center; gap: 12px; }
+  .panel-heading h2 { font-size: 20px; font-weight: 700; line-height: 1.3; }
+  .step-number { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border: 1px solid var(--color-line); border-radius: 10px; color: var(--color-purple-logo); font: 11px var(--font-mono); }
+  .form-intro { margin: 10px 0 24px; font-size: 14px; color: var(--color-ink-soft); }
+  .field { margin-top: 22px; }
+  label { display: block; font-size: 15px; font-weight: 700; }
+  label > span { display: block; font-size: 11px; font-family: var(--font-mono); font-weight: 400; color: var(--color-ink-soft); margin-top: 3px; }
+  .input-wrap { position: relative; margin-top: 9px; }
+  input { width: 100%; height: 54px; border: 1px solid #c9c2cf; border-radius: var(--radius-btn); padding: 0 62px 0 16px; font: 18px var(--font-mono); background: var(--color-bg); color: var(--color-ink); }
+  input::placeholder { color: var(--color-ink-soft); font-size: 15px; }
+  input:focus { border-color: var(--color-purple-logo); }
+  input[aria-invalid="true"] { border-color: var(--color-amber-deep); }
+  .input-wrap > span { position: absolute; right: 17px; top: 16px; font: 13px var(--font-mono); color: var(--color-ink-soft); }
+  .field-help, .field-error { font-size: 12px; margin-top: 7px; line-height: 1.5; }
+  .field-help { color: var(--color-ink-soft); }
+  .field-error { color: var(--color-amber-deep); }
+  .calculate-button { width: 100%; display: flex; align-items: center; justify-content: center; gap: 15px; min-height: 52px; margin-top: 26px; border-radius: var(--radius-btn); background: var(--color-green); color: var(--color-purple-950); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; cursor: pointer; transition: background .2s, transform .2s; }
+  .calculate-button:hover { background: var(--color-green-soft); transform: translateY(-2px); }
+  .calculate-button > span { font-size: 22px; }
+  .example-button { display: block; min-height: 44px; margin: 4px auto; font-size: 13px; font-weight: 700; color: var(--color-purple-logo); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+  .privacy { color: var(--color-ink-soft); font-size: 11px; text-align: center; }
+  .result-panel { display: flex; flex-direction: column; color: white; background: radial-gradient(ellipse at 100% 0, #5c1f8580, transparent 65%), var(--color-purple-950); }
+  .result-panel .step-number { color: var(--color-green); border-color: #ffffff40; }
+  .result-panel .panel-heading h2 { font-size: 17px; }
+  .empty-result { flex: 1; text-align: center; padding: 64px 12px; }
+  .empty-orbit { display: grid; place-items: center; width: 160px; height: 160px; border: 1px dashed #ffffff45; outline: 12px solid #ffffff04; border-radius: 50%; margin: 0 auto 32px; color: var(--color-green); background: #ffffff04; }
+  .empty-result h3 { font-size: 28px; font-weight: 700; }
+  .empty-result p { margin: 15px auto; max-width: 300px; font-size: 15px; color: #e0d3eb; }
+  .empty-caption { display: inline-block; margin-top: 12px; font: 10px var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: #cdb8de; }
+  .result-note { border-top: 1px solid #ffffff24; padding-top: 18px; margin-top: auto; font-size: 11px; line-height: 1.7; color: #cdb8de; }
+  #result { padding: 36px 0 22px; }
+  .result-topline { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #e0d3eb; font-size: 14px; }
+  #result-badge { font: 12px var(--font-mono); color: var(--color-green); border: 1px solid #6bdd1255; border-radius: 8px; padding: 5px 9px; }
+  .loss-value { font-size: clamp(2.1rem, 4.4vw, 3.8rem); font-weight: 700; line-height: 1.2; letter-spacing: -.025em; margin: 14px 0 8px; overflow-wrap: anywhere; }
+  .investment-base { font-size: 13px; color: #e0d3eb; }
+  .investment-base strong { color: white; font-weight: 600; }
+  .breakdown { display: flex; gap: 28px; align-items: center; margin: 30px 0; }
+  .result-ring { --loss: 0%; width: 158px; height: 158px; flex-shrink: 0; padding: 10px; border-radius: 50%; background: conic-gradient(var(--color-green) var(--loss), #8d6ba6 0); transform: rotate(-90deg); }
+  .result-ring > div { background: var(--color-purple-950); border-radius: 50%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; transform: rotate(90deg); }
+  .result-ring strong { font: 700 23px var(--font-mono); color: var(--color-green); }
+  .result-ring span { font-size: 10px; margin-top: 6px; color: #e0d3eb; }
+  .legend { min-width: 0; }
+  .legend > div + div { margin-top: 18px; }
+  .legend dt { font-size: 12px; color: #e0d3eb; }
+  .legend dd { font: 14px var(--font-mono); margin: 6px 0 0 16px; overflow-wrap: anywhere; }
+  .legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 8px; }
+  .loss-dot { background: var(--color-green); }
+  .remaining-dot { background: #8d6ba6; }
+  .diagnosis { border-left: 2px solid var(--color-green); padding: 4px 0 4px 16px; }
+  .diagnosis h3 { font-size: 17px; font-weight: 700; }
+  .diagnosis p { color: #e0d3eb; font-size: 13px; line-height: 1.7; margin-top: 10px; }
+  .result-inputs { font: 10px/1.8 var(--font-mono); color: #cdb8de; margin-top: 22px; }
+  #calculator-status:not(.sr-only) { color: var(--color-green-soft); font-size: 13px; margin-bottom: 16px; }
+  .methodology { margin-top: 20px; border: 1px solid var(--color-line); border-radius: var(--radius-card); background: var(--color-surface); }
+  summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; padding: 16px 24px; cursor: pointer; color: var(--color-purple-logo); font-size: 14px; font-weight: 700; }
+  summary span { font: 22px var(--font-mono); }
+  details[open] summary span { transform: rotate(45deg); }
+  .methodology > div { padding: 0 24px 24px; color: var(--color-ink-soft); font-size: 14px; }
+  .methodology p + p { margin-top: 12px; }
+  .next-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin: 64px 0 48px; }
+  .step-label { color: var(--color-purple-logo); font: 12px var(--font-mono); }
+  .next-steps h2 { font-size: 19px; font-weight: 700; margin: 13px 0 12px; }
+  .next-steps p { color: var(--color-ink-soft); font-size: 14px; }
+  .calculator-cta { display: flex; align-items: center; justify-content: space-between; gap: 30px; border-radius: var(--radius-card); padding: 28px; background: #5c1f8508; border: 1px solid var(--color-line); }
+  .calculator-cta h2 { font-size: 23px; font-weight: 700; color: var(--color-purple-logo); }
+  .calculator-cta p { max-width: 590px; margin-top: 10px; font-size: 14px; color: var(--color-ink-soft); }
+  [hidden] { display: none !important; }
+  @media (max-width: 900px) { .calculator-grid { grid-template-columns: 1fr; } .calculator-cta { align-items: flex-start; flex-direction: column; } .empty-result { padding: 40px 12px; } }
+  @media (max-width: 540px) { .calculator-intro { margin: 28px auto 30px; } .input-panel, .result-panel { padding: 24px 20px; border-radius: var(--radius-card); } .next-steps { grid-template-columns: 1fr; gap: 28px; margin: 42px 0; } .breakdown { gap: 18px; } .result-ring { width: 130px; height: 130px; padding: 8px; } .result-ring strong { font-size: 19px; } .legend dd { font-size: 12px; } .legend dt { font-size: 11px; } .calculator-cta { padding: 24px 20px; } }
+  @media (max-width: 360px) { .breakdown { flex-direction: column; align-items: flex-start; } }
+</style>

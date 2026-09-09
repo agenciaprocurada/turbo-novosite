@@ -1,0 +1,22 @@
+---
+/**
+ * Terminal ilustrativo do Turbo Deploy: `turbodeploy agents` gerando os
+ * arquivos de instrução e `turbodeploy deploy` publicando a pasta local.
+ * Versão escura, para dentro do bloco roxo. Saída ilustrativa, rotulada.
+ */
+import MockupFrame from '../MockupFrame.astro'
+import { turboDeploy } from '../../data/turbodeploy'
+
+const t = turboDeploy.caminhos.terminal
+---
+
+<div>
+  <MockupFrame titulo={t.titulo} tone="dark" bodyClass="p-4 sm:p-5">
+    <pre class="overflow-x-auto font-mono text-[12px] leading-[1.75] whitespace-pre-wrap break-words text-white/80"><code>{
+      t.linhas.map((l) => (
+        <span class:list={['block', l.tipo === 'cmd' && 'mt-2 first:mt-0 text-white', l.tipo === 'ok' && 'text-green']}>{l.tipo === 'cmd' && <span class="mr-2 text-green select-none" aria-hidden="true">$</span>}{l.texto}</span>
+      ))
+    }<span class="cursor-pisca text-green" aria-hidden="true">▍</span></code></pre>
+  </MockupFrame>
+  <p class="mt-3 text-center font-mono text-[10.5px] text-white/40 lg:text-left">{t.legenda}</p>
+</div>

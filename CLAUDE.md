@@ -283,6 +283,7 @@ estão no `Base.astro`, porque valem para toda página.
 | `/legal/` | `src/pages/legal.astro` — índice, não guarda texto |
 | `/hospedagem/openclaw/` | `src/pages/hospedagem/openclaw.astro` — rota própria, ver abaixo |
 | `/ferramentas-ia/turbo-builder/` | `src/pages/ferramentas-ia/turbo-builder.astro` + `src/data/turbobuilder.ts` — ver abaixo |
+| `/ferramentas-ia/turbo-deploy/` | `src/pages/ferramentas-ia/turbo-deploy.astro` + `src/data/turbodeploy.ts` — ver abaixo |
 
 **O hero das páginas internas é claro, não roxo.** `HeroProduto.astro` segue
 o mesmo sistema do hero da home: fundo `#F6F1FA`, título em duas cores
@@ -382,6 +383,21 @@ lugar do card de preço), `FaixaProvas` (ícone + texto ao lado de cada CTA) e
 vão para `#planos` e os botões de assinar para o WhatsApp — está em `PENDENTE`.
 Sem hub `/ferramentas-ia/` enquanto for a única ferramenta: a trilha pula de
 Home para a página, porque um crumb sem destino seria link morto.
+
+**O Turbo Deploy (`/ferramentas-ia/turbo-deploy/`) nasce de `SALES-ANALYSIS.md`.**
+Aquele documento (08/09/2026) é a única fonte do texto e é cauteloso de
+propósito: só recurso marcado "Implementado" vira promessa; nada de "zero
+downtime", "ilimitado", "24/7", número de performance ou preço não
+homologado. A ordem das seções segue o §12 dele (promessa → como funciona →
+três caminhos → operação → tecnologias e casos → acompanhamento → equipes →
+planos → quem faz → FAQ → CTA). Não há prova social do produto porque não
+existe caso autorizado; a faixa "Quem faz" mostra a casa (Turbo Cloud).
+Mockups próprios em `mockups/Deploy*` (painel do produto no hero e terminal
+da CLI) e blocos `DeployPaths` e `DeployPlans`, todos rotulados como
+ilustração. **A página está `noindex` e fora do menu
+até o lançamento** — para liberar, tirar a prop e acrescentar o item em
+`nav` e `footer`. O que falta do time (URL de cadastro, preço do Turbo,
+suporte) está em `PENDENTE`.
 
 **Por que `/contato/` não tem formulário.** O projeto é `output: 'static'`: não
 há servidor para processar POST. Em vez de pendurar o lead num serviço de

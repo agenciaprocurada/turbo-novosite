@@ -10,11 +10,17 @@ interface Props {
   titulo1?: string
   titulo2?: string
   texto?: string
+  /** Botões próprios da página. Sem eles, valem os da home ("Comece agora" /
+   *  "Migrar grátis"), que só fazem sentido para hospedagem. */
+  primario?: { label: string; href: string }
+  secundario?: { label: string; href: string }
 }
 const {
   titulo1 = ctaFinal.titulo1,
   titulo2 = ctaFinal.titulo2,
   texto = ctaFinal.texto,
+  primario = ctaFinal.primario,
+  secundario = ctaFinal.secundario,
 } = Astro.props
 ---
 
@@ -60,11 +66,11 @@ const {
       {texto}
     </p>
     <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
-      <Button href={ctaFinal.primario.href} variant="green" size="lg" fullWidth class="sm:w-auto"
-        >{ctaFinal.primario.label}</Button
+      <Button href={primario.href} variant="green" size="lg" fullWidth class="sm:w-auto"
+        >{primario.label}</Button
       >
-      <Button href={ctaFinal.secundario.href} variant="outline-light" size="lg" fullWidth class="sm:w-auto"
-        >{ctaFinal.secundario.label}</Button
+      <Button href={secundario.href} variant="outline-light" size="lg" fullWidth class="sm:w-auto"
+        >{secundario.label}</Button
       >
     </div>
   </div>

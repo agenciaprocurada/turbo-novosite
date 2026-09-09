@@ -1,0 +1,36 @@
+---
+import { turboDeploy as td } from '../data/turbodeploy'
+import Button from './Button.astro'
+const plans = [{ ...td.planos.gratis, key: 'gratis' as const }, { ...td.planos.turbo, key: 'turbo' as const }]
+---
+<div class="deploy-plans">
+  {plans.map((plan, index) => (
+    <article class:list={['deploy-plan', index === 1 && 'featured block-dark']} aria-labelledby={`plan-${plan.key}`}>
+      <div class="plan-title"><h3 id={`plan-${plan.key}`}>{plan.nome}</h3>{index === 1 && <span>{td.planos.turbo.selo}</span>}</div>
+      <p class="plan-persona">{plan.persona}</p>
+      <p class="plan-price">{plan.preco}</p>
+      <Button href={plan.cta.href} variant={index === 1 ? 'green' : 'outline-purple'} fullWidth>{plan.cta.label}</Button>
+      <dl>{td.planos.linhas.map(row => <div><dt>{row.recurso}{'obs' in row && <small>{row.obs}</small>}</dt><dd>{row[plan.key]}</dd></div>)}</dl>
+    </article>
+  ))}
+</div>
+<style>
+  .deploy-plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 920px; margin: 40px auto 0; gap: 20px; }
+  .deploy-plan { padding: 32px; border: 1px solid var(--color-line); border-radius: var(--radius-card); background: var(--color-surface); box-shadow: var(--shadow-soft); }
+  .featured { color: white; border-color: var(--color-purple-logo); background: var(--color-purple-950); }
+  .plan-title { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+  h3 { font-size: 26px; font-weight: 700; }
+  .plan-title > span { font: 9px var(--font-mono); letter-spacing: .06em; border: 1px solid #6bdd1260; color: var(--color-green); padding: 6px 9px; border-radius: 8px; }
+  .plan-persona { min-height: 48px; font-size: 14px; color: var(--color-ink-soft); margin-top: 12px; }
+  .featured .plan-persona { color: #e0d3eb; }
+  .plan-price { font-size: 36px; font-weight: 700; margin: 20px 0 25px; line-height: 1.2; }
+  dl { margin-top: 24px; }
+  dl > div { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 16px 0; border-top: 1px solid var(--color-line); }
+  .featured dl > div { border-color: #ffffff25; }
+  dt { font-size: 13px; }
+  dt small { display: block; margin-top: 3px; font-size: 11px; color: var(--color-ink-soft); }
+  .featured dt small { color: #d9c7e7; }
+  dd { font: 12px var(--font-mono); text-align: right; flex-shrink: 0; }
+  .featured dd { color: var(--color-green); }
+  @media (max-width: 640px) { .deploy-plans { grid-template-columns: 1fr; } .deploy-plan { padding: 24px; } .plan-persona { min-height: 0; } }
+</style>

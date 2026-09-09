@@ -214,6 +214,10 @@ Tamanhos: `md` (44px, texto 13px) e `lg` (52px, texto 14px).
 | `BeneficioCard` | ícone em quadrado lavanda + título + texto; `tone="dark"` no bloco roxo |
 | `mockups/AnelNota` | anel de nota 0–100 (estilo PageSpeed), só SVG |
 | `mockups/Builder*` | editor, placar, chat e painel do Turbo Builder — exemplos de mockup HTML/CSS |
+| `mockups/Deploy*` | painel do Turbo Deploy (hero) e terminal da CLI em tom escuro; os blocos de caminhos e planos estão em `DeployPaths` e `DeployPlans` |
+| `DeployPaths` | três formas de publicação em abas com navegação por teclado e conteúdo completo sem JavaScript |
+| `DeployPlans` | comparação dos planos em dois cartões, empilhados no celular, com recursos em listas de definição |
+| `mockups/DeployDashboardPanel` | prévia interativa baseada nas telas reais do Turbo Deploy: lista de projetos, menu lateral e cinco abas do projeto. A ilustração usa o lilás e o verde suave do aplicativo; os CTAs da página mantêm as cores institucionais. |
 
 ---
 

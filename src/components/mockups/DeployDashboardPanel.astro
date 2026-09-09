@@ -1,0 +1,149 @@
+---
+import Logo from '../Logo.astro'
+import { turboDeploy } from '../../data/turbodeploy'
+const ui = turboDeploy.interface
+---
+
+<figure class="dashboard-demo" data-deploy-demo>
+  <div class="app-window">
+    <div class="app-topbar">
+      <div class="app-brand"><Logo height={16} /><span>Turbo Deploy</span></div>
+      <div class="app-search" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg>{ui.busca}</div>
+      <span class="app-avatar" aria-hidden="true">TM</span>
+    </div>
+    <div class="app-layout">
+      <aside class="app-sidebar" aria-label="Menus do painel ilustrativo">
+        <div class="app-org"><span class="app-avatar" aria-hidden="true">TM</span><div><strong>{ui.organizacao}</strong><small>{ui.proprietario}</small></div></div>
+        {ui.grupos.map(group => <div class="app-menu-group"><p>{group.titulo}</p><ul>{group.itens.map((item, i) => <li class:list={[item === 'Projetos' && 'selected']}><svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2">{i % 2 === 0 ? <path d="M3 3h5v5H3zM12 3h5v5h-5zM3 12h5v5H3zM12 12h5v5h-5z"/> : <><circle cx="10" cy="10" r="7"/><path d="M10 6v5m0 2v1"/></>}</svg>{item}</li>)}</ul></div>)}
+      </aside>
+      <div class="app-main">
+        <div data-demo-projects>
+          <div class="app-page-heading"><div><h3>Projetos</h3><p>De uma nova ideia à próxima versão.</p></div><span class="app-action" aria-hidden="true">+ Novo projeto</span></div>
+          <div class="app-filters"><span>Todos os projetos <b>2</b></span><span><i></i>No ar <b>2</b></span></div>
+          <div class="app-project-list">
+            <p class="list-search" aria-hidden="true">Buscar por nome, endereço ou repositório</p>
+            {ui.projetos.map((project, i) => <button class="app-project" type="button" data-open-project={i} aria-label={`Explorar ${project.nome} na prévia`}><span class="project-icon" aria-hidden="true">{i === 0 ? 'A' : 'JS'}</span><span class="project-copy"><strong>{project.nome}</strong><small>{project.tecnologia} · main</small><span>{project.endereco}</span></span><span class="app-running"><i></i>Rodando</span><span class="project-arrow" aria-hidden="true">→</span></button>)}
+          </div>
+          <p class="app-footnote">Cada publicação mantém seu histórico e seus logs.</p>
+          <a class="demo-open-link" href="#painel">Conheça os menus do painel <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div data-demo-detail hidden>
+          <button type="button" class="demo-back" data-demo-back>← Projetos</button>
+          <div class="app-page-heading detail-heading"><div><h3 data-project-name>{ui.projetos[0].nome}</h3><p><span class="app-running"><i></i>Rodando</span> <span class="project-branch">GitHub · main</span></p></div><span class="app-action" aria-hidden="true">↗ Publicar</span></div>
+          <div class="app-tabs" role="tablist" aria-label="Explore as abas do projeto">
+            {ui.abas.map((tab, i) => <button id={`demo-tab-${i}`} type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`demo-panel-${i}`} tabindex={i === 0 ? 0 : -1} data-demo-tab={i}>{tab.nome}</button>)}
+          </div>
+          {ui.abas.map((tab, i) => <div id={`demo-panel-${i}`} class="app-tab-panel" role="tabpanel" aria-labelledby={`demo-tab-${i}`} tabindex="0" hidden={i !== 0} data-demo-panel={i}>
+            {i === 0 ? <><div class="production-card"><p>Produção <span class="app-running"><i></i>No ar</span></p><strong data-project-domain>{ui.projetos[0].endereco}</strong><small>GitHub · main</small></div><div class="history-title">Histórico de publicações <span>1</span></div><div class="history-row"><span><strong data-project-description>{ui.projetos[0].descricao}</strong><small>GitHub · Produção</small></span><span class="app-running"><i></i>Rodando</span></div></> : <div class="tab-explanation"><span class="tab-overline">{tab.nome}</span><h4>{tab.titulo}</h4><p>{tab.texto}</p></div>}
+          </div>)}
+        </div>
+      </div>
+    </div>
+  </div>
+  <figcaption><strong>{ui.instrucao}</strong><span>{ui.legenda}</span></figcaption>
+</figure>
+
+<script>
+  import { turboDeploy } from '../../data/turbodeploy'
+  const root = document.querySelector<HTMLElement>('[data-deploy-demo]')!
+  const projects = root.querySelector<HTMLElement>('[data-demo-projects]')!
+  const detail = root.querySelector<HTMLElement>('[data-demo-detail]')!
+  const back = root.querySelector<HTMLButtonElement>('[data-demo-back]')!
+  const openButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-open-project]')]
+  const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-demo-tab]')]
+  const panels = [...root.querySelectorAll<HTMLElement>('[data-demo-panel]')]
+  let projectIndex = 0
+  function selectTab(index: number, focus = false) {
+    tabs.forEach((tab, i) => { tab.setAttribute('aria-selected', String(i === index)); tab.tabIndex = i === index ? 0 : -1; panels[i]!.hidden = i !== index })
+    if (focus) tabs[index]!.focus()
+  }
+  openButtons.forEach((button, i) => button.addEventListener('click', () => {
+    projectIndex = i
+    const project = turboDeploy.interface.projetos[i]!
+    root.querySelector('[data-project-name]')!.textContent = project.nome
+    root.querySelector('[data-project-domain]')!.textContent = project.endereco
+    root.querySelector('[data-project-description]')!.textContent = project.descricao
+    projects.hidden = true
+    detail.hidden = false
+    selectTab(0)
+    back.focus({ preventScroll: true })
+  }))
+  back.addEventListener('click', () => { detail.hidden = true; projects.hidden = false; openButtons[projectIndex]!.focus({ preventScroll: true }) })
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => selectTab(i))
+    tab.addEventListener('keydown', event => {
+      const next = event.key === 'ArrowRight' ? (i + 1) % tabs.length : event.key === 'ArrowLeft' ? (i + tabs.length - 1) % tabs.length : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : -1
+      if (next >= 0) { event.preventDefault(); selectTab(next, true) }
+    })
+  })
+</script>
+
+<style>
+  .dashboard-demo { --app-purple: #8242ba; --app-muted: #687089; --app-line: #e7e5ef; color: #141c36; width: 100%; }
+  .app-window { overflow: hidden; background: #f9fafd; border: 1px solid var(--app-line); border-radius: 16px; box-shadow: 0 8px 40px #300c5110; }
+  .app-topbar { display: flex; align-items: center; gap: 22px; height: 61px; padding: 12px 16px; background: white; border-bottom: 1px solid var(--app-line); }
+  .app-brand { color: var(--color-purple-logo); flex-shrink: 0; }
+  .app-brand > span { display: block; font-size: 8px; margin-top: 3px; color: var(--app-muted); }
+  .app-search { flex: 1; display: flex; align-items: center; gap: 7px; border-radius: 10px; background: #f4f5f9; padding: 10px; color: var(--app-muted); font-size: 9px; }
+  .app-search svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .app-avatar { width: 27px; height: 27px; display: grid; place-items: center; flex-shrink: 0; border-radius: 9px; background: #f4eefa; color: var(--app-purple); font-size: 9px; }
+  .app-layout { display: grid; grid-template-columns: 130px minmax(0, 1fr); min-height: 405px; }
+  .app-sidebar { background: #f4effa; border-right: 1px solid var(--app-line); padding: 14px 9px; }
+  .app-org { display: flex; align-items: center; gap: 7px; padding: 10px 6px; border-radius: 12px; background: white; border: 1px solid var(--app-line); }
+  .app-org strong { font-size: 8px; display: block; font-weight: 600; }
+  .app-org small { font-size: 8px; display: block; color: var(--app-muted); }
+  .app-menu-group { margin-top: 19px; }
+  .app-menu-group > p { font-size: 8px; text-transform: uppercase; letter-spacing: .05em; color: var(--app-muted); padding-left: 6px; }
+  .app-menu-group ul { display: grid; gap: 3px; margin-top: 6px; }
+  .app-menu-group li { display: flex; align-items: center; gap: 8px; font-size: 9px; color: var(--app-muted); padding: 7px 6px; }
+  .app-menu-group li.selected { color: var(--app-purple); }
+  .app-menu-group svg { width: 12px; height: 12px; flex-shrink: 0; }
+  .app-main { padding: 24px 18px; min-width: 0; }
+  .app-page-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .app-page-heading h3 { font-size: 23px; font-weight: 700; line-height: 1.2; }
+  .app-page-heading p { margin-top: 8px; font-size: 10px; color: var(--app-muted); }
+  .app-action { background: #b7e8b5; color: #17213a; border-radius: 10px; padding: 10px 12px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+  .app-filters { display: flex; align-items: center; gap: 15px; margin: 24px 0 18px; font-size: 9px; color: var(--app-muted); }
+  .app-filters > span:first-child { border-radius: 9px; background: #f4eefa; color: var(--app-purple); padding: 8px 10px; }
+  .app-filters b { font-size: 8px; color: #141c36; background: white; padding: 3px 5px; border-radius: 4px; margin-left: 4px; }
+  i { width: 5px; height: 5px; display: inline-block; border-radius: 50%; background: #29a652; margin-right: 5px; }
+  .app-project-list { border: 1px solid var(--app-line); border-radius: 14px; padding: 12px; background: white; }
+  .list-search { padding: 10px; background: #f4f5f9; border-radius: 8px; font-size: 9px; color: var(--app-muted); margin-bottom: 12px; }
+  .app-project { display: flex; align-items: center; width: 100%; gap: 9px; padding: 16px 0; border-top: 1px solid var(--app-line); text-align: left; cursor: pointer; }
+  .app-project:hover .project-copy strong { color: var(--app-purple); text-decoration: underline; text-underline-offset: 3px; }
+  .project-icon { width: 28px; height: 32px; display: grid; place-items: center; flex-shrink: 0; background: #f4eefa; border-radius: 8px; color: var(--app-purple); font-size: 12px; }
+  .project-copy { min-width: 0; flex: 1; }
+  .project-copy strong { display: block; font-size: 11px; font-weight: 700; }
+  .project-copy small { display: block; font-size: 8px; color: var(--app-muted); margin-top: 3px; }
+  .project-copy > span { display: block; font-size: 8px; color: var(--app-purple); overflow-wrap: anywhere; margin-top: 4px; }
+  .app-running { display: inline-flex; align-items: center; background: #eff9f0; color: #21783e; font-size: 8px; padding: 3px 6px; border-radius: 12px; white-space: nowrap; }
+  .project-arrow { color: var(--app-purple); font-size: 14px; }
+  .app-footnote { font-size: 8px; color: var(--app-muted); margin-top: 20px; }
+  .demo-open-link { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; min-height: 44px; color: var(--app-purple); }
+  .demo-back { color: var(--app-purple); font-size: 10px; min-height: 32px; margin-top: -12px; cursor: pointer; }
+  .detail-heading h3 { font-size: 20px; }
+  .project-branch { font-size: 9px; margin-left: 5px; }
+  .app-tabs { display: flex; overflow-x: auto; gap: 14px; margin-top: 15px; border-bottom: 1px solid var(--app-line); }
+  .app-tabs button { min-height: 44px; font-size: 9px; white-space: nowrap; border-bottom: 2px solid transparent; cursor: pointer; color: #59617a; }
+  .app-tabs button[aria-selected="true"] { border-color: var(--app-purple); color: var(--app-purple); }
+  .app-tab-panel { margin-top: 18px; }
+  .production-card, .history-row, .tab-explanation { border: 1px solid var(--app-line); border-radius: 12px; background: white; padding: 16px; }
+  .production-card > p { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; }
+  .production-card > strong { display: block; font-size: 12px; margin-top: 16px; overflow-wrap: anywhere; }
+  .production-card > small { font-size: 9px; color: var(--app-muted); display: block; margin-top: 10px; }
+  .history-title { font-size: 11px; font-weight: 700; margin: 22px 0 12px; }
+  .history-title > span { margin-left: 6px; color: var(--app-muted); }
+  .history-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .history-row strong { display: block; font-size: 10px; }
+  .history-row small { display: block; font-size: 8px; margin-top: 6px; color: var(--app-muted); }
+  .tab-overline { font-size: 10px; color: var(--app-purple); }
+  .tab-explanation h4 { font-size: 18px; font-weight: 700; line-height: 1.3; margin-top: 12px; }
+  .tab-explanation p { font-size: 12px; line-height: 1.8; color: #59617a; margin-top: 14px; }
+  figcaption { margin-top: 16px; text-align: center; }
+  figcaption strong { display: block; font-size: 11px; font-weight: 600; color: var(--color-purple-logo); }
+  figcaption > span { display: block; font-size: 10px; color: var(--color-ink-soft); margin-top: 4px; }
+  [hidden] { display: none !important; }
+  @media (max-width: 600px) { .app-layout { grid-template-columns: 94px minmax(0, 1fr); } .app-sidebar { padding: 12px 5px; } .app-org { padding: 8px 5px; } .app-org .app-avatar { display: none; } .app-main { padding: 20px 10px; } .app-topbar { padding: 10px; gap: 10px; } .app-search { font-size: 8px; } .app-topbar > .app-avatar { display: none; } .app-page-heading { flex-wrap: wrap; } .app-page-heading h3 { font-size: 20px; } .app-action { padding: 6px 9px; font-size: 9px; } .app-project-list { padding: 9px; } .app-project { flex-wrap: wrap; } .project-icon { display: none; } .app-project .app-running { margin-left: auto; } .project-arrow { display: none; } .app-menu-group li { font-size: 8px; gap: 5px; padding-inline: 3px; } .app-filters { gap: 6px; font-size: 8px; } .app-filters > span:first-child { padding: 7px; } .app-filters b { margin-left: 2px; } .production-card, .history-row, .tab-explanation { padding: 12px; } .production-card > strong { font-size: 10px; } .history-row { flex-wrap: wrap; } .demo-back { min-height: 44px; } }
+  :global(.no-js) .app-project { pointer-events: none; }
+</style>
