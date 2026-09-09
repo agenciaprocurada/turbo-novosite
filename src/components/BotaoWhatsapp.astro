@@ -10,6 +10,7 @@
  * carrega branco. Ver docs/DESIGN-SYSTEM.md.
  */
 import { links } from '../data/site'
+import foguete from '../../public/favicon.svg?url'
 
 const objetivos = [
   'Quero contratar hospedagem',
@@ -27,22 +28,19 @@ const objetivos = [
     role="dialog"
     aria-label="Atendimento Turbo Cloud"
   >
-    <header class="block-dark flex items-center gap-2.5 bg-purple-950 px-3.5 py-3">
-      <span
-        class="grid size-9 shrink-0 place-items-center rounded-full bg-linear-to-br from-green-soft to-green font-medium text-purple-950"
-        aria-hidden="true">TC</span
-      >
+    <header class="flex items-center gap-2.5 border-b border-[#dfe4e7] bg-[#f0f2f5] px-3.5 py-3">
+      <span class="grid size-11 shrink-0 place-items-center rounded-full bg-purple-logo" aria-hidden="true"><img src={foguete} alt="" width="28" height="28" /></span>
       <span class="min-w-0 flex-1">
-        <span class="block truncate text-[14px] font-medium text-white">Turbo Cloud · Atendimento</span>
-        <span class="flex items-center gap-1.5 font-mono text-[11px] text-green">
-          <span class="pulse-dot"></span> online agora
+        <span class="block truncate text-[14px] font-bold text-[#111b21]">Turbo Cloud · Atendimento</span>
+        <span class="flex items-center gap-1.5 text-[11px] text-[#667781]">
+          <span class="size-1.5 rounded-full bg-[#25d366]"></span> online agora
         </span>
       </span>
       <button
         type="button"
         data-whats-fechar
         aria-label="Fechar atendimento"
-        class="grid size-8 shrink-0 place-items-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+        class="grid size-8 shrink-0 place-items-center rounded-full text-[#667781] transition-colors hover:bg-[#e1e5e8] hover:text-[#111b21]"
       >
         <svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
           <path d="M3.5 3.5l9 9m0-9l-9 9" stroke-linecap="round"></path>
@@ -50,7 +48,7 @@ const objetivos = [
       </button>
     </header>
 
-    <div class="flex max-h-[360px] flex-col gap-2 overflow-y-auto p-3.5" data-whats-log aria-live="polite"></div>
+    <div class="whats-wallpaper flex max-h-[360px] flex-col gap-2 overflow-y-auto p-3.5" data-whats-log aria-live="polite"></div>
 
     <div class="hidden flex-col gap-2 border-t border-line px-3.5 py-3" data-whats-opcoes>
       {objetivos.map((objetivo) => (
@@ -64,18 +62,18 @@ const objetivos = [
       ))}
     </div>
 
-    <form data-whats-form class="flex items-center gap-2 border-t border-line p-3">
+    <form data-whats-form class="flex items-center gap-2 border-t border-line bg-[#f0f2f5] p-3">
       <input
         type="text"
         data-whats-input
         autocomplete="off"
-        class="h-10 flex-1 rounded-btn border border-line bg-white px-3.5 text-[13.5px] text-ink outline-none placeholder:text-ink-soft focus:border-green-deep/50"
+        class="h-10 min-w-0 flex-1 rounded-btn border border-line bg-white px-3.5 text-[13.5px] text-ink outline-none placeholder:text-ink-soft focus:border-green-deep/50"
       />
       <button
         type="submit"
         data-whats-enviar
         aria-label="Enviar"
-        class="grid size-10 shrink-0 place-items-center rounded-full bg-green text-purple-950 transition-transform hover:-translate-y-0.5"
+        class="grid size-10 shrink-0 place-items-center rounded-full bg-[#008069] text-white transition-transform hover:-translate-y-0.5"
       >
         <svg viewBox="0 0 16 16" class="size-4" fill="currentColor" aria-hidden="true">
           <path d="M1 8l13.2-6.4a.6.6 0 0 1 .84.74L11.8 15a.6.6 0 0 1-1.1.06L8.3 9.7 3 8z"></path>
@@ -83,7 +81,7 @@ const objetivos = [
       </button>
     </form>
 
-    <p class="border-t border-line px-3.5 py-2.5 text-center font-mono text-[10.5px] text-ink-soft">
+    <p class="border-t border-line bg-[#f0f2f5] px-3.5 py-2.5 text-center font-mono text-[10.5px] text-ink-soft">
       Atendimento pelo WhatsApp · Turbo Cloud
     </p>
   </div>
@@ -140,7 +138,7 @@ const objetivos = [
       const corpo = document.createElement('div')
       corpo.className = [
         'max-w-[85%] rounded-[14px] px-3.5 py-2.5 text-[13.5px] leading-snug',
-        de === 'visitante' ? 'rounded-br-[6px] bg-green/15 text-ink' : 'rounded-bl-[6px] bg-ink/6 text-ink',
+        de === 'visitante' ? 'rounded-br-[6px] bg-[#d9fdd3] text-[#111b21] shadow-sm' : 'rounded-bl-[6px] bg-white text-[#111b21] shadow-sm',
         reduzido ? '' : 'animate-[msg-in_0.35s_cubic-bezier(0.22,1,0.36,1)_both]',
       ].join(' ')
       corpo.textContent = texto
@@ -248,3 +246,7 @@ const objetivos = [
     })
   }
 </script>
+
+<style>
+  .whats-wallpaper { background-color: #efeae2; background-image: radial-gradient(#c8bfb34a .8px, transparent .8px); background-size: 18px 18px; }
+</style>
