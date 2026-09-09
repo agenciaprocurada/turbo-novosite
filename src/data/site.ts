@@ -1,3 +1,23 @@
+import clientLogo0 from '../assets/logos/cora.svg?url'
+import clientLogo1 from '../assets/logos/oab.webp?url'
+import clientLogo2 from '../assets/logos/tallos.svg?url'
+import clientLogo3 from '../assets/logos/unimed.webp?url'
+import clientLogo4 from '../assets/logos/fiocruz.webp?url'
+import clientLogo5 from '../assets/logos/fenapaf.svg?url'
+import clientLogo6 from '../assets/logos/abrint.webp?url'
+import clientLogo7 from '../assets/logos/abcfarma.webp?url'
+import clientLogo8 from '../assets/logos/anpei.webp?url'
+import clientLogo9 from '../assets/logos/cref8.webp?url'
+import clientLogo10 from '../assets/logos/carloschagas.webp?url'
+import clientLogo11 from '../assets/logos/febracis.svg?url'
+import clientLogo12 from '../assets/logos/livup.svg?url'
+import clientLogo13 from '../assets/logos/fecomercio.svg?url'
+import clientLogo14 from '../assets/logos/sinduscon.svg?url'
+import clientLogo15 from '../assets/logos/creci.webp?url'
+import clientLogo16 from '../assets/logos/ademi.svg?url'
+import clientLogo17 from '../assets/logos/iab.webp?url'
+import clientLogo18 from '../assets/logos/brasao-brasil.webp?url'
+
 /**
  * Fonte única de conteúdo da home.
  *
@@ -112,24 +132,24 @@ export const provas = {
 export const confiancaInfra = {
   eyebrow: 'Organizações que confiam na Turbo Cloud',
   organizacoes: [
-    { nome: 'Banco Cora', logo: '/imagens/logos/cora.svg', largura: 90, altura: 24, marca: 'cora' },
-    { nome: 'OAB', logo: '/imagens/logos/oab.webp', largura: 280, altura: 152, marca: 'oab' },
-    { nome: 'Tallos', logo: '/imagens/logos/tallos.svg', largura: 184, altura: 44, marca: 'tallos' },
-    { nome: 'Unimed Mercosul', logo: '/imagens/logos/unimed.webp', largura: 360, altura: 133, marca: 'unimed' },
-    { nome: 'Fiocruz – Fundação Oswaldo Cruz', logo: '/imagens/logos/fiocruz.webp', largura: 360, altura: 63, marca: 'fiocruz' },
-    { nome: 'FENAPAF – Federação Nacional dos Atletas Profissionais de Futebol', logo: '/imagens/logos/fenapaf.svg', largura: 122, altura: 87, marca: 'fenapaf' },
-    { nome: 'ABRINT', logo: '/imagens/logos/abrint.webp', largura: 360, altura: 135, marca: 'abrint' },
-    { nome: 'ABCFARMA', logo: '/imagens/logos/abcfarma.webp', largura: 360, altura: 90, marca: 'abcfarma' },
-    { nome: 'ANPEI', logo: '/imagens/logos/anpei.webp', largura: 128, altura: 28, marca: 'anpei' },
-    { nome: 'CREF8', logo: '/imagens/logos/cref8.webp', largura: 283, altura: 94, marca: 'cref8' },
-    { nome: 'Instituto Carlos Chagas', logo: '/imagens/logos/carloschagas.webp', largura: 184, altura: 180, marca: 'carloschagas' },
-    { nome: 'Febracis', logo: '/imagens/logos/febracis.svg', largura: 857, altura: 216, marca: 'febracis' },
-    { nome: 'Liv Up', logo: '/imagens/logos/livup.svg', largura: 49, altura: 56, marca: 'livup' },
-    { nome: 'Fecomércio', logo: '/imagens/logos/fecomercio.svg', largura: 171, altura: 43, marca: 'fecomercio' },
-    { nome: 'Sinduscon', logo: '/imagens/logos/sinduscon.svg', largura: 224, altura: 45, marca: 'sinduscon' },
-    { nome: 'CRECI', logo: '/imagens/logos/creci.webp', largura: 360, altura: 67, marca: 'creci' },
-    { nome: 'ADEMI', logo: '/imagens/logos/ademi.svg', largura: 156, altura: 60, marca: 'ademi' },
-    { nome: 'IAB Brasil', logo: '/imagens/logos/iab.webp', largura: 117, altura: 57, marca: 'iab' },
+    { nome: 'Banco Cora', logo: clientLogo0, largura: 90, altura: 24, marca: 'cora' },
+    { nome: 'OAB', logo: clientLogo1, largura: 280, altura: 152, marca: 'oab' },
+    { nome: 'Tallos', logo: clientLogo2, largura: 184, altura: 44, marca: 'tallos' },
+    { nome: 'Unimed Mercosul', logo: clientLogo3, largura: 360, altura: 133, marca: 'unimed' },
+    { nome: 'Fiocruz – Fundação Oswaldo Cruz', logo: clientLogo4, largura: 360, altura: 63, marca: 'fiocruz' },
+    { nome: 'FENAPAF – Federação Nacional dos Atletas Profissionais de Futebol', logo: clientLogo5, largura: 122, altura: 87, marca: 'fenapaf' },
+    { nome: 'ABRINT', logo: clientLogo6, largura: 360, altura: 135, marca: 'abrint' },
+    { nome: 'ABCFARMA', logo: clientLogo7, largura: 360, altura: 90, marca: 'abcfarma' },
+    { nome: 'ANPEI', logo: clientLogo8, largura: 128, altura: 28, marca: 'anpei' },
+    { nome: 'CREF8', logo: clientLogo9, largura: 283, altura: 94, marca: 'cref8' },
+    { nome: 'Instituto Carlos Chagas', logo: clientLogo10, largura: 184, altura: 180, marca: 'carloschagas' },
+    { nome: 'Febracis', logo: clientLogo11, largura: 857, altura: 216, marca: 'febracis' },
+    { nome: 'Liv Up', logo: clientLogo12, largura: 49, altura: 56, marca: 'livup' },
+    { nome: 'Fecomércio', logo: clientLogo13, largura: 171, altura: 43, marca: 'fecomercio' },
+    { nome: 'Sinduscon', logo: clientLogo14, largura: 224, altura: 45, marca: 'sinduscon' },
+    { nome: 'CRECI', logo: clientLogo15, largura: 360, altura: 67, marca: 'creci' },
+    { nome: 'ADEMI', logo: clientLogo16, largura: 156, altura: 60, marca: 'ademi' },
+    { nome: 'IAB Brasil', logo: clientLogo17, largura: 117, altura: 57, marca: 'iab' },
   ],
   aplicacoes: '155 mil',
   titulo: 'aplicações hospedadas.',
@@ -138,7 +158,7 @@ export const confiancaInfra = {
   governo: '150',
   governoTexto: 'prefeituras e sites oficiais do governo federal',
   governoDetalhe: 'Governo do Brasil',
-  governoLogo: '/imagens/logos/brasao-brasil.webp',
+  governoLogo: clientLogo18,
   alcance: 'Clientes em',
   paises: 'mais de 70 países',
   maisDe: 'Mais de',
