@@ -11,17 +11,14 @@ const logos: Record<string, string> = { cPanel: cpanel, WordPress: wordpress, Wo
 // 50%, 70% e 90%. As curvas do funil saem exatamente desses pontos.
 const XS = [32, 96, 160, 224, 288]
 
-// No celular (5 colunas de ~65px) os nomes longos não cabem: usa a forma curta usual
-const curto: Record<string, string> = { WooCommerce: 'Woo', WordPress: 'WP' }
 ---
 
 <div class="relative" aria-hidden="true">
   <div class="stagger -mx-2 grid grid-cols-5 gap-1 sm:mx-0">
     {
       migracao.origens.map((origem) => (
-        <span class="migration-source">
-          {logos[origem] ? <img class:list={['migration-source-logo', { 'cpanel-logo': origem === 'cPanel' }]} src={logos[origem]} alt="" width="64" height="30" loading="lazy" decoding="async" /> : <svg class="migration-email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3" /><path d="m4 7 8 6 8-6" /></svg>}
-          <span class="sm:hidden">{curto[origem] ?? origem}</span><span class="hidden sm:inline">{origem}</span>
+        <span class="migration-source" title={origem}>
+          {logos[origem] ? <img class:list={['migration-source-logo', { 'cpanel-logo': origem === 'cPanel' }]} src={logos[origem]} alt={origem} width="88" height="44" loading="lazy" decoding="async" /> : <svg class="migration-email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3" /><path d="m4 7 8 6 8-6" /></svg>}
         </span>
       ))
     }
@@ -87,11 +84,11 @@ const curto: Record<string, string> = { WooCommerce: 'Woo', WordPress: 'WP' }
 </div>
 
 <style>
-  .migration-source { display: flex; min-width: 0; flex-direction: column; align-items: center; justify-content: center; gap: 9px; padding: 13px 5px 10px; border: 1px solid var(--color-line); border-radius: 16px; background: var(--color-surface); box-shadow: 0 4px 14px #300c5108; color: var(--color-ink-soft); font: 9px/1.3 var(--font-mono); }
-  .migration-source-logo { display: block; width: 64px; max-width: 90%; height: 30px; object-fit: contain; }
+  .migration-source { display: flex; min-width: 0; flex-direction: column; align-items: center; justify-content: center; min-height: 76px; padding: 14px 7px; border: 1px solid var(--color-line); border-radius: 16px; background: var(--color-surface); box-shadow: 0 4px 14px #300c5108; color: var(--color-ink-soft); font: 9px/1.3 var(--font-mono); }
+  .migration-source-logo { display: block; width: 88px; max-width: 100%; height: 44px; object-fit: contain; }
   .cpanel-logo { filter: brightness(0) saturate(100%); }
-  .migration-email-icon { width: 30px; height: 30px; color: var(--color-purple-logo); }
-  @media (max-width: 540px) { .migration-source { gap: 7px; padding: 11px 3px 9px; border-radius: 12px; } .migration-source-logo { height: 25px; } .migration-email-icon { width: 25px; height: 25px; } }
+  .migration-email-icon { width: 40px; height: 40px; color: var(--color-purple-logo); }
+  @media (max-width: 540px) { .migration-source { min-height: 66px; padding: 12px 5px; border-radius: 12px; } .migration-source-logo { height: 38px; } .migration-email-icon { width: 34px; height: 34px; } }
   .funil-pulso {
     stroke-dasharray: 22 200;
     stroke-dashoffset: 22;
