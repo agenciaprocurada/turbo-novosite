@@ -33,3 +33,9 @@ Rasters otimizados em WebP; proporções preservadas.
 - iab: https://iabbrasil.com.br/wp-content/uploads/2019/12/logo-1.png
 
 - Brasão da República (versão oficial em preto e branco): https://www.gov.br/planalto/pt-br/conheca-a-presidencia/biblioteca-da-pr/simbolos-nacionais/brasao-da-republica/brasaooficialpretoebranco.png.png
+
+## Versões sem identificação regional
+
+Solicitadas pelo cliente: Fecomércio, CRECI, Sinduscon, ADEMI, Unimed e CREF8. Os SVGs adaptam a área visível das artes e removem os complementos regionais. Não são arquivos de identidade nacional fornecidos pelas entidades.
+
+Fecomércio: arte base https://fecomercio-pa.com.br/framework/view/site/img/logo.png, exibida sem PA. As demais preservam as fontes documentadas acima.
