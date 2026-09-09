@@ -394,10 +394,8 @@ planos → quem faz → FAQ → CTA). Não há prova social do produto porque n�
 existe caso autorizado; a faixa "Quem faz" mostra a casa (Turbo Cloud).
 Mockups próprios em `mockups/Deploy*` (painel do produto no hero e terminal
 da CLI) e blocos `DeployPaths` e `DeployPlans`, todos rotulados como
-ilustração. **A página está `noindex` e fora do menu
-até o lançamento** — para liberar, tirar a prop e acrescentar o item em
-`nav` e `footer`. O que falta do time (URL de cadastro, preço do Turbo,
-suporte) está em `PENDENTE`.
+ilustração. Está no menu "Ferramentas IA" e no rodapé. O que falta do time
+(URL de cadastro, preço do Turbo, suporte) está em `PENDENTE`.
 
 **Por que `/contato/` não tem formulário.** O projeto é `output: 'static'`: não
 há servidor para processar POST. Em vez de pendurar o lead num serviço de

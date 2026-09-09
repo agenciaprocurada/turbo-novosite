@@ -189,6 +189,11 @@ export const nav = [
         desc: 'Site criado por IA, publicado na hora',
         href: links.ferramentasIa.turboBuilder,
       },
+      {
+        label: 'Turbo Deploy',
+        desc: 'Publique o projeto que você criou com IA',
+        href: links.ferramentasIa.turboDeploy,
+      },
     ],
   },
   { label: 'Estrutura', href: links.estrutura },
@@ -863,7 +868,10 @@ export const footer = {
     },
     {
       titulo: 'Ferramentas IA',
-      itens: [{ label: 'Turbo Builder', href: links.ferramentasIa.turboBuilder }],
+      itens: [
+        { label: 'Turbo Builder', href: links.ferramentasIa.turboBuilder },
+        { label: 'Turbo Deploy', href: links.ferramentasIa.turboDeploy },
+      ],
     },
     {
       titulo: 'Empresa',
@@ -973,6 +981,5 @@ export const PENDENTE = [
   'Sincronizar o package-lock: falta @emnapi/runtime e @emnapi/core no topo, e por isso npm ci quebra no Linux. O deploy usa npm install e não sente, mas qualquer CI com npm ci vai falhar. Precisa ser regenerado num Linux — regenerar no Windows não resolve.',
   'Turbo Deploy (/ferramentas-ia/turbo-deploy/): confirmar a URL de cadastro/login da plataforma. Enquanto isso, os CTAs levam ao WhatsApp e a página informa que o produto está em preparação para lançamento. https://up.turbo.cloud permanece apenas como referência não confirmada em links.turboDeploy.',
   'Turbo Deploy: preço, ciclo de cobrança e condições do plano Turbo (o card mostra "Sob consulta" e o botão manda para o WhatsApp), condições públicas do plano Grátis, canal e horário de suporte do produto. Os limites da tabela são os de referência do produto (PLAN_LIMITS), não oferta homologada.',
-  'Turbo Deploy: a página está noindex e fora do menu até o lançamento. Para liberar, tirar `noindex` em turbo-deploy.astro e acrescentar o item em `nav` (Ferramentas IA) e `footer`.',
   'URL real de checkout/assinatura do Turbo Builder. Os botões "Assinar Starter/Agência" em /ferramentas-ia/turbo-builder/ apontam para o WhatsApp por enquanto — trocar pelo link de loja assim que o produto tiver checkout próprio no WHMCS.',
 ] as const

@@ -14,9 +14,8 @@
  * página respeita (nada de "zero downtime", "ilimitado", número de
  * performance ou preço não homologado).
  *
- * `noindex` e fora do menu até o lançamento: o produto ainda não foi
- * liberado. Para publicar, tirar a prop `noindex` aqui e acrescentar o item
- * em `nav` e `footer` (site.ts) — os links já estão em `links.ferramentasIa`.
+ * Está no menu "Ferramentas IA" e no rodapé, e é indexável. O que ainda
+ * falta do time (URL de cadastro, preço do Turbo, suporte) está em `PENDENTE`.
  */
 import Base from '../../layouts/Base.astro'
 import TopBar from '../../components/TopBar.astro'
@@ -71,7 +70,7 @@ const ICONES: Record<string, string> = {
 
 ---
 
-<Base titulo={td.titulo} descricao={td.descricao} trilha={trilha} faq={td.faq} noindex>
+<Base titulo={td.titulo} descricao={td.descricao} trilha={trilha} faq={td.faq}>
   <TopBar />
   <HeaderPill ctaPlanos="#planos" />
 
