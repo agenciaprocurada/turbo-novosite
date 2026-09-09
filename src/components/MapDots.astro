@@ -158,7 +158,7 @@ const rotas = origens.map(([lon, lat, pop, curva], i) => {
   return {
     o: { x: ox, y: oy },
     d: `M${ox} ${oy} Q${cx} ${cy} ${pop.x} ${pop.y}`,
-    dur: +(2.2 + (len / 200) * 1.6).toFixed(2),
+    dur: +((2.2 + (len / 200) * 1.6) / 1.5).toFixed(2),
     delay: +((i * 0.53) % 3.6).toFixed(2),
   }
 })
@@ -178,7 +178,7 @@ const espinha = [
   const cy = Math.round(my + (dx / len) * curva)
   return {
     d: `M${de.x} ${de.y} Q${cx} ${cy} ${para.x} ${para.y}`,
-    dur: +(4.4 + i * 0.7).toFixed(2),
+    dur: +((4.4 + i * 0.7) / 1.5).toFixed(2),
     delay: +(i * 1.5).toFixed(2),
   }
 })
@@ -202,13 +202,13 @@ const espinha = [
 </div>
 <style>
   .turbo-globe { width: 100%; max-width: 650px; margin-inline: auto; }
-  .globe-scene { position: relative; animation: globe-float 9s ease-in-out infinite; }
+  .globe-scene { position: relative; animation: globe-float 6s ease-in-out infinite; }
   .globe-svg { display: block; width: 100%; height: auto; overflow: visible; }
   .globe-label { position: absolute; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; padding: 10px 13px; border: 1px solid #5c1f8526; border-radius: 11px; background: #ffffffed; box-shadow: 0 8px 26px #300c5110; color: #300c51; font: 11px/1.3 var(--font-mono); transform: translate(10px,-130%); }
   .globe-label--EU { transform: translate(-30%,-140%); }
   .label-dot { width: 6px; height: 6px; border-radius: 50%; background: #5c1f85; }
   .globe-packet { animation: globe-travel 4s linear infinite; }
-  .globe-pulse { animation: globe-pulse 3s ease-in-out infinite; }
+  .globe-pulse { animation: globe-pulse 2s ease-in-out infinite; }
   @keyframes globe-travel { to { offset-distance: 100%; } }
   @keyframes globe-float { 50% { transform: translateY(-8px) rotate(1deg); } }
   @keyframes globe-pulse { 50% { opacity: .65; } }
