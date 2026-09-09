@@ -167,7 +167,9 @@ export const confiancaInfra = {
 /** Verificação conferida no perfil do Reclame AQUI em 09/09/2026. */
 export const seloReclameAqui = {
   texto: 'Verificada por',
-  marca: 'ReclameAQUI',
+  /** O wordmark é pintado em duas cores, por isso vem partido. */
+  marca1: 'Reclame',
+  marca2: 'AQUI',
   acessibilidade: 'Turbo Cloud verificada pelo Reclame AQUI — abre em nova aba',
 } as const
 
