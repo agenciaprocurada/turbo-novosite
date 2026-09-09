@@ -6,6 +6,8 @@ import { confiancaInfra as copy } from '../data/site'
   <div class="container-page">
     <div class="trust-organizations">
       <p class="trust-eyebrow">{copy.eyebrow}</p>
+      <div class="trust-carousel-shell">
+      <button class="trust-arrow" type="button" data-direction="-1" aria-label="Ver logos anteriores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></button>
       <div class="trust-carousel" tabindex="0" role="region" aria-label={copy.eyebrow}>
         <div class="trust-track">
           {[false, true].map(duplicate => (
@@ -20,6 +22,8 @@ import { confiancaInfra as copy } from '../data/site'
             </ul>
           ))}
         </div>
+      </div>
+      <button class="trust-arrow" type="button" data-direction="1" aria-label="Ver próximos logos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg></button>
       </div>
     </div>
     <div class="trust-message">
@@ -39,26 +43,27 @@ import { confiancaInfra as copy } from '../data/site'
   .trust-infra { background: var(--color-bg); padding: 34px 0 54px; }
   .trust-organizations { text-align: center; padding: 0 0 32px; }
   .trust-eyebrow { font: 11px/1.8 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--color-ink-soft); }
-  .trust-carousel { overflow: hidden; margin-top: 28px; mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent); }
+  .trust-carousel-shell { display: grid; grid-template-columns: 36px minmax(0, 1fr) 36px; align-items: center; gap: 16px; margin-top: 28px; }
+  .trust-arrow { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--color-line); background: var(--color-surface); color: var(--color-purple-logo); cursor: pointer; transition: background .2s, border-color .2s; }
+  .trust-arrow:hover { background: #5c1f850a; border-color: #5c1f8550; }
+  .trust-arrow:focus-visible { outline: 2px solid var(--color-purple-logo); outline-offset: 3px; }
+  .trust-arrow svg { width: 19px; height: 19px; }
+  .trust-carousel { overflow: hidden; mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent); }
   .trust-carousel:focus-visible { outline: 2px solid var(--color-purple-logo); outline-offset: 4px; }
   .trust-track { display: flex; width: max-content; animation: trust-scroll 55s linear infinite; }
-  .trust-logo-group { display: flex; align-items: center; gap: 40px; padding-right: 40px; flex-shrink: 0; }
-  .trust-logo-group li { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 160px; height: 100px; padding: 8px; }
+  .trust-logo-group { display: flex; align-items: center; gap: 32px; padding-right: 32px; flex-shrink: 0; }
+  .trust-logo-group li { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: auto; height: 100px; }
   .trust-logo-group .trust-government-client { width: 330px; gap: 16px; text-align: left; }
   .trust-government-client p { max-width: 220px; font-size: 12px; line-height: 1.5; color: var(--color-ink-soft); }
   .trust-government-client strong { display: block; font: 800 24px/1.2 var(--font-sans); color: var(--color-ink); }
   .trust-government-client span { display: block; margin-top: 4px; }
   .trust-carousel:hover .trust-track, .trust-carousel:focus-within .trust-track { animation-play-state: paused; }
   @keyframes trust-scroll { to { transform: translateX(-50%); } }
-  .trust-logo { display: block; width: 155px; max-width: 100%; max-height: 65px; height: auto; object-fit: contain; filter: grayscale(1); opacity: .8; }
-  .trust-logo--cora { width: 145px; }
-  .trust-logo--oab { width: 112px; }
-  .trust-logo--tallos { width: 160px; filter: brightness(0); opacity: .6; }
+  .trust-logo { display: block; width: auto; max-width: 145px; height: 55px; object-fit: contain; filter: grayscale(1); opacity: .8; }
+  .trust-logo--tallos { filter: brightness(0); opacity: .6; }
   .trust-logo--fiocruz, .trust-logo--abrint, .trust-logo--carloschagas { filter: brightness(0); opacity: .6; }
-  .trust-logo--carloschagas { max-height: 80px; }
-  .trust-logo--anpei { width: 128px; }
-  .trust-logo--iab { width: 100px; }
-  .trust-logo--livup { width: 55px; }
+  .trust-logo--carloschagas { height: 70px; }
+  .trust-logo--livup { height: 60px; }
   .government-logo { width: 58px; height: 58px; object-fit: contain; flex-shrink: 0; opacity: .8; }
   .trust-message { text-align: center; padding-top: 38px; }
   .trust-message h2 { font-size: clamp(1.7rem, 3.6vw, 2.7rem); font-weight: 700; line-height: 1.25; letter-spacing: -.025em; color: var(--color-ink); }
@@ -71,15 +76,15 @@ import { confiancaInfra as copy } from '../data/site'
   .trust-government p { font-size: 14px; color: var(--color-ink); line-height: 1.6; }
   .trust-government strong { color: var(--color-purple-logo); font-weight: 800; }
   .trust-government-detail { display: block; color: var(--color-ink-soft); font-size: 12px; }
-  @media (max-width: 540px) { .trust-infra { padding: 28px 0 38px; } .trust-organizations ul { gap: 28px; } .trust-organizations li { font-size: 22px; } .trust-eyebrow { font-size: 10px; } .trust-message { padding-top: 28px; } .trust-message h2 { font-size: 27px; } .trust-description { font-size: 14px; } .trust-government { padding: 12px 15px; } .trust-government p { font-size: 13px; } }
+  @media (max-width: 540px) { .trust-infra { padding: 28px 0 38px; } .trust-eyebrow { font-size: 10px; } .trust-message { padding-top: 28px; } .trust-message h2 { font-size: 27px; } .trust-description { font-size: 14px; } .trust-government { padding: 12px 15px; } .trust-government p { font-size: 13px; } }
   @media (max-width: 540px) {
     .trust-logo-group { gap: 24px; padding-right: 24px; }
-    .trust-logo-group li { width: 130px; height: 88px; padding: 5px; }
+    .trust-carousel-shell { gap: 8px; }
+    .trust-logo-group li { height: 88px; }
     .trust-logo-group .trust-government-client { width: 270px; gap: 12px; }
-    .trust-logo { max-height: 52px; }
-    .trust-logo--carloschagas { max-height: 65px; }
-    .trust-logo--livup { width: 40px; }
-    .trust-logo--oab { width: 82px; }
+    .trust-logo { height: 45px; max-width: 125px; }
+    .trust-logo--carloschagas { height: 60px; }
+    .trust-logo--livup { height: 50px; }
     .government-logo { width: 48px; height: 48px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -88,3 +93,47 @@ import { confiancaInfra as copy } from '../data/site'
     .trust-logo-group[aria-hidden="true"] { display: none; }
   }
 </style>
+<script>
+  document.querySelectorAll<HTMLElement>('.trust-carousel-shell').forEach(shell => {
+    const viewport = shell.querySelector<HTMLElement>('.trust-carousel')!
+    const track = shell.querySelector<HTMLElement>('.trust-track')!
+    const group = shell.querySelector<HTMLElement>('.trust-logo-group')!
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let frame = 0
+    const advance = (direction: number) => {
+      cancelAnimationFrame(frame)
+      const distance = Math.max(180, viewport.clientWidth * .65) * direction
+      if (reduced.matches) {
+        const max = viewport.scrollWidth - viewport.clientWidth
+        const target = viewport.scrollLeft + distance
+        viewport.scrollTo({ left: target > max ? 0 : target < 0 ? max : target, behavior: 'instant' })
+        return
+      }
+      const animation = track.getAnimations().find(a => a instanceof CSSAnimation && a.animationName === 'trust-scroll')
+      if (!animation?.effect || !group.offsetWidth) return
+      const duration = Number(animation.effect.getTiming().duration)
+      const shift = distance / group.offsetWidth * duration
+      let start: number | undefined
+      let previous = 0
+      const step = (now: number) => {
+        start ??= now
+        const progress = Math.min(1, (now - start) / 350)
+        const eased = 1 - Math.pow(1 - progress, 3)
+        const time = Number(animation.currentTime ?? 0) + shift * (eased - previous)
+        animation.currentTime = ((time % duration) + duration) % duration
+        previous = eased
+        if (progress < 1) frame = requestAnimationFrame(step)
+      }
+      frame = requestAnimationFrame(step)
+    }
+    shell.querySelectorAll<HTMLButtonElement>('[data-direction]').forEach(button => {
+      button.addEventListener('click', () => advance(Number(button.dataset.direction)))
+    })
+    viewport.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault()
+        advance(event.key === 'ArrowRight' ? 1 : -1)
+      }
+    })
+  })
+</script>
