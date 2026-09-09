@@ -1,11 +1,10 @@
 ---
 /**
- * Bloco de ação do hero Astra: os dois CTAs, o "a partir de" e os dois
+ * Bloco de ação do hero Astra: CTA principal, o "a partir de" e os dois
  * benefícios com check verde. Centrado abaixo de 1024px, à esquerda acima.
  */
 import Button from '../Button.astro'
 import { homeAstra as copy } from '../../data/home-astra'
-import { links } from '../../data/site'
 
 interface Props {
   class?: string
@@ -17,7 +16,6 @@ const brl = (valor: number) => valor.toLocaleString('pt-BR', { minimumFractionDi
 <div class:list={['hero-acoes', className]}>
   <div class="hero-actions">
     <Button href="#planos" size="lg">{copy.hero.principal} <span aria-hidden="true">→</span></Button>
-    <Button href={links.whatsapp} variant="outline-purple" size="lg">{copy.hero.secundario}</Button>
   </div>
   <p class="hero-price">A partir de <strong>R$ {brl(copy.hero.preco)}/mês</strong> <span>· cobrança mensal</span></p>
   <ul class="hero-benefits">
@@ -27,8 +25,7 @@ const brl = (valor: number) => valor.toLocaleString('pt-BR', { minimumFractionDi
 
 <style>
   .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-  .hero-actions :global(a) { padding-inline: 20px; font-size: 13px; }
-  .hero-actions :global(a:not(.bg-green)) { color: var(--color-purple-logo); border-color: #5c1f8566; }
+  .hero-actions :global(a) { min-height: 58px; padding-inline: 32px; font-size: 15px; }
   .hero-price { margin-top: 22px; font-size: 14px; color: var(--color-ink-soft); }
   .hero-price strong { color: var(--color-ink); }
   .hero-benefits { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 14px; font-size: 13px; }
