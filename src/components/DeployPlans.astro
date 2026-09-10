@@ -1,30 +1,46 @@
 ---
 import { turboDeploy as td } from '../data/turbodeploy'
 import Button from './Button.astro'
-const plans = [{ ...td.planos.gratis, key: 'gratis' as const }, { ...td.planos.turbo, key: 'turbo' as const }]
+const plans = td.planos.itens
 ---
 <div class="deploy-plans">
-  {plans.map((plan, index) => (
-    <article class:list={['deploy-plan', index === 1 && 'featured block-dark']} aria-labelledby={`plan-${plan.key}`}>
-      <div class="plan-title"><h3 id={`plan-${plan.key}`}>{plan.nome}</h3>{index === 1 && <span>{td.planos.turbo.selo}</span>}</div>
+  {plans.map((plan) => (
+    <article class:list={['deploy-plan', plan.destaque && 'featured block-dark']} aria-labelledby={`plan-${plan.key}`}>
+      <div class="plan-title"><h3 id={`plan-${plan.key}`}>{plan.nome}</h3>{plan.selo && <span>{plan.selo}</span>}</div>
       <p class="plan-persona">{plan.persona}</p>
-      <p class="plan-price">{plan.preco}</p>
-      <Button href={plan.cta.href} variant={index === 1 ? 'green' : 'outline-purple'} fullWidth>{plan.cta.label}</Button>
-      <dl>{td.planos.linhas.map(row => <div><dt>{row.recurso}{'obs' in row && <small>{row.obs}</small>}</dt><dd>{row[plan.key]}</dd></div>)}</dl>
+      <p class="plan-price"><span>R$</span> {plan.preco}<small>{td.planos.periodo}</small></p>
+      <p class="plan-billing">{td.planos.cobranca}</p>
+      <Button href={plan.cta.href} variant={plan.destaque ? 'green' : 'outline-purple'} fullWidth>{plan.cta.label}</Button>
+      <p class="plan-capacity">{plan.capacidade}</p>
+      <dl>{plan.recursos.map(row => <div><dt>{row.nome}</dt><dd>{row.valor}</dd></div>)}</dl>
     </article>
   ))}
 </div>
+<div class="plan-included">
+  <h3>{td.planos.recursosTitulo}</h3>
+  <ul>{td.planos.recursos.map(recurso => <li><span aria-hidden="true">✓</span>{recurso}</li>)}</ul>
+</div>
 <style>
-  .deploy-plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 920px; margin: 40px auto 0; gap: 20px; }
-  .deploy-plan { padding: 32px; border: 1px solid var(--color-line); border-radius: var(--radius-card); background: var(--color-surface); box-shadow: var(--shadow-soft); }
+  .deploy-plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 40px auto 0; gap: 20px; }
+  .deploy-plan { padding: 28px; border: 1px solid var(--color-line); border-radius: var(--radius-card); background: var(--color-surface); box-shadow: var(--shadow-soft); }
   .featured { color: white; border-color: var(--color-purple-logo); background: var(--color-purple-950); }
   .plan-title { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
   h3 { font-size: 26px; font-weight: 700; }
   .plan-title > span { font: 9px var(--font-mono); letter-spacing: .06em; border: 1px solid #6bdd1260; color: var(--color-green); padding: 6px 9px; border-radius: 8px; }
   .plan-persona { min-height: 48px; font-size: 14px; color: var(--color-ink-soft); margin-top: 12px; }
   .featured .plan-persona { color: #e0d3eb; }
-  .plan-price { font-size: 36px; font-weight: 700; margin: 20px 0 25px; line-height: 1.2; }
-  dl { margin-top: 24px; }
+  .plan-price { font-size: 44px; font-weight: 700; margin: 24px 0 6px; line-height: 1.2; white-space: nowrap; }
+  .plan-price > span { font-size: 20px; }
+  .plan-price > small { font-size: 14px; font-weight: 400; }
+  .plan-billing { font-size: 12px; color: var(--color-ink-soft); margin-bottom: 24px; }
+  .featured .plan-billing { color: #e0d3eb; }
+  .plan-capacity { margin: 24px 0 8px; font-size: 15px; font-weight: 700; }
+  .featured .plan-capacity { color: var(--color-green); }
+  .plan-included { padding: 28px; margin-top: 24px; border-radius: var(--radius-card); background: var(--color-surface); border: 1px solid var(--color-line); }
+  .plan-included h3 { font-size: 18px; }
+  .plan-included ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 24px; margin-top: 18px; }
+  .plan-included li { display: flex; gap: 10px; font-size: 13px; }
+  .plan-included li span { color: var(--color-green-deep); }
   dl > div { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 16px 0; border-top: 1px solid var(--color-line); }
   .featured dl > div { border-color: #ffffff25; }
   dt { font-size: 13px; }
@@ -32,5 +48,6 @@ const plans = [{ ...td.planos.gratis, key: 'gratis' as const }, { ...td.planos.t
   .featured dt small { color: #d9c7e7; }
   dd { font: 12px var(--font-mono); text-align: right; flex-shrink: 0; }
   .featured dd { color: var(--color-green); }
-  @media (max-width: 640px) { .deploy-plans { grid-template-columns: 1fr; } .deploy-plan { padding: 24px; } .plan-persona { min-height: 0; } }
+  @media (max-width: 960px) { .deploy-plans { grid-template-columns: 1fr; max-width: 540px; } .plan-persona { min-height: 0; } .plan-included ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .deploy-plan, .plan-included { padding: 24px; } .plan-included ul { grid-template-columns: 1fr; } }
 </style>

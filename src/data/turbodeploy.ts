@@ -4,15 +4,15 @@
 /*  Turbo Deploy: plataforma de publicação e hospedagem para quem cria com
  *  IA. Rota própria em "Ferramentas IA", irmã do Turbo Builder.
  *
- *  TODO O TEXTO SAI DE `SALES-ANALYSIS.md` (08/09/2026). Aquele documento é
+ *  Os recursos vêm de `SALES-ANALYSIS.md` (08/09/2026). Aquele documento é
  *  cauteloso de propósito, e esta página respeita cada limite dele:
  *
  *  - só recurso marcado "Implementado" entra como promessa;
  *  - nada de "zero downtime", "nunca cai", "qualquer linguagem", "ilimitado",
  *    "sem cartão", "24/7", "10x mais rápido" — nenhum número de performance,
  *    porque não existe medição publicada;
- *  - os limites dos planos são os de referência do produto (PLAN_LIMITS), não
- *    uma oferta homologada. Preço e condições do Turbo estão em `PENDENTE`;
+ *  - oferta e preços adaptados da HAD Deploy por solicitação do cliente em
+ *    10/09/2026: https://hadcloud.com.br/had-deploy;
  *  - sem depoimento, sem cliente e sem caso "real": o que aparece é ilustração
  *    e está rotulado assim.
  *
@@ -36,11 +36,11 @@ export const turboDeploy = {
   h1Verde: 'Agora, coloque no ar.',
   lead:
     'Publique sites, aplicações e APIs sem montar a infraestrutura do zero. O Turbo Deploy tem MCP: conecte seu agente de IA para publicar, consultar logs e fazer rollback. Tudo com um painel em português para acompanhar.',
-  cta: { label: 'Conhecer o Turbo Deploy', href: links.whatsapp },
+  cta: { label: 'Escolher meu plano', href: '#planos' },
   ctaSecundario: { label: 'Ver como funciona', href: '#como-funciona' },
   /** Chips do hero: só fato, sem adjetivo. */
   badges: ['MCP para agentes de IA', 'Domínio próprio + HTTPS', 'Histórico e rollback'],
-  disponibilidade: 'Em preparação para lançamento. Fale com a equipe para conhecer o produto.',
+  disponibilidade: 'A partir de R$ 29,90/mês. Cobrança em reais, por plano.',
   atalhos: [
     { label: 'Como funciona', href: '#como-funciona' },
     { label: 'Formas de publicar', href: '#caminhos' },
@@ -329,34 +329,56 @@ export const turboDeploy = {
   },
 
   planos: {
-    eyebrow: 'Planos',
-    titulo1: 'Comece grátis.',
-    titulo2: 'Peça mais quando precisar.',
-    texto:
-      'O plano Grátis serve para experimentar a publicação. O Turbo dá mais recursos, prioridade na fila e mais armazenamento.',
-    /** Limites de referência do produto (PLAN_LIMITS). Não é oferta homologada:
-     *  os valores efetivos aparecem no painel de cada organização. */
-    linhas: [
-      { recurso: 'CPU da aplicação', gratis: '0,5 vCPU', turbo: '1 vCPU' },
-      { recurso: 'Memória da aplicação', gratis: '512 MB', turbo: '1 GB' },
-      { recurso: 'Volume persistente', gratis: '1 GB', turbo: '20 GB', obs: 'total da organização' },
-      { recurso: 'Builder de compilação', gratis: '2 vCPUs · 3 GB', turbo: '3 vCPUs · 4 GB', obs: 'compartilhado por plano' },
-      { recurso: 'Fila de deploy', gratis: 'Normal', turbo: 'Prioritária' },
+    eyebrow: 'Planos Turbo Deploy',
+    titulo1: 'Da sua ideia ao próximo deploy.',
+    titulo2: 'Escolha o espaço para crescer.',
+    texto: 'Hospede suas aplicações com um valor mensal em reais. Você escolhe o plano e cuida do projeto. A infraestrutura fica com a Turbo.',
+    periodo: '/mês',
+    cobranca: 'Cobrança mensal por plano',
+    recursosTitulo: 'Em todos os planos',
+    recursos: ['Publicação por GitHub e CLI', 'MCP para agentes de IA', 'Domínio próprio com HTTPS', 'Logs e histórico de publicações', 'Rollback de aplicações', 'Painel em português'],
+    itens: [
+      {
+        key: 'start', nome: 'Start', selo: '',
+        persona: 'Para tirar suas primeiras ideias do localhost.',
+        preco: '29,90', destaque: false,
+        capacidade: 'Até 3 aplicações · 2 projetos',
+        recursos: [
+          { nome: 'Domínios personalizados', valor: '2' },
+          { nome: 'Publicações por mês', valor: '50' },
+          { nome: 'CPU', valor: '0,5 vCPU' },
+          { nome: 'Memória RAM', valor: '768 MB' },
+        ],
+        cta: { label: 'Escolher Start', href: links.whatsapp },
+      },
+      {
+        key: 'pro', nome: 'Pro', selo: 'PARA IR ALÉM',
+        persona: 'Para publicar mais e evoluir seus projetos.',
+        preco: '49,90', destaque: true,
+        capacidade: 'Até 5 aplicações · 4 projetos',
+        recursos: [
+          { nome: 'Domínios personalizados', valor: '5' },
+          { nome: 'Publicações por mês', valor: '150' },
+          { nome: 'CPU', valor: '1,5 vCPU' },
+          { nome: 'Memória RAM', valor: '2 GB' },
+        ],
+        cta: { label: 'Escolher Pro', href: links.whatsapp },
+      },
+      {
+        key: 'business', nome: 'Business', selo: '',
+        persona: 'Para reunir mais aplicações da sua operação.',
+        preco: '79,90', destaque: false,
+        capacidade: 'Até 8 aplicações · 6 projetos',
+        recursos: [
+          { nome: 'Domínios personalizados', valor: '10' },
+          { nome: 'Publicações por mês', valor: '500' },
+          { nome: 'CPU', valor: '3 vCPU' },
+          { nome: 'Memória RAM', valor: '4 GB' },
+        ],
+        cta: { label: 'Escolher Business', href: links.whatsapp },
+      },
     ],
-    gratis: {
-      nome: 'Grátis',
-      persona: 'Para experimentar a publicação.',
-      preco: 'R$ 0',
-      cta: { label: 'Quero experimentar', href: links.whatsapp },
-    },
-    turbo: {
-      nome: 'Turbo',
-      persona: 'Para quem precisa de mais recursos e prioridade.',
-      preco: 'Sob consulta',
-      selo: 'MAIS RECURSOS',
-      cta: { label: 'Solicitar plano Turbo', href: links.whatsapp },
-    },
-    nota: 'Limites de referência do produto. Os valores efetivos, o preço do plano Turbo, o ciclo de cobrança e as condições de uso serão publicados no lançamento. A ativação do Turbo é feita pela equipe após a solicitação.',
+    nota: 'Contratação e ativação com a equipe pelo WhatsApp. Registro de domínio, banco de dados gerenciado e créditos de IA são contratados separadamente. O HTTPS depende da configuração e validação do domínio.',
   },
 
   ecossistema: {
@@ -420,7 +442,7 @@ export const turboDeploy = {
     },
     {
       p: 'Quanto custa, e qual é o suporte?',
-      r: 'O plano Grátis serve para experimentar. O preço, o ciclo de cobrança e as condições do plano Turbo, além do canal e horário de suporte do produto, serão publicados no lançamento. Enquanto isso, fale com a equipe no WhatsApp.',
+      r: 'O Start custa R$ 29,90/mês para até 3 aplicações e 2 projetos; o Pro, R$ 49,90/mês para até 5 aplicações e 4 projetos; e o Business, R$ 79,90/mês para até 8 aplicações e 6 projetos. A cobrança é mensal por plano, em reais. Fale com a equipe no WhatsApp para contratar, ativar seu plano e consultar as condições de suporte.',
     },
   ],
 

@@ -395,7 +395,13 @@ existe caso autorizado; a faixa "Quem faz" mostra a casa (Turbo Cloud).
 Mockups próprios em `mockups/Deploy*` (painel do produto no hero e terminal
 da CLI) e blocos `DeployPaths` e `DeployPlans`, todos rotulados como
 ilustração. Está no menu "Ferramentas IA" e no rodapé. O que falta do time
-(URL de cadastro, preço do Turbo, suporte) está em `PENDENTE`.
+(URL de cadastro/checkout e suporte) está em `PENDENTE`.
+
+A oferta foi atualizada em 10/09/2026 a pedido do cliente, usando
+https://hadcloud.com.br/had-deploy como referência: Start R$ 29,90/mês,
+Pro R$ 49,90/mês e Business R$ 79,90/mês. Os recursos técnicos continuam
+limitados ao que o Turbo Deploy implementa; banco gerenciado e Docker Compose
+da referência não fazem parte desta oferta. A contratação segue pelo WhatsApp.
 
 **Por que `/contato/` não tem formulário.** O projeto é `output: 'static'`: não
 há servidor para processar POST. Em vez de pendurar o lead num serviço de
