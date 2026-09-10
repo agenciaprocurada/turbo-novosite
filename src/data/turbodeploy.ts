@@ -40,7 +40,7 @@ export const turboDeploy = {
   ctaSecundario: { label: 'Ver como funciona', href: '#como-funciona' },
   /** Chips do hero: só fato, sem adjetivo. */
   badges: ['MCP para agentes de IA', 'Domínio próprio + HTTPS', 'Histórico e rollback'],
-  disponibilidade: 'A partir de R$ 29,90/mês. Cobrança em reais, por plano.',
+  disponibilidade: 'A partir de R$ 19,90/mês. Cobrança em reais, por plano.',
   atalhos: [
     { label: 'Como funciona', href: '#como-funciona' },
     { label: 'Formas de publicar', href: '#caminhos' },
@@ -341,7 +341,7 @@ export const turboDeploy = {
       {
         key: 'start', nome: 'Start', selo: '',
         persona: 'Para tirar suas primeiras ideias do localhost.',
-        preco: '29,90', destaque: false,
+        preco: '19,90', destaque: false,
         capacidade: 'Até 3 aplicações · 2 projetos',
         recursos: [
           { nome: 'Domínios personalizados', valor: '2' },
@@ -354,7 +354,7 @@ export const turboDeploy = {
       {
         key: 'pro', nome: 'Pro', selo: 'PARA IR ALÉM',
         persona: 'Para publicar mais e evoluir seus projetos.',
-        preco: '49,90', destaque: true,
+        preco: '39,90', destaque: true,
         capacidade: 'Até 5 aplicações · 4 projetos',
         recursos: [
           { nome: 'Domínios personalizados', valor: '5' },
@@ -367,7 +367,7 @@ export const turboDeploy = {
       {
         key: 'business', nome: 'Business', selo: '',
         persona: 'Para reunir mais aplicações da sua operação.',
-        preco: '79,90', destaque: false,
+        preco: '59,90', destaque: false,
         capacidade: 'Até 8 aplicações · 6 projetos',
         recursos: [
           { nome: 'Domínios personalizados', valor: '10' },
@@ -442,7 +442,7 @@ export const turboDeploy = {
     },
     {
       p: 'Quanto custa, e qual é o suporte?',
-      r: 'O Start custa R$ 29,90/mês para até 3 aplicações e 2 projetos; o Pro, R$ 49,90/mês para até 5 aplicações e 4 projetos; e o Business, R$ 79,90/mês para até 8 aplicações e 6 projetos. A cobrança é mensal por plano, em reais. Fale com a equipe no WhatsApp para contratar, ativar seu plano e consultar as condições de suporte.',
+      r: 'O Start custa R$ 19,90/mês para até 3 aplicações e 2 projetos; o Pro, R$ 39,90/mês para até 5 aplicações e 4 projetos; e o Business, R$ 59,90/mês para até 8 aplicações e 6 projetos. A cobrança é mensal por plano, em reais. Fale com a equipe no WhatsApp para contratar, ativar seu plano e consultar as condições de suporte.',
     },
   ],
 

@@ -398,8 +398,9 @@ ilustração. Está no menu "Ferramentas IA" e no rodapé. O que falta do time
 (URL de cadastro/checkout e suporte) está em `PENDENTE`.
 
 A oferta foi atualizada em 10/09/2026 a pedido do cliente, usando
-https://hadcloud.com.br/had-deploy como referência: Start R$ 29,90/mês,
-Pro R$ 49,90/mês e Business R$ 79,90/mês. Os recursos técnicos continuam
+https://hadcloud.com.br/had-deploy como referência. Os preços foram depois
+ajustados pelo cliente: Start R$ 19,90/mês, Pro R$ 39,90/mês e Business
+R$ 59,90/mês. Os recursos técnicos continuam
 limitados ao que o Turbo Deploy implementa; banco gerenciado e Docker Compose
 da referência não fazem parte desta oferta. A contratação segue pelo WhatsApp.
 
