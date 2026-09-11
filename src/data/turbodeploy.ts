@@ -23,9 +23,6 @@
 import { links, marca, provas } from './site'
 import type { IconeBeneficio } from './produtos'
 
-/** Endereço da plataforma. Os projetos publicados vivem em `*.up.turbo.cloud`;
- *  a URL de cadastro/login ainda precisa ser confirmada (ver `PENDENTE`). */
-export const plataforma = links.turboDeploy
 
 export const turboDeploy = {
   titulo: 'Turbo Deploy — publique o projeto que você criou com IA',
@@ -60,7 +57,7 @@ export const turboDeploy = {
   /** Mockup do hero: o fluxo de uma publicação, passo a passo. */
   demo: {
     projeto: 'meu-app',
-    dominio: 'meu-app.up.turbo.cloud',
+    dominio: 'meu-app.com.br',
     origem: 'GitHub · main · a1b2c3d',
     framework: 'Next.js',
     etapas: [
@@ -68,7 +65,7 @@ export const turboDeploy = {
       { rotulo: 'Framework detectado', detalhe: 'Next.js · Dockerfile gerado', estado: 'ok' },
       { rotulo: 'Imagem construída', detalhe: 'build concluído', estado: 'ok' },
       { rotulo: 'Verificação de saúde', detalhe: 'respondeu antes da troca de tráfego', estado: 'ok' },
-      { rotulo: 'Publicado', detalhe: 'https://meu-app.up.turbo.cloud', estado: 'ativo' },
+      { rotulo: 'Publicado', detalhe: 'https://meu-app.com.br', estado: 'ativo' },
     ],
     chips: ['HTTPS ativo', 'Rollback disponível'],
     legenda: 'Ilustração do fluxo de publicação. Etapas e tempos variam por projeto.',
@@ -153,7 +150,7 @@ export const turboDeploy = {
         { tipo: 'out', texto: '→ enviando ./ (sem .env)' },
         { tipo: 'out', texto: '→ framework: Next.js · construindo imagem' },
         { tipo: 'out', texto: '→ verificação de saúde: 200 OK' },
-        { tipo: 'ok', texto: '✓ publicado em https://meu-app.up.turbo.cloud' },
+        { tipo: 'ok', texto: '✓ publicado em https://meu-app.com.br' },
       ],
       legenda: 'Saída ilustrativa da CLI.',
     },
@@ -294,8 +291,8 @@ export const turboDeploy = {
       { titulo: 'Conta', itens: ['GitHub', 'Tokens da CLI', 'Configurações', 'Segurança'] },
     ],
     projetos: [
-      { nome: 'Meu site', tecnologia: 'Astro', endereco: 'meu-site.up.turbo.cloud', descricao: 'Nova página de apresentação' },
-      { nome: 'Minha API', tecnologia: 'Node.js', endereco: 'minha-api.up.turbo.cloud', descricao: 'Atualiza os serviços da aplicação' },
+      { nome: 'Meu site', tecnologia: 'Astro', endereco: 'meu-site.com.br', descricao: 'Nova página de apresentação' },
+      { nome: 'Minha API', tecnologia: 'Node.js', endereco: 'api.meu-site.com.br', descricao: 'Atualiza os serviços da aplicação' },
     ],
     abas: [
       { nome: 'Publicações', titulo: 'Saiba qual versão está no ar.', texto: 'Acompanhe cada publicação, abra os logs para investigar erros e consulte o histórico. Use Publicar para enviar uma nova versão ou faça redeploy de uma publicação.', caminho: 'Projetos → seu projeto → Publicações' },
