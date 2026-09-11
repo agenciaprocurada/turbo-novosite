@@ -334,6 +334,16 @@ location = /404.html { internal; }          # senão /404.html responde 200
 gzip on;                                    # a home cai de 216 KB para ~33 KB
 ```
 
+**Arquivo de `public/` chega sem permissão de leitura na hospedagem.** O
+Dockerfile gerado pela plataforma copia o repositório, roda o build e leva o
+`dist/` para o nginx. O que o build gera nasce legível; o que é copiado como
+está de `public/` (favicon, e antes os logos de clientes) chega sem leitura
+para o usuário do nginx e responde **403** — o favicon sumiu do site
+publicado por isso, e os logos foram parar em `src/assets/` pelo mesmo
+motivo. O `npm run build` roda `scripts/normaliza-permissoes.mjs` no fim,
+que libera leitura em tudo dentro de `dist/`. Se um arquivo novo de
+`public/` der 403 online, é esse passo que precisa estar rodando.
+
 **Não colocar Dockerfile na raiz.** Chegamos a tentar contornar por ali e a
 plataforma passou a detectar `DOCKERFILE`, ignorando o preset — e o build
 quebrou no `npm ci`, que é mais rígido que o `npm install` usado pelo preset.

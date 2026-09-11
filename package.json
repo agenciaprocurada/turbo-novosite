@@ -6,7 +6,7 @@
   "description": "Nova home da TurboCloud — Astro + Tailwind",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/normaliza-permissoes.mjs",
     "preview": "astro preview",
     "check": "astro check"
   },
