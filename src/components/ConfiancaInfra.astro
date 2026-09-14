@@ -100,6 +100,27 @@ import { confiancaInfra as copy } from '../data/site'
   .trust-government p { font-size: 14px; color: var(--color-ink); line-height: 1.6; }
   .trust-government strong { color: var(--color-purple-logo); font-weight: 800; }
   .trust-government-detail { display: block; color: var(--color-ink-soft); font-size: 12px; }
+  @media (min-width: 541px) {
+    .trust-highlight { grid-template-columns: auto auto minmax(0, 1fr); }
+    .trust-highlight-text, .trust-highlight-seal { align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding-block: 0; }
+    .trust-highlight-seal svg { flex-shrink: 0; }
+  }
+  @media (min-width: 541px) and (max-width: 1023px) {
+    .trust-bottom { width: 100%; }
+    .trust-bottom > .trust-highlight { contain: none; grid-template-columns: auto minmax(0, 1fr) auto; }
+  }
+  @media (min-width: 1024px) {
+    .trust-highlight { width: 92%; margin-inline: auto; padding: 18px 24px; }
+    .trust-highlight-logo { width: 84px; height: 84px; margin-right: 20px; }
+    .trust-highlight-text { padding-inline: 20px; }
+    .trust-highlight-text strong { font-size: 46px; }
+    .trust-highlight-text span { font-size: 18px; }
+    .trust-highlight-seal { padding-left: 20px; gap: 8px; }
+    .trust-highlight-seal svg { width: 24px; height: 24px; }
+    .trust-highlight-seal p { max-width: 17ch; margin: 0; white-space: normal; font: 600 14px/1.4 var(--font-sans); letter-spacing: 0; text-transform: none; text-wrap: balance; }
+    .trust-highlight-seal span, .trust-highlight-seal strong { display: inline; }
+    .trust-highlight-seal span::after { content: " "; }
+  }
   @media (max-width: 540px) { .trust-infra { padding: 28px 0 38px; } .trust-eyebrow { font-size: 10px; } .trust-bottom h2 { margin-top: 28px; font-size: 27px; } .trust-description { font-size: 14px; } .trust-government { padding: 12px 15px; } .trust-government p { font-size: 13px; } }
   @media (max-width: 540px) {
     .trust-logo-group { gap: 24px; padding-right: 24px; }
