@@ -27,7 +27,8 @@ import { confiancaInfra as copy } from '../data/site'
       <img class="trust-highlight-logo" src={copy.governoLogo} alt="Brasão da República Federativa do Brasil" width="240" height="240" loading="lazy" decoding="async" />
       <p class="trust-highlight-text">
         <strong>+{copy.governo}</strong>
-        <span>{copy.governoTexto} <b>{copy.governoDestaque}</b></span>
+        <span class="trust-highlight-label-desktop">{copy.governoTexto}</span>
+        <span class="trust-highlight-label-mobile">Sites<br />governamentais</span>
       </p>
       <div class="trust-highlight-seal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5 12 4l9 5.5H3ZM5 9.5V18M9.5 9.5V18M14.5 9.5V18M19 9.5V18M3 18h18M2 21h20" /></svg>
@@ -82,7 +83,7 @@ import { confiancaInfra as copy } from '../data/site'
   .trust-highlight-text { min-width: 0; padding: 4px 24px; border-left: 1px solid #5c1f8522; }
   .trust-highlight-text strong { display: block; font: 800 clamp(40px, 4vw, 54px)/1 var(--font-sans); letter-spacing: -.03em; color: var(--color-purple-logo); }
   .trust-highlight-text span { display: block; margin-top: 6px; font-size: clamp(16px, 1.45vw, 20px); line-height: 1.3; color: var(--color-ink); }
-  .trust-highlight-text b { display: block; font-weight: 800; }
+  .trust-highlight-text .trust-highlight-label-mobile { display: none; }
   .trust-highlight-seal { padding: 4px 0 4px 24px; border-left: 1px solid #5c1f8522; }
   .trust-highlight-seal svg { width: 34px; height: 34px; color: var(--color-purple-logo); }
   .trust-highlight-seal p { margin-top: 8px; white-space: nowrap; font: 500 11px/1.7 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--color-purple-800); }
@@ -109,11 +110,29 @@ import { confiancaInfra as copy } from '../data/site'
     .trust-logo--livup { height: 50px; }
     .trust-bottom { width: 100%; margin-top: 4px; }
     .trust-bottom > .trust-highlight { contain: none; }
-    .trust-highlight { grid-template-columns: 1fr; justify-items: center; text-align: center; padding: 24px 20px; }
-    .trust-highlight-logo { width: 96px; height: 96px; margin: 0 0 16px; }
-    .trust-highlight-text { padding: 16px 0 0; border-left: 0; border-top: 1px solid #5c1f8522; width: 100%; }
-    .trust-highlight-seal { padding: 16px 0 0; margin-top: 16px; border-left: 0; border-top: 1px solid #5c1f8522; width: 100%; display: flex; flex-direction: column; align-items: center; }
-    .trust-highlight-seal p { margin-top: 8px; }
+    /* Celular: brasão maior à esquerda, todas as informações na coluna ao lado. */
+    .trust-highlight { grid-template-columns: 88px minmax(0, 1fr); grid-template-areas: "logo texto" "logo selo"; align-items: center; gap: 10px 14px; padding: 20px 16px; border-radius: 16px; background: #f7f2fb; box-shadow: none; text-align: left; }
+    .trust-highlight-logo { grid-area: logo; width: 88px; height: 88px; margin: 0; }
+    .trust-highlight-text { grid-area: texto; display: flex; align-items: center; gap: 8px; padding: 0; border: 0; text-align: left; }
+    .trust-highlight-text strong { flex-shrink: 0; font-size: 44px; }
+    .trust-highlight-text .trust-highlight-label-desktop { display: none; }
+    .trust-highlight-text .trust-highlight-label-mobile { display: block; margin: 0; font-size: 14px; font-weight: 700; line-height: 1.3; }
+    .trust-highlight-seal { grid-area: selo; padding: 10px 0 0; border-left: 0; border-top: 1px solid #5c1f8518; }
+    .trust-highlight-seal svg { display: none; }
+    .trust-highlight-seal p { margin: 0; white-space: normal; font: 600 12px/1.5 var(--font-sans); letter-spacing: 0; text-transform: none; text-align: left; text-wrap: balance; }
+    .trust-highlight-seal span, .trust-highlight-seal strong { display: inline; }
+    .trust-highlight-seal span::after { content: " "; }
+  }
+  @media (min-width: 375px) and (max-width: 389px) {
+    .trust-highlight-text { gap: 6px; }
+    .trust-highlight-text strong { font-size: 40px; }
+  }
+  @media (max-width: 374px) {
+    .trust-highlight { grid-template-columns: 72px minmax(0, 1fr); column-gap: 10px; padding-inline: 12px; }
+    .trust-highlight-logo { width: 72px; height: 72px; }
+    .trust-highlight-text { gap: 6px; }
+    .trust-highlight-text strong { font-size: 32px; }
+    .trust-highlight-text .trust-highlight-label-mobile { font-size: 12px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .trust-track { animation: none; }

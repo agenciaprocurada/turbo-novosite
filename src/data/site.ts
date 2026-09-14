@@ -152,11 +152,9 @@ export const confiancaInfra = {
   titulo: 'aplicações hospedadas.',
   destaque: 'Uma infraestrutura para ir mais longe.',
   descricao: 'De empresas a instituições públicas, a confiança de quem precisa de velocidade e estabilidade todos os dias.',
-  /** Cartão de destaque abaixo do carrossel. O texto vem partido porque o
-   *  fim ("governo federal") vai em negrito. */
+  /** Cartão de destaque abaixo do carrossel e versão discreta no rodapé. */
   governo: '150',
-  governoTexto: 'prefeituras e sites oficiais do',
-  governoDestaque: 'governo federal',
+  governoTexto: 'sites governamentais',
   /** Uma entrada por linha: a quebra é parte do desenho do selo. */
   governoSelo: ['Confiança', 'que impulsiona'],
   governoSeloDestaque: 'o Brasil',
