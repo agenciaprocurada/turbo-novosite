@@ -20,7 +20,7 @@
  */
 import Logo from './Logo.astro'
 import SeloReclameAqui from './SeloReclameAqui.astro'
-import { marca, links, footer, provas, atendimento } from '../data/site'
+import { marca, links, footer, provas, atendimento, confiancaInfra } from '../data/site'
 
 const ano = new Date().getFullYear()
 
@@ -193,6 +193,30 @@ const selos = [
             </nav>
           ))
         }
+
+        {/* Sites do governo, versão discreta: entra no vão que sobra ao lado de
+            "Suporte" (a grade tem 3 colunas e 4 listas). No celular, com 2
+            colunas, vira uma linha própria abaixo das listas. */}
+        <div class="col-span-2 self-start">
+          <div class="border-line bg-surface flex items-center gap-4 rounded-card border px-4 py-3.5">
+            <img
+              src={confiancaInfra.governoLogo}
+              alt="Brasão da República Federativa do Brasil"
+              width="240"
+              height="240"
+              loading="lazy"
+              decoding="async"
+              class="size-12 shrink-0 object-contain"
+            />
+            <p class="text-ink-soft min-w-0 text-[13.5px] leading-snug">
+              <strong class="text-ink text-[17px] font-extrabold">+{confiancaInfra.governo}</strong>
+              {' '}{confiancaInfra.governoTexto} <strong class="text-ink font-bold">{confiancaInfra.governoDestaque}</strong>
+              <span class="text-purple-logo mt-1 block font-mono text-[10.5px] tracking-[0.1em] uppercase">
+                {confiancaInfra.governoSelo.join(' ')} <strong class="font-bold">{confiancaInfra.governoSeloDestaque}</strong>
+              </span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
 
