@@ -39,3 +39,10 @@ Rasters otimizados em WebP; proporções preservadas.
 Solicitadas pelo cliente: Fecomércio, CRECI, Sinduscon, ADEMI, Unimed e CREF8. Os SVGs adaptam a área visível das artes e removem os complementos regionais. Não são arquivos de identidade nacional fornecidos pelas entidades.
 
 Fecomércio: arte base https://fecomercio-pa.com.br/framework/view/site/img/logo.png, exibida sem PA. As demais preservam as fontes documentadas acima.
+
+## brasao-brasil.webp
+
+Brasão da República Federativa do Brasil, símbolo oficial de domínio público.
+Fonte: https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Brazil.svg
+Convertido para WebP 85 em 240px (2x dos 120px em que aparece no cartão de destaque).
+Substituiu a versão em cinza em 14/09/2026.
