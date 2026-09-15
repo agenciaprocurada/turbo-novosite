@@ -514,8 +514,8 @@ export const produtos: readonly Produto[] = [
     ],
     faq: [
       {
-        p: 'O que diferencia o VPS da hospedagem compartilhada?',
-        r: 'O VPS oferece recursos dedicados, ambiente isolado e controle total, garantindo maior performance e segurança.',
+        p: 'O que diferencia o VPS do Container?',
+        r: 'Os dois têm recursos dedicados e ambiente isolado. A diferença é o controle: no VPS você tem acesso root e monta o servidor do jeito que o projeto pede, instalando o que quiser.',
       },
       {
         p: 'Posso personalizar o ambiente VPS?',
