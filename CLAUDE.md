@@ -364,8 +364,13 @@ quem clica quer ver preço, não a dobra inicial.
 **Atenção com os redirects.** O `redirects` do `astro.config.mjs` gera um HTML
 com `meta refresh` + canonical + noindex. Isso resolve para o visitante, mas
 **não é um 301 de verdade** — o status HTTP continua 200. Para 301 real, a
-regra tem que estar no servidor. Hoje há dois redirects assim:
-`/politica-de-privacidade` → `/legal/` e `/planos` → `/`.
+regra tem que estar no servidor: `deploy/nginx-redirects.conf` traz o
+equivalente em Nginx de cada redirect do `astro.config.mjs` (`/planos`,
+`/politica-de-privacidade`, `/calculadora-perda-de-trafego` e as URLs do site
+antigo — `/whats`, `/blog`, `/rd25`, `/hospedagem/opencloud-ps`, os sitemaps do
+Yoast). O sitemap e o robots.txt são gerados no build, em
+`src/pages/sitemap.xml.ts` e `src/pages/robots.txt.ts`; página nova indexável
+entra na lista do sitemap.
 
 **A `/legal/` não guarda texto jurídico.** Ela lista os dez documentos e
 manda para a versão oficial no WHMCS, que é onde o time mantém. O motivo é
