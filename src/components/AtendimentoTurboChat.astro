@@ -1,0 +1,13 @@
+---
+/**
+ * Atendimento da Turbo Cloud (TurboBot Livechat) — o mesmo do site atual.
+ * O widget desenha o botão "Falar com a equipe" no canto e a janela de chat.
+ * Substitui o BotaoWhatsapp como botão flutuante padrão.
+ */
+---
+
+<script is:inline src="https://app2.turbobot.com.br/livechat-widget.js?v=chat-20261005" defer></script>
+<script is:inline>
+  window.TurboChat = window.TurboChat || { q: [], init(o) { this.q.push(o) } }
+  TurboChat.init({ department: '' }) // opcional: nome do departamento
+</script>

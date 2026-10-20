@@ -2,7 +2,7 @@
 import '../styles/global.css'
 import { marca, links, abasPlanos } from '../data/site'
 import type { Faq } from '../data/site'
-import BotaoWhatsapp from '../components/BotaoWhatsapp.astro'
+import AtendimentoTurboChat from '../components/AtendimentoTurboChat.astro'
 
 interface Props {
   titulo: string
@@ -125,7 +125,7 @@ const schema = {
     >
     <slot />
 
-    <slot name="whatsapp"><BotaoWhatsapp /></slot>
+    <slot name="whatsapp"><AtendimentoTurboChat /></slot>
 
     <script>
       const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches
