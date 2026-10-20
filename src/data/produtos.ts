@@ -680,7 +680,7 @@ export const produtos: readonly Produto[] = [
       {
         icone: 'monitor',
         titulo: 'Monitoramento contínuo',
-        texto: 'Sistema de monitoramento acompanha o servidor 24 horas por dia, para agir antes que o problema chegue no seu projeto.',
+        texto: 'Sistema de monitoramento acompanha o servidor de forma contínua, para agir antes que o problema chegue no seu projeto.',
       },
     ],
     faq: [

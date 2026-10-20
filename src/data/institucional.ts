@@ -64,9 +64,9 @@ export const estrutura = {
     },
     {
       icone: 'ferramentas',
-      titulo: '+150 plugins premium',
+      titulo: 'Plugins premium grátis',
       texto:
-        'Acesso a uma biblioteca com mais de 25.000 plugins gratuitos e 3 opções premium sem custo adicional, para personalizar e otimizar seu site.',
+        'Acesso a uma biblioteca com mais de 25.000 plugins gratuitos e 3 plugins premium originais, à sua escolha, sem custo adicional, para personalizar e otimizar seu site.',
     },
     {
       icone: 'suporte',
@@ -92,7 +92,7 @@ export const estrutura = {
       { rotulo: 'Certificação', valor: 'TIER III' },
       { rotulo: 'Disponibilidade', valor: provas.uptimeTier3 },
       { rotulo: 'Backup', valor: 'a cada 12h' },
-      { rotulo: 'Monitoramento', valor: '24 horas' },
+      { rotulo: 'Monitoramento', valor: 'Contínuo' },
     ],
   },
 
@@ -101,7 +101,7 @@ export const estrutura = {
     titulo1: 'Seu site em boas mãos,',
     titulo2: 'sempre.',
     texto:
-      'Monitoramos os servidores 24 horas por dia e mantemos backups automáticos a cada 12 horas. A tecnologia de proteção identifica e resolve vulnerabilidade antes de virar problema.',
+      'Monitoramos os servidores continuamente e mantemos backups automáticos a cada 12 horas. A tecnologia de proteção identifica e resolve vulnerabilidade antes de virar problema.',
   },
 
   painel: {

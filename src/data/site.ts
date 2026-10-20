@@ -112,12 +112,15 @@ export const atendimento = {
 /* ------------------------------------------------------------------ */
 
 export const provas = {
-  ttfb: '5 ms',
+  /* 18 ms é o TTFB que o site atual publica. O 5 ms que estava aqui não tinha fonte. */
+  ttfb: '18 ms',
   uptimeTier3: '99,982%',
   backup: '12/12h',
   notaGoogle: '5,0',
   avaliacoesGoogle: 1366,
-  pluginsPremium: '+150',
+  /* O site atual diz "+150 plugins premium" e, no mesmo parágrafo, "3 plugins premium à sua
+     escolha" + 25.000 gratuitos. Vale a versão conservadora: 3. */
+  pluginsPremium: '3',
   pluginsGratuitos: '25.000',
   apps1Click: '470+',
   anosDeCasa: new Date().getFullYear() - 2013,
@@ -175,7 +178,7 @@ export const seloReclameAqui = {
 /** S9 · faixa de números. Ícone + número + rótulo curto. */
 export const stats = [
   { icone: 'uptime', valor: '99,982%', label: 'Uptime do datacenter' },
-  { icone: 'latencia', valor: '5 ms', label: 'Latência média' },
+  { icone: 'latencia', valor: provas.ttfb, label: 'Latência média' },
   { icone: 'backup', valor: '12 / 12h', label: 'Backup automático' },
   { icone: 'estrela', valor: '5,0', sufixo: '★', label: 'Nota no Google' },
 ] as const
@@ -237,7 +240,7 @@ export const nav = [
       },
       {
         label: 'Cloud / VPS',
-        desc: 'Acesso root e +100 apps em 1 clique',
+        desc: 'Acesso root e +50 apps em 1 clique',
         href: links.produtos.cloudVps,
       },
       {
