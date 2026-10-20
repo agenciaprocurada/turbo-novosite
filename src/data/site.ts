@@ -250,21 +250,7 @@ export const nav = [
       },
     ],
   },
-  {
-    label: 'Ferramentas IA',
-    itens: [
-      {
-        label: 'Turbo Builder',
-        desc: 'Site criado por IA, publicado na hora',
-        href: links.ferramentasIa.turboBuilder,
-      },
-      {
-        label: 'Turbo Deploy',
-        desc: 'Publique o projeto que você criou com IA',
-        href: links.ferramentasIa.turboDeploy,
-      },
-    ],
-  },
+  // Ferramentas IA (Turbo Builder / Turbo Deploy) ocultas até o lançamento.
   { label: 'Estrutura', href: links.estrutura },
   { label: 'Planos', href: links.planos },
 ] as const
@@ -1028,13 +1014,7 @@ export const footer = {
         { label: 'OpenClaw VPS', href: links.produtos.openclaw },
       ],
     },
-    {
-      titulo: 'Ferramentas IA',
-      itens: [
-        { label: 'Turbo Builder', href: links.ferramentasIa.turboBuilder },
-        { label: 'Turbo Deploy', href: links.ferramentasIa.turboDeploy },
-      ],
-    },
+    // Ferramentas IA ocultas até o lançamento.
     {
       titulo: 'Empresa',
       itens: [

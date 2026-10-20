@@ -17,8 +17,6 @@ const caminhos: string[] = [
   links.hospedagem,
   ...produtos.map((produto) => urlProduto(produto.slug)),
   links.produtos.openclaw,
-  links.ferramentasIa.turboBuilder,
-  links.ferramentasIa.turboDeploy,
   links.estrutura,
   links.calculadora,
   links.afiliados,
