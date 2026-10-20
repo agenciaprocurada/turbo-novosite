@@ -990,6 +990,8 @@ export const notaPlanos =
 export const ctaFinal = {
   titulo1: 'Seu site,',
   titulo2: 'em modo Turbo.',
+  /** Texto da hospedagem de sites: é lá que o site atual oferece os 7 dias de
+   *  teste e a garantia de devolução. Outras páginas usam `ctaFinalGeral`. */
   texto:
     'Contrate em minutos ou deixe a migração com a gente. São 7 dias de teste e garantia de devolução — se não gostar, você não fica no prejuízo.',
   /* /planos/ e não '#planos': o CtaFinal aparece em toda página, inclusive
@@ -997,6 +999,12 @@ export const ctaFinal = {
      existe é botão morto. */
   primario: { label: 'Comece agora', href: links.planos },
   secundario: { label: 'Migrar grátis', href: links.whatsapp },
+} as const
+
+/** Fechamento sem promessa de teste ou devolução — para as páginas que não são
+ *  de hospedagem de sites (hub, contato, OpenClaw, ferramentas). */
+export const ctaFinalGeral = {
+  texto: 'Contrate em minutos ou fale com a nossa equipe pelo WhatsApp: a gente ajuda a escolher o plano certo.',
 } as const
 
 /* ------------------------------------------------------------------ */
@@ -1078,7 +1086,7 @@ export const faq = [
   },
   {
     p: 'Posso testar antes de contratar?',
-    r: 'Sim. São 7 dias de teste grátis e garantia de devolução do dinheiro caso você não fique satisfeito.',
+    r: 'Sim. Na hospedagem de sites e na revenda são 7 dias de teste grátis e garantia de devolução do dinheiro caso você não fique satisfeito.',
   },
 ] as const
 

@@ -30,7 +30,7 @@ import astroContainers from '../../assets/imagens/empresa-de-hospedagem-de-site-
 import astroCloudVps from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-cloud-vps.webp'
 import astroServidorEmail from '../../assets/imagens/empresa-de-hospedagem-de-site-astronauta-servidor-email.webp'
 
-import { produtos, seguranca } from '../../data/produtos'
+import { produtos, planosEmail } from '../../data/produtos'
 import type { Produto } from '../../data/produtos'
 import { abasPlanos, links } from '../../data/site'
 
@@ -54,6 +54,28 @@ const artesHero: Partial<Record<string, ImageMetadata>> = {
 
 const abas = produto.abaPlanos ? abasPlanos.filter((aba) => aba.familia === produto.abaPlanos) : []
 
+/** JSON-LD Product: cada produto publica os preços dos SEUS planos. Na
+ *  hospedagem só entram os do servidor Brasil (EUA e Europa repetem os mesmos
+ *  valores e inflariam a lista com duplicatas). */
+const ofertasSchema =
+  produto.tipo === 'email'
+    ? planosEmail.map((plano) => ({ nome: `E-mail ${plano.gb}GB`, preco: plano.preco, url: plano.href }))
+    : (abas[0]?.planos ?? []).map((plano) => ({ nome: produto.tipo === 'hospedagem' ? `Plano ${plano.nome}` : plano.nome, preco: plano.precoMensal, url: plano.href }))
+
+/** Segurança: só os produtos que têm bloco próprio mostram (VPS não tem). */
+const seguranca = produto.seguranca
+const colunasSeguranca = !seguranca
+  ? ''
+  : seguranca.itens.length === 2
+    ? 'md:grid-cols-2 md:mx-auto md:max-w-[720px]'
+    : seguranca.itens.length === 4
+      ? 'md:grid-cols-2 lg:grid-cols-4'
+      : 'md:grid-cols-3'
+
+/** "para container." / "para cloud / vps." ficavam estranhos no título. */
+const nomeNoTitulo =
+  produto.tipo === 'container' ? 'Container' : produto.tipo === 'vps' ? 'Cloud VPS' : produto.nome.toLowerCase()
+
 const trilha = [
   { label: 'Home', href: '/' },
   { label: 'Hospedagem', href: '/hospedagem/' },
@@ -63,7 +85,13 @@ const trilha = [
 const SECAO = 'py-[clamp(72px,9vw,132px)]'
 ---
 
-<Base titulo={produto.titulo} descricao={produto.descricao} faq={produto.faq} trilha={trilha} comProduto={abas.length > 0}>
+<Base
+  titulo={produto.titulo}
+  descricao={produto.descricao}
+  faq={produto.faq}
+  trilha={trilha}
+  produto={{ nome: produto.schemaNome, descricao: produto.descricao, ofertas: ofertasSchema }}
+>
   <TopBar />
   <HeaderPill ctaPlanos="#planos" />
 
@@ -87,7 +115,7 @@ const SECAO = 'py-[clamp(72px,9vw,132px)]'
           <h2
             class="mt-4 text-[clamp(1.7rem,3.6vw,2.3rem)] leading-[1.12] font-bold tracking-[-0.018em] text-balance text-ink"
           >
-            Por que a Turbo Cloud é a escolha certa <span class="text-green-ink">para {produto.nome.toLowerCase()}.</span>
+            Por que a Turbo Cloud é a escolha certa <span class="text-green-ink">para {nomeNoTitulo}.</span>
           </h2>
         </div>
 
@@ -150,6 +178,7 @@ const SECAO = 'py-[clamp(72px,9vw,132px)]'
     }
 
     {/* -------------------------- Segurança -------------------------- */}
+    {seguranca && (
     <section class="py-2">
       <div class="block-section block-dark bg-purple-950 py-[clamp(56px,7vw,104px)] text-white">
         <div class="container-page">
@@ -163,7 +192,7 @@ const SECAO = 'py-[clamp(72px,9vw,132px)]'
             </p>
           </div>
 
-          <div class="mt-10 grid gap-4 md:grid-cols-3">
+          <div class:list={['mt-10 grid gap-4', colunasSeguranca]}>
             {
               seguranca.itens.map((item, i) => (
                 <div class="reveal flex" data-delay={String(i + 1)}>
@@ -188,14 +217,19 @@ const SECAO = 'py-[clamp(72px,9vw,132px)]'
         </div>
       </div>
     </section>
+    )}
 
-    <ProvaSocial class="pt-[clamp(64px,8vw,110px)] pb-[clamp(40px,5vw,64px)]" />
+    {produto.comDepoimentos && <ProvaSocial class="pt-[clamp(64px,8vw,110px)] pb-[clamp(40px,5vw,64px)]" />}
 
     <Faq itens={produto.faq} />
 
-    <Migracao class={SECAO} />
+    {produto.comMigracao && <Migracao class={SECAO} />}
 
-    <CtaFinal />
+    <CtaFinal
+      texto={produto.fechamento.texto}
+      primario={produto.fechamento.primario}
+      secundario={produto.fechamento.secundario}
+    />
   </main>
 
   <FooterMega />

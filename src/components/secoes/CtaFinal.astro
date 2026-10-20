@@ -2,7 +2,7 @@
 /** S11 · CTA final — bloco roxo com a arte do foguete. */
 import { Image } from 'astro:assets'
 import Button from '../Button.astro'
-import { ctaFinal } from '../../data/site'
+import { ctaFinal, ctaFinalGeral } from '../../data/site'
 import fundoCta from '../../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-fundo.webp'
 import fundoCtaMobile from '../../assets/imagens/empresa-de-hospedagem-de-site-foguete-decolando-mobile.webp'
 
@@ -18,7 +18,7 @@ interface Props {
 const {
   titulo1 = ctaFinal.titulo1,
   titulo2 = ctaFinal.titulo2,
-  texto = ctaFinal.texto,
+  texto = ctaFinalGeral.texto,
   primario = ctaFinal.primario,
   secundario = ctaFinal.secundario,
 } = Astro.props

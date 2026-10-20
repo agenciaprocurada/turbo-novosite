@@ -24,7 +24,7 @@ import Migracao from '../components/secoes/Migracao.astro'
 import CtaFinal from '../components/secoes/CtaFinal.astro'
 
 import { estrutura } from '../data/institucional'
-import { faq, links, marca, provas } from '../data/site'
+import { ctaFinal, faq, links, marca, provas } from '../data/site'
 
 const trilha = [
   { label: 'Home', href: '/' },
@@ -248,7 +248,7 @@ const SECAO = 'py-[clamp(72px,9vw,132px)]'
 
     <Migracao class={SECAO} />
 
-    <CtaFinal />
+    <CtaFinal texto={ctaFinal.texto} />
   </main>
 
   <FooterMega />

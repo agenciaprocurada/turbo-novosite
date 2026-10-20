@@ -18,7 +18,6 @@ import BeneficioCard from '../../components/BeneficioCard.astro'
 import SectionEyebrow from '../../components/SectionEyebrow.astro'
 import Button from '../../components/Button.astro'
 
-import Migracao from '../../components/secoes/Migracao.astro'
 import CtaFinal from '../../components/secoes/CtaFinal.astro'
 
 import { openclaw } from '../../data/institucional'
@@ -189,12 +188,12 @@ const trilha = [
       </div>
     </section>
 
-    <Migracao class="py-[clamp(72px,9vw,132px)]" />
-
     <CtaFinal
       titulo1="Pronto para rodar OpenClaw"
       titulo2="de verdade."
-      texto="Comece agora com infraestrutura que não vai te limitar. Migração feita pela nossa equipe e suporte humano no WhatsApp."
+      texto="Comece agora com infraestrutura que não vai te limitar. Suporte humano no WhatsApp, de segunda a sábado, das 8h à 1h."
+      primario={openclaw.cta}
+      secundario={{ label: 'Falar com especialista', href: links.whatsapp }}
     />
   </main>
 

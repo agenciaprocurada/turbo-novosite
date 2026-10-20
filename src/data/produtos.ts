@@ -16,7 +16,7 @@
  *     desta lista que NÃO veio do site. Está marcado com TEXTO NOVO.
  */
 
-import { provas, menorPreco } from './site'
+import { provas, menorPreco, links } from './site'
 import type { Faq } from './site'
 
 export type Beneficio = {
@@ -64,6 +64,18 @@ export type Produto = {
   aPartirDe: number
   /** família das abas de `abasPlanos` que esta página mostra */
   abaPlanos: 'hospedagem' | 'container' | 'vps' | null
+  /** Decide o que a página mostra: depoimentos de hospedagem, migração de
+   *  site e garantia de 7 dias só aparecem em `hospedagem`. */
+  tipo: 'hospedagem' | 'container' | 'vps' | 'email'
+  /** nome do produto no JSON-LD (schema.org/Product) */
+  schemaNome: string
+  /** bloco roxo de segurança; `null` = a página não tem */
+  seguranca: Seguranca | null
+  /** migração de site (funil de cPanel/WordPress) — só hospedagem */
+  comMigracao: boolean
+  /** depoimentos do Google, que são de hospedagem — só hospedagem */
+  comDepoimentos: boolean
+  fechamento: FechamentoProduto
   planosTitulo1: string
   planosTitulo2a: string
   planosTitulo2b: string
@@ -159,6 +171,109 @@ export const planosEmail = [
 ].map((p) => ({ ...p, href: `${LOJA_EMAIL}/${p.slug}` }))
 
 /* --------------------------------------------------------------------- */
+/* Bloco de segurança — cada produto tem o seu                            */
+/* --------------------------------------------------------------------- */
+/*  O texto de hospedagem (AntiBrute Force para WordPress, MalwareExpert,
+ *  contingência que "espelha seu site") só vale para hospedagem de sites.
+ *  Container usa a versão do próprio Container no site atual; e-mail usa a
+ *  segurança de e-mail do site atual (AntiSpam e AntiVírus — o "Backup
+ *  Automático" que o atual lista ali fica de fora até o dono confirmar se
+ *  e-mail tem backup). VPS não tem o bloco. */
+
+export type Seguranca = { texto: string; itens: readonly Beneficio[] }
+
+const segurancaHospedagem = {
+  texto:
+    'Cansado de lidar com invasão, vírus e dor de cabeça? Aqui a história é outra: além do suporte por WhatsApp e ticket, você conta com proteção em várias camadas e um time que resolve o problema em vez de abrir chamado.',
+  itens: [
+    {
+      icone: 'escudo',
+      titulo: 'AntiBrute Force',
+      texto:
+        'Sistema avançado de proteção para WordPress e demais CMS. Barra tentativa de invasão por força bruta no painel administrativo.',
+    },
+    {
+      icone: 'monitor',
+      titulo: 'AntiVírus em tempo real',
+      texto:
+        'Usamos o Malware Expert, um dos melhores antimalware do mercado. O escaneamento acontece em tempo real, não uma vez por dia.',
+    },
+    {
+      icone: 'backup',
+      titulo: 'Servidores de contingência',
+      texto:
+        'Serviço adicional que espelha seu site em outro datacenter, de forma automática, para o caso de precisar do projeto no ar de qualquer jeito.',
+    },
+  ],
+} as const satisfies Seguranca
+
+const segurancaContainer = {
+  texto:
+    'Com a Turbo Cloud, seu projeto está protegido contra falhas e ameaças digitais: ambiente isolado de outros clientes e proteção em várias camadas.',
+  itens: [
+    {
+      icone: 'isolamento',
+      titulo: 'Ambiente isolado',
+      texto:
+        'Os Containers oferecem uma camada adicional de segurança, separando completamente seu projeto de outros usuários no mesmo servidor.',
+    },
+    segurancaHospedagem.itens[0],
+    segurancaHospedagem.itens[1],
+    segurancaHospedagem.itens[2],
+  ],
+} as const satisfies Seguranca
+
+const segurancaEmail = {
+  texto: 'Com a Turbo Cloud, você tem a tranquilidade de saber que a comunicação corporativa da sua empresa está protegida.',
+  itens: [
+    {
+      icone: 'escudo',
+      titulo: 'AntiSpam Pro',
+      texto: 'Sistema avançado que bloqueia e-mails indesejados antes de chegar à sua caixa de entrada.',
+    },
+    {
+      icone: 'monitor',
+      titulo: 'AntiVírus em tempo real',
+      texto: 'Proteção contínua contra anexos maliciosos e ataques de phishing.',
+    },
+  ],
+} as const satisfies Seguranca
+
+/* --------------------------------------------------------------------- */
+/* Fechamento (CTA final) de cada produto                                  */
+/* --------------------------------------------------------------------- */
+/*  O "7 dias de teste e garantia de devolução" só entra na hospedagem de
+ *  sites: é onde o site atual a oferece. */
+
+export type FechamentoProduto = {
+  texto: string
+  primario: { label: string; href: string }
+  secundario: { label: string; href: string }
+}
+
+const fechamentoHospedagem: FechamentoProduto = {
+  texto:
+    'Contrate em minutos ou deixe a migração com a gente. São 7 dias de teste e garantia de devolução — se não gostar, você não fica no prejuízo.',
+  primario: { label: 'Comece agora', href: '#planos' },
+  secundario: { label: 'Migrar grátis', href: links.whatsapp },
+}
+const fechamentoContainer: FechamentoProduto = {
+  texto: 'Escolha o plano de Container ou chame o nosso time para montar o ambiente sob medida do seu projeto.',
+  primario: { label: 'Ver planos', href: '#planos' },
+  secundario: { label: 'Falar com especialista', href: links.whatsapp },
+}
+const fechamentoVps: FechamentoProduto = {
+  texto: 'Escolha o plano de VPS e monte o servidor do seu jeito, com acesso root. Na dúvida, o nosso time ajuda no WhatsApp.',
+  primario: { label: 'Ver planos', href: '#planos' },
+  secundario: { label: 'Falar com especialista', href: links.whatsapp },
+}
+const fechamentoEmail: FechamentoProduto = {
+  texto: 'Escolha o plano de e-mail e deixe a comunicação da empresa em um servidor exclusivo. A migração das suas contas é gratuita.',
+  primario: { label: 'Ver planos', href: '#planos' },
+  secundario: { label: 'Migrar meus e-mails', href: links.whatsapp },
+}
+
+/* --------------------------------------------------------------------- */
 /* Os seis produtos                                                       */
 /* --------------------------------------------------------------------- */
 
@@ -176,6 +291,12 @@ export const produtos: readonly Produto[] = [
     badges: ['Migração grátis', 'Otimizada para WordPress', '7 dias de teste'],
     aPartirDe: menorPreco('hospedagem'),
     abaPlanos: 'hospedagem',
+    tipo: 'hospedagem',
+    schemaNome: 'Hospedagem de sites institucionais Turbo Cloud',
+    seguranca: segurancaHospedagem,
+    comMigracao: true,
+    comDepoimentos: true,
+    fechamento: fechamentoHospedagem,
     planosTitulo1: 'Planos otimizados',
     planosTitulo2a: 'para sites',
     planosTitulo2b: 'institucionais.',
@@ -247,6 +368,12 @@ export const produtos: readonly Produto[] = [
     badges: ['Migração grátis', 'Otimizada para WooCommerce', '7 dias de teste'],
     aPartirDe: menorPreco('hospedagem'),
     abaPlanos: 'hospedagem',
+    tipo: 'hospedagem',
+    schemaNome: 'Hospedagem para loja virtual WooCommerce Turbo Cloud',
+    seguranca: segurancaHospedagem,
+    comMigracao: true,
+    comDepoimentos: true,
+    fechamento: fechamentoHospedagem,
     planosTitulo1: 'Planos otimizados',
     planosTitulo2a: 'para',
     planosTitulo2b: 'e-commerce.',
@@ -324,6 +451,12 @@ export const produtos: readonly Produto[] = [
     badges: ['Migração grátis', 'SEO otimizado', '7 dias de teste'],
     aPartirDe: menorPreco('hospedagem'),
     abaPlanos: 'hospedagem',
+    tipo: 'hospedagem',
+    schemaNome: 'Hospedagem para blogs e portais de conteúdo Turbo Cloud',
+    seguranca: segurancaHospedagem,
+    comMigracao: true,
+    comDepoimentos: true,
+    fechamento: fechamentoHospedagem,
     planosTitulo1: 'Planos otimizados',
     planosTitulo2a: 'para blogs',
     planosTitulo2b: 'e portais.',
@@ -403,6 +536,12 @@ export const produtos: readonly Produto[] = [
     badges: ['Ambiente isolado', 'Recursos dedicados', 'Migração grátis'],
     aPartirDe: menorPreco('container'),
     abaPlanos: 'container',
+    tipo: 'container',
+    schemaNome: 'Hospedagem em Container Turbo Cloud',
+    seguranca: segurancaContainer,
+    comMigracao: false,
+    comDepoimentos: false,
+    fechamento: fechamentoContainer,
     planosTitulo1: 'Planos de Container',
     planosTitulo2a: 'para o seu',
     planosTitulo2b: 'projeto.',
@@ -490,6 +629,12 @@ export const produtos: readonly Produto[] = [
     badges: ['Acesso root', 'Recursos dedicados', 'Monitoramento contínuo'],
     aPartirDe: menorPreco('vps'),
     abaPlanos: 'vps',
+    tipo: 'vps',
+    schemaNome: 'Cloud VPS Turbo Cloud',
+    seguranca: null,
+    comMigracao: false,
+    comDepoimentos: false,
+    fechamento: fechamentoVps,
     planosTitulo1: 'Planos VPS',
     planosTitulo2a: 'para a sua',
     planosTitulo2b: 'empresa.',
@@ -579,6 +724,12 @@ export const produtos: readonly Produto[] = [
     badges: ['Contas ilimitadas', 'Servidor exclusivo', 'Migração grátis'],
     aPartirDe: Math.min(...planosEmail.map((plano) => plano.preco)),
     abaPlanos: null,
+    tipo: 'email',
+    schemaNome: 'Servidor de e-mail profissional Turbo Cloud',
+    seguranca: segurancaEmail,
+    comMigracao: false,
+    comDepoimentos: false,
+    fechamento: fechamentoEmail,
     planosTitulo1: 'Planos de e-mail',
     planosTitulo2a: 'para a sua',
     planosTitulo2b: 'empresa.',
@@ -642,35 +793,6 @@ export const recursosEmail = [
   'SMTP profissional',
   'AntiSpam Pro',
 ] as const
-
-/* --------------------------------------------------------------------- */
-/* Bloco de segurança — igual em toda página de produto                   */
-/* --------------------------------------------------------------------- */
-
-export const seguranca = {
-  texto:
-    'Cansado de lidar com invasão, vírus e dor de cabeça? Aqui a história é outra: além do suporte por WhatsApp e ticket, você conta com proteção em várias camadas e um time que resolve o problema em vez de abrir chamado.',
-  itens: [
-    {
-      icone: 'escudo',
-      titulo: 'AntiBrute Force',
-      texto:
-        'Sistema avançado de proteção para WordPress e demais CMS. Barra tentativa de invasão por força bruta no painel administrativo.',
-    },
-    {
-      icone: 'monitor',
-      titulo: 'AntiVírus em tempo real',
-      texto:
-        'Usamos o Malware Expert, um dos melhores antimalware do mercado. O escaneamento acontece em tempo real, não uma vez por dia.',
-    },
-    {
-      icone: 'backup',
-      titulo: 'Servidores de contingência',
-      texto:
-        'Serviço adicional que espelha seu site em outro datacenter, de forma automática, para o caso de precisar do projeto no ar de qualquer jeito.',
-    },
-  ],
-} as const satisfies { texto: string; itens: readonly Beneficio[] }
 
 /* --------------------------------------------------------------------- */
 /* Hub /hospedagem/                                                       */

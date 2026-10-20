@@ -10,15 +10,32 @@ interface Props {
   /** FAQPage do schema.org. Só entra na página que realmente mostra esse FAQ —
    *  repetir o mesmo FAQPage em 9 URLs é o tipo de coisa que o Google ignora. */
   faq?: readonly Faq[]
-  /** Product do schema.org. Só onde a tabela de planos aparece de fato. */
+  /** Product do schema.org da hospedagem de sites (Brasil). Só onde a tabela
+   *  de planos aparece de fato. As páginas de produto passam `produto`. */
   comProduto?: boolean
+  /** Product do schema.org com nome e preços do próprio produto — Container,
+   *  VPS e e-mail não podem herdar os planos de hospedagem. */
+  produto?: { nome: string; descricao: string; ofertas: readonly { nome: string; preco: number; url: string }[] }
   /** Trilha de navegação para o BreadcrumbList. A home não passa nada. */
   trilha?: readonly { label: string; href: string }[]
   /** Tira a página do índice. Só o 404 usa — URL de erro não indexa. */
   noindex?: boolean
 }
 
-const { titulo, descricao, faq, comProduto = false, trilha, noindex = false } = Astro.props
+const { titulo, descricao, faq, comProduto = false, produto, trilha, noindex = false } = Astro.props
+
+const produtoSchema =
+  produto ??
+  (comProduto
+    ? {
+        nome: 'Hospedagem de sites Turbo Cloud',
+        descricao:
+          'Hospedagem WordPress e WooCommerce com recursos dedicados, servidores no Brasil, backup a cada 12 horas e suporte humano por WhatsApp.',
+        ofertas: abasPlanos
+          .find((aba) => aba.id === 'hospedagem')!
+          .planos.map((plano) => ({ nome: `Plano ${plano.nome}`, preco: plano.precoMensal, url: plano.href })),
+      }
+    : undefined)
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://turbocloud.com.br').toString()
 
 const schema = {
@@ -41,18 +58,17 @@ const schema = {
       },
       sameAs: [links.status],
     },
-    ...(comProduto ? [{
+    ...(produtoSchema ? [{
       '@type': 'Product',
-      name: 'Hospedagem de sites Turbo Cloud',
-      description:
-        'Hospedagem WordPress e WooCommerce com recursos dedicados, servidores no Brasil, backup a cada 12 horas e suporte humano por WhatsApp.',
+      name: produtoSchema.nome,
+      description: produtoSchema.descricao,
       brand: { '@id': 'https://turbocloud.com.br/#organizacao' },
-      offers: abasPlanos[0]!.planos.map((plano) => ({
+      offers: produtoSchema.ofertas.map((oferta) => ({
         '@type': 'Offer',
-        name: `Plano ${plano.nome}`,
-        price: plano.precoMensal.toFixed(2),
+        name: oferta.nome,
+        price: oferta.preco.toFixed(2),
         priceCurrency: 'BRL',
-        url: plano.href,
+        url: oferta.url,
         availability: 'https://schema.org/InStock',
       })),
     }] : []),
