@@ -533,6 +533,8 @@ export type Plano = {
   precoAnualTotal?: number
   destaque?: boolean
   selo?: string
+  /** texto literal do cupom exibido no card (ex.: VPS) */
+  cupom?: string
   grupos: { titulo: string; itens: string[] }[]
   href: string
 }
@@ -593,6 +595,7 @@ const planosHospedagemBase = [
     mensal: 35.9,
     anualMes: 32.9,
     anualTotal: 394.9,
+    anualForaBrasil: 32.9,
     dominios: '1 domínio Blindagem Turbo',
     disco: '15GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4',
@@ -618,6 +621,7 @@ const planosHospedagemBase = [
     mensal: 64.9,
     anualMes: 54.0,
     anualTotal: 648.0,
+    anualForaBrasil: 54.0,
     dominios: '2 domínios Blindagem Turbo',
     disco: '20GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
@@ -629,6 +633,7 @@ const planosHospedagemBase = [
     mensal: 100.0,
     anualMes: 91.67,
     anualTotal: 1100.04,
+    anualForaBrasil: 91.6,
     dominios: '5 domínios Blindagem Turbo',
     disco: '50GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
@@ -640,6 +645,7 @@ const planosHospedagemBase = [
     mensal: 150.0,
     anualMes: 137.5,
     anualTotal: 1650.0,
+    anualForaBrasil: 137.5,
     dominios: '10 domínios Blindagem Turbo',
     disco: '75GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
@@ -651,6 +657,7 @@ const planosHospedagemBase = [
     mensal: 190.0,
     anualMes: 174.0,
     anualTotal: 2088.0,
+    anualForaBrasil: 174.0,
     dominios: '15 domínios Blindagem Turbo',
     disco: '100GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
@@ -662,6 +669,7 @@ const planosHospedagemBase = [
     mensal: 280.0,
     anualMes: 256.0,
     anualTotal: 3072.0,
+    anualForaBrasil: 256.0,
     dominios: '20 domínios Blindagem Turbo',
     disco: '150GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
@@ -674,8 +682,9 @@ const planosHospedagemBase = [
     anualMes: 378.0,
     anualTotal: 4536.0,
     dominios: '30 domínios Blindagem Turbo',
-    /* O site atual diz 150GB na tabela mensal e 225GB na anual. Vale o menor. */
-    disco: '150GB SSD NVMe',
+    /* Resposta oficial da equipe (20/10/2026): 225GB, no mensal e no anual, em Brasil, EUA e Europa.
+       O site atual mostra 150GB no mensal — erro do atual. */
+    disco: '225GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
   },
   {
@@ -727,15 +736,21 @@ const slugsHospedagem: Record<LocalHospedagem, Record<string, string>> = {
   },
 }
 
-/** Brasil leva o preço anual; EUA e Europa são só mensais aqui (o site atual
- *  tem anual para eles, mas incompleto — falta Elite 30 e 50 — e com centavos
- *  divergentes; o ciclo anual dessas contas se escolhe no carrinho). */
+/** Brasil leva o preço anual e o total do ano. EUA e Europa levam o preço anual
+ *  por mês copiado do site atual (`anualForaBrasil`), que traz só Duo, One e
+ *  Revenda Elite 5, 10, 15 e 20 — sem o total do ano, sem Three, Elite 30 e 50.
+ *  Esses ficam sem preço anual e o card manda consultar a equipe. O link de
+ *  checkout do anual é o mesmo do mensal (igual ao site atual). */
 const planosHospedagem = (local: LocalHospedagem): Plano[] =>
   planosHospedagemBase.map((d) => ({
     nome: d.nome,
     persona: d.persona,
     precoMensal: d.mensal,
-    ...(local === 'brasil' ? { precoAnualMes: d.anualMes, precoAnualTotal: d.anualTotal } : {}),
+    ...(local === 'brasil'
+      ? { precoAnualMes: d.anualMes, precoAnualTotal: d.anualTotal }
+      : 'anualForaBrasil' in d
+        ? { precoAnualMes: d.anualForaBrasil }
+        : {}),
     ...('destaque' in d ? { destaque: d.destaque, selo: d.selo } : {}),
     grupos: gruposHospedagem(
       d.dominios,
@@ -782,6 +797,10 @@ const gruposVpsPadrao = (...extras: string[]): Plano['grupos'] => [
     itens: ['Recursos dedicados', 'Monitoramento contínuo', 'Escalabilidade sob demanda'],
   },
 ]
+
+/** Texto literal do cupom que o site atual exibe nos seis cards de VPS
+ *  (confirmado como vigente pela equipe em 20/10/2026). */
+const CUPOM_VPS = 'CUPOM 20% OFF: VPS20OFF'
 
 const gruposApps: Plano['grupos'][number] = {
   titulo: 'Apps em 1 clique',
@@ -864,12 +883,13 @@ export const abasPlanos: AbaPlanos[] = [
     label: 'Cloud / VPS',
     labelCurto: 'VPS',
     descricao: 'Acesso root, NVMe 4.0 em RAID10 e servidores na Ascenty em São Paulo.',
-    nota: 'VPS e bare metal ainda não têm backup automático — ele está disponível nos planos de hospedagem, revenda e Container. Plugins premium também não entram no VPS.',
+    nota: 'VPS e bare metal ainda não têm backup automático — ele está disponível nos planos de hospedagem, revenda, Container e e-mail. Plugins premium também não entram no VPS.',
     planos: [
       {
         nome: 'VPS NVMe Linux',
         persona: 'Para quem quer o servidor do próprio jeito, com root total.',
         precoMensal: 49.9,
+        cupom: CUPOM_VPS,
         grupos: gruposVpsPadrao('Ubuntu, Debian, AlmaLinux, CentOS e mais'),
         href: loja('cloud-vps/vps-nvme-linux'),
       },
@@ -877,6 +897,7 @@ export const abasPlanos: AbaPlanos[] = [
         nome: 'VPS NVMe Windows Server',
         persona: 'Para quem precisa de Windows Server com acesso root total.',
         precoMensal: 92.4,
+        cupom: CUPOM_VPS,
         grupos: [
           ...gruposVps('Sistema operacional Windows Server'),
           {
@@ -890,6 +911,7 @@ export const abasPlanos: AbaPlanos[] = [
         nome: 'VPS com cPanel',
         persona: 'Para quem quer VPS sem abrir mão do painel que já conhece.',
         precoMensal: 64.9,
+        cupom: CUPOM_VPS,
         destaque: true,
         selo: 'RECOMENDADO',
         grupos: [
@@ -905,6 +927,7 @@ export const abasPlanos: AbaPlanos[] = [
         nome: 'VPS com CloudPanel',
         persona: 'Para quem prefere um painel leve e gratuito.',
         precoMensal: 67.4,
+        cupom: CUPOM_VPS,
         grupos: gruposVpsPadrao('CloudPanel pré-instalado'),
         href: loja('cloud-vps/vps-nvme-com-cloudpanel'),
       },
@@ -912,6 +935,7 @@ export const abasPlanos: AbaPlanos[] = [
         nome: 'VPS com Cloudron',
         persona: 'Para automação: n8n, Typebot, Chatwoot e Mautic em 1 clique.',
         precoMensal: 82.4,
+        cupom: CUPOM_VPS,
         grupos: [...gruposVps('Instalador automático Cloudron'), gruposApps],
         href: loja('cloud-vps/vps-nvme-com-instalador-automatico-cloudron'),
       },
@@ -919,6 +943,7 @@ export const abasPlanos: AbaPlanos[] = [
         nome: 'VPS com EasyPanel',
         persona: 'Para automação: n8n, Typebot, Chatwoot e Mautic em 1 clique.',
         precoMensal: 82.4,
+        cupom: CUPOM_VPS,
         grupos: [...gruposVps('Instalador automático EasyPanel'), gruposApps],
         /* "eazypanel" é o slug que existe no WHMCS do site atual (sic). */
         href: loja('cloud-vps/vps-nvme-com-instalador-automatico-eazypanel'),
@@ -942,11 +967,11 @@ export const planosCabecalho = {
   titulo2a: 'e suporte que',
   titulo2b: 'fazem a diferença.',
   texto:
-    'Preço em real, sem surpresa de câmbio. A migração é feita pela nossa equipe e, na hospedagem de sites e revenda, você tem 7 dias de teste.',
+    'Preço em real, sem surpresa de câmbio. A migração é feita pela nossa equipe e, na hospedagem de sites, na revenda e na VPS, você tem 7 dias de garantia (na VPS, exceto custos de terceiros, como licenças).',
 } as const
 
 export type Garantia = {
-  icone: 'migracao' | 'uptime' | 'backup' | 'ssl' | 'suporte'
+  icone: 'migracao' | 'uptime' | 'backup' | 'ssl' | 'suporte' | 'garantia'
   linha1: string
   linha2: string
 }
@@ -965,12 +990,15 @@ export const garantiasPlanos: readonly Garantia[] = [
 
 /** A faixa depende da família da aba: VPS não tem backup automático e nenhum
  *  card de VPS promete SSL, então ela fica só com o que vale para VPS. */
-export const garantiasVps: readonly Garantia[] = garantiasPlanos.filter(
-  (g) => g.icone !== 'backup' && g.icone !== 'ssl',
-)
+export const garantiasVps: readonly Garantia[] = [
+  ...garantiasPlanos.filter((g) => g.icone !== 'backup' && g.icone !== 'ssl'),
+  /* Resposta oficial da equipe (20/10/2026): a garantia de 7 dias vale também na
+     VPS, desde que não envolva custos de terceiros, como licenças (cPanel, Windows). */
+  { icone: 'garantia', linha1: '7 dias de garantia', linha2: 'exceto custos de terceiros, como licenças' },
+]
 
 export const notaPlanos =
-  'Valores mensais vigentes. Na hospedagem de sites (servidor Brasil) o ciclo anual tem desconto e a cobrança é única. Aceitamos PIX, boleto e cartão.'
+  'Valores mensais vigentes. Na hospedagem de sites o ciclo anual tem desconto e a cobrança é única; nos servidores EUA e Europa o anual existe só nos planos que mostram o valor, e nos demais a equipe informa. Aceitamos PIX, boleto e cartão.'
 
 /* ------------------------------------------------------------------ */
 /* S11 · CTA final                                                     */
@@ -1061,7 +1089,7 @@ export const faq = [
   },
   {
     p: 'Os planos incluem backup automático?',
-    r: 'Os planos de hospedagem de sites, de revenda e de Container têm backup automático a cada 12 horas. Planos de VPS e servidores bare metal ainda não contam com backup automatizado.',
+    r: 'Os planos de hospedagem de sites, de revenda e de Container têm backup automático a cada 12 horas, e os planos de servidor de e-mail também têm backup automático. Planos de VPS e servidores bare metal ainda não contam com backup automatizado.',
   },
   {
     p: 'Quais são as formas de pagamento?',
@@ -1069,7 +1097,7 @@ export const faq = [
   },
   {
     p: 'Posso testar antes de contratar?',
-    r: 'Sim. Na hospedagem de sites e na revenda são 7 dias de teste grátis e garantia de devolução do dinheiro caso você não fique satisfeito.',
+    r: 'Sim. Na hospedagem de sites, na revenda e na VPS são 7 dias de garantia, com devolução do dinheiro caso você não fique satisfeito. Na VPS, a garantia vale desde que não envolva custos de terceiros, como licenças (cPanel, Windows). Container e servidor de e-mail não têm essa garantia.',
   },
 ] as const
 

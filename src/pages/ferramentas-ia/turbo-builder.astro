@@ -620,7 +620,7 @@ const PILAR_COR = ['bg-purple-logo', 'bg-green-deep', 'bg-purple-800']
           {
             tb.planos.itens.map((plano, i) => (
               <div class="reveal" data-delay={String(i + 1)}>
-                <PricingCard plano={plano} icone={i === 0 ? 'foguete' : 'grupo'} />
+                <PricingCard plano={plano} icone={i === 0 ? 'foguete' : 'grupo'} cicloAnual={false} />
               </div>
             ))
           }

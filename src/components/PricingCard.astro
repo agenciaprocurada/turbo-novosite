@@ -5,14 +5,17 @@
  * roxo com brilho e selo "MAIS ESCOLHIDO".
  */
 import Button from './Button.astro'
+import { links } from '../data/site'
 import type { Plano } from '../data/site'
 
 interface Props {
   plano: Plano
   icone?: 'foguete' | 'coroa' | 'camadas' | 'grupo' | 'servidor'
+  /** `false` quando a aba não tem ciclo anual (Container, VPS): o bloco anual nem é emitido. */
+  cicloAnual?: boolean
 }
 
-const { plano, icone = 'servidor' } = Astro.props
+const { plano, icone = 'servidor', cicloAnual = true } = Astro.props
 const d = plano.destaque === true
 
 const brl = (v: number) =>
@@ -99,7 +102,7 @@ const anual = inteiroAno ? preco(inteiroAno, centavosAno!) : mensal
     {
       [
         { ciclo: 'mensal', p: mensal },
-        { ciclo: 'anual', p: anual },
+        ...(cicloAnual ? [{ ciclo: 'anual', p: anual }] : []),
       ].map(({ ciclo, p }) => (
         <div data-ciclo-mensal={ciclo === 'mensal' ? '' : undefined} data-ciclo-anual={ciclo === 'anual' ? '' : undefined} hidden={ciclo === 'anual'}>
           <p class="flex items-baseline gap-1">
@@ -118,11 +121,19 @@ const anual = inteiroAno ? preco(inteiroAno, centavosAno!) : mensal
             <span class:list={['text-[14px]', d ? 'text-white/50' : 'text-ink-soft']}>/mês</span>
           </p>
           <p class:list={['mt-1.5 text-[12.5px]', d ? 'text-white/45' : 'text-ink-soft']}>
-            {ciclo === 'mensal'
-              ? 'cobrança mensal'
-              : inteiroAno
-                ? `1× de R$ ${brl(plano.precoAnualTotal ?? 0)} no ano${desconto > 0 ? ` · ${desconto}% off` : ''}`
-                : 'sem desconto anual nesta linha'}
+            {ciclo === 'mensal' ? (
+              'cobrança mensal'
+            ) : inteiroAno ? (
+              plano.precoAnualTotal ? (
+                `1× de R$ ${brl(plano.precoAnualTotal)} no ano${desconto > 0 ? ` · ${desconto}% off` : ''}`
+              ) : (
+                'faturado anualmente'
+              )
+            ) : (
+              <>
+                valor mensal · <a href={links.whatsapp} target="_blank" rel="noopener" class="underline underline-offset-2">consulte o anual com a equipe</a>
+              </>
+            )}
           </p>
         </div>
       ))
@@ -135,6 +146,13 @@ const anual = inteiroAno ? preco(inteiroAno, centavosAno!) : mensal
     fullWidth
     class="mt-5">Quero contratar</Button
   >
+  {
+    plano.cupom && (
+      <p class:list={['mt-2.5 text-center font-mono text-[11px] font-semibold tracking-[0.06em] uppercase', d ? 'text-green' : 'text-green-deep']}>
+        {plano.cupom}
+      </p>
+    )
+  }
 
   {/* Só o primeiro grupo aparece; os outros abrem no botão "Ver tudo que inclui"
       — mesmo comportamento no celular e no desktop. */}

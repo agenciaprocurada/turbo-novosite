@@ -65,7 +65,8 @@ export type Produto = {
   /** família das abas de `abasPlanos` que esta página mostra */
   abaPlanos: 'hospedagem' | 'container' | 'vps' | null
   /** Decide o que a página mostra: depoimentos de hospedagem, migração de
-   *  site e garantia de 7 dias só aparecem em `hospedagem`. */
+   *  site e garantia de 7 dias só aparecem em `hospedagem` (a VPS tem a sua
+   *  garantia, com ressalva, no fechamento, na FAQ e na faixa de planos). */
   tipo: 'hospedagem' | 'container' | 'vps' | 'email'
   /** nome do produto no JSON-LD (schema.org/Product) */
   schemaNome: string
@@ -127,7 +128,15 @@ const faqBackupContainer: Faq = {
 }
 const faqBackupVps: Faq = {
   p: 'Os planos incluem backups automáticos?',
-  r: 'Não. O backup automatizado ainda não está implantado para planos de VPS e servidores bare metal. Ele está disponível nos planos de hospedagem de sites, revenda e Container.',
+  r: 'Não. O backup automatizado ainda não está implantado para planos de VPS e servidores bare metal. Ele está disponível nos planos de hospedagem de sites, revenda, Container e servidor de e-mail.',
+}
+const faqBackupEmail: Faq = {
+  p: 'Os planos de e-mail incluem backup automático?',
+  r: 'Sim. Os planos de servidor de e-mail contam com backup automático, que mantém uma cópia segura de todos os seus e-mails importantes.',
+}
+const faqGarantiaVps: Faq = {
+  p: 'A VPS tem garantia de 7 dias?',
+  r: 'Sim. A VPS tem 7 dias de garantia, desde que a contratação não envolva custos de terceiros, como licenças (por exemplo, cPanel e Windows).',
 }
 const faqEscalar: Faq = {
   p: 'É possível escalar os recursos conforme meu site cresce?',
@@ -176,9 +185,9 @@ export const planosEmail = [
 /*  O texto de hospedagem (AntiBrute Force para WordPress, MalwareExpert,
  *  contingência que "espelha seu site") só vale para hospedagem de sites.
  *  Container usa a versão do próprio Container no site atual; e-mail usa a
- *  segurança de e-mail do site atual (AntiSpam e AntiVírus — o "Backup
- *  Automático" que o atual lista ali fica de fora até o dono confirmar se
- *  e-mail tem backup). VPS não tem o bloco. */
+ *  segurança de e-mail do site atual (AntiSpam, AntiVírus e Backup Automático
+ *  — a equipe confirmou em 20/10/2026 que o e-mail TEM backup; sem
+ *  periodicidade, porque o site atual não informa). VPS não tem o bloco. */
 
 export type Seguranca = { texto: string; itens: readonly Beneficio[] }
 
@@ -236,14 +245,21 @@ const segurancaEmail = {
       titulo: 'AntiVírus em tempo real',
       texto: 'Proteção contínua contra anexos maliciosos e ataques de phishing.',
     },
+    {
+      icone: 'backup',
+      titulo: 'Backup automático',
+      texto: 'Mantenha uma cópia segura de todos os seus e-mails importantes.',
+    },
   ],
 } as const satisfies Seguranca
 
 /* --------------------------------------------------------------------- */
 /* Fechamento (CTA final) de cada produto                                  */
 /* --------------------------------------------------------------------- */
-/*  O "7 dias de teste e garantia de devolução" só entra na hospedagem de
- *  sites: é onde o site atual a oferece. */
+/*  O "7 dias de teste e garantia de devolução" vale para hospedagem de sites e
+ *  revenda. A VPS também tem 7 dias de garantia (resposta da equipe em
+ *  20/10/2026), exceto custos de terceiros, como licenças. Container e e-mail
+ *  não têm garantia. */
 
 export type FechamentoProduto = {
   texto: string
@@ -263,7 +279,8 @@ const fechamentoContainer: FechamentoProduto = {
   secundario: { label: 'Falar com especialista', href: links.whatsapp },
 }
 const fechamentoVps: FechamentoProduto = {
-  texto: 'Escolha o plano de VPS e monte o servidor do seu jeito, com acesso root. Na dúvida, o nosso time ajuda no WhatsApp.',
+  texto:
+    'Escolha o plano de VPS e monte o servidor do seu jeito, com acesso root. Você tem 7 dias de garantia (exceto custos de terceiros, como licenças). Na dúvida, o nosso time ajuda no WhatsApp.',
   primario: { label: 'Ver planos', href: '#planos' },
   secundario: { label: 'Falar com especialista', href: links.whatsapp },
 }
@@ -706,6 +723,7 @@ export const produtos: readonly Produto[] = [
       faqBrasil,
       faqPagamento,
       faqBackupVps,
+      faqGarantiaVps,
     ],
     resumoHub:
       'Para projetos que demandam recursos dedicados e personalização. Servidores virtuais com controle total, acesso root e escalabilidade.',
@@ -780,6 +798,7 @@ export const produtos: readonly Produto[] = [
       faqMigracao,
       faqBrasil,
       faqPagamento,
+      faqBackupEmail,
     ],
     resumoHub:
       'Serviço dedicado para a comunicação da empresa. Alta entregabilidade, proteção contra spam e contas ilimitadas, sem depender do servidor do site.',
@@ -792,6 +811,7 @@ export const recursosEmail = [
   'Contas ilimitadas',
   'SMTP profissional',
   'AntiSpam Pro',
+  'Backup automático',
 ] as const
 
 /* --------------------------------------------------------------------- */
