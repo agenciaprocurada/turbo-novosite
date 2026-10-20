@@ -108,9 +108,13 @@ const faqBackupSim: Faq = {
   p: 'Os planos incluem backups automáticos?',
   r: 'Todos os nossos planos de hospedagem e revenda contam com backups automáticos realizados a cada 12 horas, assegurando a integridade e segurança dos seus dados.',
 }
-const faqBackupNao: Faq = {
+const faqBackupContainer: Faq = {
   p: 'Os planos incluem backups automáticos?',
-  r: 'Ainda não. O backup automatizado não está implantado para planos de VPS, Container e servidores bare metal — só para hospedagem de sites e revenda.',
+  r: 'Sim. Os planos de Container contam com backups automáticos realizados a cada 12 horas, assegurando a integridade e segurança dos seus dados.',
+}
+const faqBackupVps: Faq = {
+  p: 'Os planos incluem backups automáticos?',
+  r: 'Não. O backup automatizado ainda não está implantado para planos de VPS e servidores bare metal. Ele está disponível nos planos de hospedagem de sites, revenda e Container.',
 }
 const faqEscalar: Faq = {
   p: 'É possível escalar os recursos conforme meu site cresce?',
@@ -444,7 +448,7 @@ export const produtos: readonly Produto[] = [
       faqMigracao,
       faqBrasil,
       faqPagamento,
-      faqBackupNao,
+      faqBackupContainer,
       faqEscalar,
     ],
     resumoHub:
@@ -534,7 +538,7 @@ export const produtos: readonly Produto[] = [
       faqMigracao,
       faqBrasil,
       faqPagamento,
-      faqBackupNao,
+      faqBackupVps,
     ],
     resumoHub:
       'Para projetos que demandam recursos dedicados e personalização. Servidores virtuais com controle total, acesso root e escalabilidade.',
@@ -603,7 +607,6 @@ export const produtos: readonly Produto[] = [
       faqMigracao,
       faqBrasil,
       faqPagamento,
-      faqBackupNao,
     ],
     resumoHub:
       'Serviço dedicado para a comunicação da empresa. Alta entregabilidade, proteção contra spam e contas ilimitadas, sem depender do servidor do site.',

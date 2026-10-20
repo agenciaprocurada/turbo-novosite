@@ -177,7 +177,7 @@ export const seloReclameAqui = {
 export const stats = [
   { icone: 'uptime', valor: '99,982%', label: 'Uptime do datacenter' },
   { icone: 'latencia', valor: '5 ms', label: 'Latência média' },
-  { icone: 'backup', valor: '12 / 12h', label: 'Backups diários' },
+  { icone: 'backup', valor: '12 / 12h', label: 'Backup automático' },
   { icone: 'estrela', valor: '5,0', sufixo: '★', label: 'Nota no Google' },
 ] as const
 
@@ -551,6 +551,9 @@ export type Plano = {
 
 export type AbaPlanos = {
   id: string
+  /** Produto a que a aba pertence. Decide a faixa de garantias e quais abas
+   *  cada página de produto mostra (hospedagem reúne Brasil, EUA e Europa). */
+  familia: 'hospedagem' | 'container' | 'vps'
   label: string
   /** rótulo curto para o controle segmentado do celular */
   labelCurto?: string
@@ -591,6 +594,7 @@ const gruposHospedagem = (
 export const abasPlanos: AbaPlanos[] = [
   {
     id: 'hospedagem',
+    familia: 'hospedagem',
     label: 'Hospedagem de sites',
     labelCurto: 'Sites',
     descricao: 'WordPress, WooCommerce, blogs e portais. Backup e plugins premium inclusos.',
@@ -645,6 +649,7 @@ export const abasPlanos: AbaPlanos[] = [
   },
   {
     id: 'container',
+    familia: 'container',
     label: 'Container',
     descricao: 'Isolamento total e recursos exclusivos para projetos que não podem oscilar.',
     planos: [
@@ -782,9 +787,10 @@ export const abasPlanos: AbaPlanos[] = [
   },
   {
     id: 'vps',
+    familia: 'vps',
     label: 'Cloud / VPS',
     descricao: 'Acesso root, NVMe 4.0 em RAID10 e servidores na Ascenty em São Paulo.',
-    nota: 'VPS e bare metal ainda não têm backup automático — ele é exclusivo dos planos de hospedagem e revenda. Plugins premium também não entram no VPS.',
+    nota: 'VPS e bare metal ainda não têm backup automático — ele está disponível nos planos de hospedagem, revenda e Container. Plugins premium também não entram no VPS.',
     planos: [
       {
         nome: 'VPS NVMe Linux',
@@ -886,15 +892,29 @@ export const planosCabecalho = {
     'Preço em real, sem surpresa de câmbio. A migração é feita pela nossa equipe e você tem 7 dias de teste.',
 } as const
 
+export type Garantia = {
+  icone: 'migracao' | 'uptime' | 'backup' | 'ssl' | 'suporte'
+  linha1: string
+  linha2: string
+}
+
 /** Faixa de garantias abaixo dos cards. Só o que existe: o uptime é o do
- *  datacenter TIER III e o suporte segue a janela real de atendimento. */
-export const garantiasPlanos = [
+ *  datacenter TIER III e o suporte segue a janela real de atendimento.
+ *  Esta é a faixa de hospedagem e Container (os dois têm backup de 12 em 12h
+ *  e SSL grátis em todos os planos). */
+export const garantiasPlanos: readonly Garantia[] = [
   { icone: 'migracao', linha1: 'Migração grátis', linha2: 'feita pela nossa equipe' },
   { icone: 'uptime', linha1: `${provas.uptimeTier3} de uptime`, linha2: 'no datacenter TIER III' },
   { icone: 'backup', linha1: 'Backups automáticos', linha2: 'a cada 12 horas' },
   { icone: 'ssl', linha1: 'SSL grátis', linha2: 'em todos os planos' },
   { icone: 'suporte', linha1: 'Suporte humano', linha2: 'WhatsApp e ticket' },
-] as const
+]
+
+/** A faixa depende da família da aba: VPS não tem backup automático e nenhum
+ *  card de VPS promete SSL, então ela fica só com o que vale para VPS. */
+export const garantiasVps: readonly Garantia[] = garantiasPlanos.filter(
+  (g) => g.icone !== 'backup' && g.icone !== 'ssl',
+)
 
 export const notaPlanos =
   'Valores mensais vigentes em turbocloud.com.br. No ciclo anual há 8% de desconto e a cobrança é única. Aceitamos PIX, boleto e cartão.'
@@ -986,7 +1006,7 @@ export const faq = [
   },
   {
     p: 'Os planos incluem backup automático?',
-    r: 'Os planos de hospedagem de sites e de revenda têm backup automático a cada 12 horas. Planos de VPS e servidores bare metal ainda não contam com backup automatizado.',
+    r: 'Os planos de hospedagem de sites, de revenda e de Container têm backup automático a cada 12 horas. Planos de VPS e servidores bare metal ainda não contam com backup automatizado.',
   },
   {
     p: 'Quais são as formas de pagamento?',
