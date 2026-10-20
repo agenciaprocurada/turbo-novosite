@@ -96,8 +96,7 @@ export const links = {
 /** Carrinho do WHMCS. Cada plano leva direto para o seu produto — antes todos
  *  apontavam para a página /planos/, o que dava uma volta a mais entre "quero
  *  esse" e o checkout. Slugs conferidos em app.turbocloud.com.br.
- *  O card "VPS com Cloudron ou EasyPanel" cobre dois produtos, então vai para
- *  a categoria em vez de escolher um dos dois por conta. */
+ *  Cloudron e EasyPanel são dois produtos, cada um com o seu slug. */
 export const loja = (caminho: string) => `https://app.turbocloud.com.br/store/${caminho}`
 
 /** Janela real de atendimento. O site atual se contradiz (diz "24/7" em banner e
@@ -591,61 +590,239 @@ const gruposHospedagem = (
   },
 ]
 
+/* Hospedagem de sites: os mesmos nove planos em três locais. Preços, specs e
+   recursos são iguais; o que muda é o servidor (e o slug do checkout, que o
+   WHMCS do site atual nomeia de forma diferente em cada local — copiados
+   literalmente, inclusive o prefixo `container-` em alguns). */
+type LocalHospedagem = 'brasil' | 'eua' | 'europa'
+
+const planosHospedagemBase = [
+  {
+    chave: 'one',
+    nome: 'One',
+    persona: 'Para quem está colocando o primeiro site no ar.',
+    mensal: 35.9,
+    anualMes: 32.9,
+    anualTotal: 394.9,
+    dominios: '1 domínio Blindagem Turbo',
+    disco: '15GB SSD NVMe',
+    cpu: '2 vCPU e 5GB DDR4',
+    cpuForaBrasil: '2 vCPU e 5GB DDR4 por domínio',
+  },
+  {
+    chave: 'three',
+    nome: 'Three',
+    persona: 'Para agência e freela que toca mais de um cliente no mesmo painel.',
+    mensal: 49.9,
+    anualMes: 45.74,
+    anualTotal: 548.88,
+    destaque: true,
+    selo: 'MAIS ESCOLHIDO',
+    dominios: '3 domínios em 1 cPanel',
+    disco: '50GB SSD NVMe',
+    cpu: '2 vCPU e 5GB DDR4',
+  },
+  {
+    chave: 'duo',
+    nome: 'Duo',
+    persona: 'Para quem investe em tráfego pago e precisa de CPU reservada em cada domínio.',
+    mensal: 64.9,
+    anualMes: 54.0,
+    anualTotal: 648.0,
+    dominios: '2 domínios Blindagem Turbo',
+    disco: '20GB SSD NVMe',
+    cpu: '2 vCPU e 5GB DDR4 por domínio',
+  },
+  {
+    chave: 'elite-5',
+    nome: 'Revenda Elite 5',
+    persona: 'Para quem hospeda os sites dos próprios clientes e quer margem.',
+    mensal: 100.0,
+    anualMes: 91.67,
+    anualTotal: 1100.04,
+    dominios: '5 domínios Blindagem Turbo',
+    disco: '50GB SSD NVMe',
+    cpu: '2 vCPU e 5GB DDR4 por domínio',
+  },
+  {
+    chave: 'elite-10',
+    nome: 'Revenda Elite 10',
+    persona: 'Revenda com 10 domínios, cada um com a sua reserva de CPU e memória.',
+    mensal: 150.0,
+    anualMes: 137.5,
+    anualTotal: 1650.0,
+    dominios: '10 domínios Blindagem Turbo',
+    disco: '75GB SSD NVMe',
+    cpu: '2 vCPU e 5GB DDR4 por domínio',
+  },
+  {
+    chave: 'elite-15',
+    nome: 'Revenda Elite 15',
+    persona: 'Revenda com 15 domínios, cada um com a sua reserva de CPU e memória.',
+    mensal: 190.0,
+    anualMes: 174.0,
+    anualTotal: 2088.0,
+    dominios: '15 domínios Blindagem Turbo',
+    disco: '100GB SSD NVMe',
+    cpu: '2 vCPU e 5GB DDR4 por domínio',
+  },
+  {
+    chave: 'elite-20',
+    nome: 'Revenda Elite 20',
+    persona: 'Revenda com 20 domínios, cada um com a sua reserva de CPU e memória.',
+    mensal: 280.0,
+    anualMes: 256.0,
+    anualTotal: 3072.0,
+    dominios: '20 domínios Blindagem Turbo',
+    disco: '150GB SSD NVMe',
+    cpu: '2 vCPU e 5GB DDR4 por domínio',
+  },
+  {
+    chave: 'elite-30',
+    nome: 'Revenda Elite 30',
+    persona: 'Revenda com 30 domínios, cada um com a sua reserva de CPU e memória.',
+    mensal: 420.0,
+    anualMes: 378.0,
+    anualTotal: 4536.0,
+    dominios: '30 domínios Blindagem Turbo',
+    /* O site atual diz 150GB na tabela mensal e 225GB na anual. Vale o menor. */
+    disco: '150GB SSD NVMe',
+    cpu: '2 vCPU e 5GB DDR4 por domínio',
+  },
+  {
+    chave: 'elite-50',
+    nome: 'Revenda Elite 50',
+    persona: 'Revenda com 50 domínios, cada um com a sua reserva de CPU e memória.',
+    mensal: 550.0,
+    anualMes: 495.0,
+    anualTotal: 5940.0,
+    dominios: '50 domínios Blindagem Turbo',
+    disco: '250GB SSD NVMe',
+    cpu: '2 vCPU e 5GB DDR4 por domínio',
+  },
+] as const
+
+const slugsHospedagem: Record<LocalHospedagem, Record<string, string>> = {
+  brasil: {
+    one: 'alta-performance/one',
+    three: 'alta-performance/three',
+    duo: 'alta-performance/duo',
+    'elite-5': 'alta-performance/revenda-elite-5',
+    'elite-10': 'alta-performance/revenda-elite-10',
+    'elite-15': 'alta-performance/revenda-elite-15',
+    'elite-20': 'alta-performance/revenda-elite-20',
+    'elite-30': 'alta-performance/revenda-elite-30',
+    'elite-50': 'alta-performance/revenda-elite-50',
+  },
+  eua: {
+    one: 'servidores-nos-eua/one-eua',
+    three: 'servidores-nos-eua/three-eua',
+    duo: 'servidores-nos-eua/duo-eua',
+    'elite-5': 'servidores-nos-eua/revenda-elite-5-eua',
+    'elite-10': 'servidores-nos-eua/revenda-elite-10-eua',
+    'elite-15': 'servidores-nos-eua/revenda-elite-15-eua',
+    'elite-20': 'servidores-nos-eua/revenda-elite-20-eua',
+    'elite-30': 'servidores-nos-eua/container-revenda-elite-30-eua',
+    'elite-50': 'servidores-nos-eua/container-revenda-elite-50-eua',
+  },
+  europa: {
+    one: 'servidores-na-europa/one-europa',
+    three: 'servidores-na-europa/three-europa',
+    duo: 'servidores-na-europa/duo-europa',
+    'elite-5': 'servidores-na-europa/container-revenda-elite-5-europa',
+    'elite-10': 'servidores-na-europa/container-revenda-elite-10-europa',
+    'elite-15': 'servidores-na-europa/container-revenda-elite-15-europa',
+    'elite-20': 'servidores-na-europa/container-revenda-elite-20-europa',
+    'elite-30': 'servidores-na-europa/container-revenda-elite-30-europa',
+    'elite-50': 'servidores-na-europa/container-revenda-elite-50-europa',
+  },
+}
+
+/** Brasil leva o preço anual; EUA e Europa são só mensais aqui (o site atual
+ *  tem anual para eles, mas incompleto — falta Elite 30 e 50 — e com centavos
+ *  divergentes; o ciclo anual dessas contas se escolhe no carrinho). */
+const planosHospedagem = (local: LocalHospedagem): Plano[] =>
+  planosHospedagemBase.map((d) => ({
+    nome: d.nome,
+    persona: d.persona,
+    precoMensal: d.mensal,
+    ...(local === 'brasil' ? { precoAnualMes: d.anualMes, precoAnualTotal: d.anualTotal } : {}),
+    ...('destaque' in d ? { destaque: d.destaque, selo: d.selo } : {}),
+    grupos: gruposHospedagem(
+      d.dominios,
+      d.disco,
+      local !== 'brasil' && 'cpuForaBrasil' in d ? d.cpuForaBrasil : d.cpu,
+    ),
+    href: loja(slugsHospedagem[local][d.chave]!),
+  }))
+
+const gruposContainer = (cpuRam: string, dominios: string, disco: string): Plano['grupos'] => [
+  {
+    titulo: 'Infraestrutura',
+    itens: [cpuRam, dominios, disco, 'Tráfego ilimitado', 'Rede de 1GB Ethernet'],
+  },
+  {
+    titulo: 'Segurança e performance',
+    itens: [
+      'Ambiente isolado',
+      'Acelerador LiteSpeed Web',
+      'Backup de 12 em 12 horas',
+      'Certificado SSL grátis',
+      'AntiSpam Pro',
+    ],
+  },
+  {
+    titulo: 'Ferramentas Turbo',
+    itens: ['E-mail profissional', 'Instalador WordPress 1Click', 'Plugins premium originais grátis'],
+  },
+]
+
+/** VPS: os cards não informam vCPU/RAM/disco porque o site atual também não
+ *  informa — só o que a página atual afirma. */
+const gruposVps = (...extras: string[]): Plano['grupos'] => [
+  {
+    titulo: 'Infraestrutura',
+    itens: ['Acesso ROOT completo', ...extras, 'NVMe 4.0 em RAID10', 'Servidores na Ascenty em São Paulo'],
+  },
+]
+
+const gruposVpsPadrao = (...extras: string[]): Plano['grupos'] => [
+  ...gruposVps(...extras),
+  {
+    titulo: 'Segurança e performance',
+    itens: ['Recursos dedicados', 'Monitoramento contínuo', 'Escalabilidade sob demanda'],
+  },
+]
+
+const gruposApps: Plano['grupos'][number] = {
+  titulo: 'Apps em 1 clique',
+  itens: ['n8n', 'Typebot', 'Chatwoot', 'Mautic', '+50 aplicações'],
+}
+
 export const abasPlanos: AbaPlanos[] = [
   {
     id: 'hospedagem',
     familia: 'hospedagem',
-    label: 'Hospedagem de sites',
-    labelCurto: 'Sites',
+    label: 'Hospedagem Brasil',
+    labelCurto: 'Brasil',
     descricao: 'WordPress, WooCommerce, blogs e portais. Backup e plugins premium inclusos.',
-    planos: [
-      {
-        nome: 'One',
-        persona: 'Para quem está colocando o primeiro site no ar.',
-        precoMensal: 35.9,
-        precoAnualMes: 32.9,
-        precoAnualTotal: 394.9,
-        grupos: gruposHospedagem('1 domínio Blindagem Turbo', '15GB SSD NVMe', '2 vCPU e 5GB DDR4'),
-        href: loja('alta-performance/one'),
-      },
-      {
-        nome: 'Three',
-        persona: 'Para agência e freela que toca mais de um cliente no mesmo painel.',
-        precoMensal: 49.9,
-        precoAnualMes: 45.74,
-        precoAnualTotal: 548.88,
-        destaque: true,
-        selo: 'MAIS ESCOLHIDO',
-        grupos: gruposHospedagem('3 domínios em 1 cPanel', '50GB SSD NVMe', '2 vCPU e 5GB DDR4'),
-        href: loja('alta-performance/three'),
-      },
-      {
-        nome: 'Duo',
-        persona: 'Para quem investe em tráfego pago e precisa de CPU reservada em cada domínio.',
-        precoMensal: 64.9,
-        precoAnualMes: 54.0,
-        precoAnualTotal: 648.0,
-        grupos: gruposHospedagem(
-          '2 domínios Blindagem Turbo',
-          '20GB SSD NVMe',
-          '2 vCPU e 5GB DDR4 por domínio',
-        ),
-        href: loja('alta-performance/duo'),
-      },
-      {
-        nome: 'Revenda Elite 5',
-        persona: 'Para quem hospeda os sites dos próprios clientes e quer margem.',
-        precoMensal: 100.0,
-        precoAnualMes: 91.67,
-        precoAnualTotal: 1100.04,
-        grupos: gruposHospedagem(
-          '5 domínios Blindagem Turbo',
-          '50GB SSD NVMe',
-          '2 vCPU e 5GB DDR4 por domínio',
-        ),
-        href: loja('alta-performance/revenda-elite-5'),
-      },
-    ],
+    planos: planosHospedagem('brasil'),
+  },
+  {
+    id: 'hospedagem-eua',
+    familia: 'hospedagem',
+    label: 'Hospedagem EUA',
+    labelCurto: 'EUA',
+    descricao: 'Os mesmos planos de hospedagem, com o servidor nos Estados Unidos.',
+    planos: planosHospedagem('eua'),
+  },
+  {
+    id: 'hospedagem-europa',
+    familia: 'hospedagem',
+    label: 'Hospedagem Europa',
+    labelCurto: 'Europa',
+    descricao: 'Os mesmos planos de hospedagem, com o servidor na Europa.',
+    planos: planosHospedagem('europa'),
   },
   {
     id: 'container',
@@ -657,64 +834,14 @@ export const abasPlanos: AbaPlanos[] = [
         nome: 'Container 4v50',
         persona: 'Para o projeto que passou do limite da hospedagem compartilhada.',
         precoMensal: 295.0,
-        grupos: [
-          {
-            titulo: 'Infraestrutura',
-            itens: [
-              '4 vCPU e 6GB RAM DDR4',
-              '10 domínios Blindagem Turbo',
-              '50GB SSD NVMe Pro',
-              'Tráfego ilimitado',
-              'Rede de 1GB Ethernet',
-            ],
-          },
-          {
-            titulo: 'Segurança e performance',
-            itens: [
-              'Ambiente isolado',
-              'Acelerador LiteSpeed Web',
-              'Backup de 12 em 12 horas',
-              'Certificado SSL grátis',
-              'AntiSpam Pro',
-            ],
-          },
-          {
-            titulo: 'Ferramentas Turbo',
-            itens: ['E-mail profissional', 'Instalador WordPress 1Click', 'Plugins premium originais grátis'],
-          },
-        ],
+        grupos: gruposContainer('4 vCPU e 6GB RAM DDR4', '10 domínios Blindagem Turbo', '50GB SSD NVMe Pro'),
         href: loja('container-especial/special-container-4v50-295'),
       },
       {
         nome: 'Container 4v100',
         persona: 'Para quem precisa do mesmo poder com o dobro de disco.',
         precoMensal: 395.0,
-        grupos: [
-          {
-            titulo: 'Infraestrutura',
-            itens: [
-              '4 vCPU e 6GB RAM DDR4',
-              '15 domínios Blindagem Turbo',
-              '100GB SSD NVMe Pro',
-              'Tráfego ilimitado',
-              'Rede de 1GB Ethernet',
-            ],
-          },
-          {
-            titulo: 'Segurança e performance',
-            itens: [
-              'Ambiente isolado',
-              'Acelerador LiteSpeed Web',
-              'Backup de 12 em 12 horas',
-              'Certificado SSL grátis',
-              'AntiSpam Pro',
-            ],
-          },
-          {
-            titulo: 'Ferramentas Turbo',
-            itens: ['E-mail profissional', 'Instalador WordPress 1Click', 'Plugins premium originais grátis'],
-          },
-        ],
+        grupos: gruposContainer('4 vCPU e 6GB RAM DDR4', '15 domínios Blindagem Turbo', '100GB SSD NVMe Pro'),
         href: loja('container-especial/special-container-4v100-395'),
       },
       {
@@ -723,65 +850,22 @@ export const abasPlanos: AbaPlanos[] = [
         precoMensal: 545.0,
         destaque: true,
         selo: 'MAIS ESCOLHIDO',
-        grupos: [
-          {
-            titulo: 'Infraestrutura',
-            itens: [
-              '8 vCPU e 12GB RAM DDR4',
-              '25 domínios Blindagem Turbo',
-              '100GB SSD NVMe Pro',
-              'Tráfego ilimitado',
-              'Rede de 1GB Ethernet',
-            ],
-          },
-          {
-            titulo: 'Segurança e performance',
-            itens: [
-              'Ambiente isolado',
-              'Acelerador LiteSpeed Web',
-              'Backup de 12 em 12 horas',
-              'Certificado SSL grátis',
-              'AntiSpam Pro',
-            ],
-          },
-          {
-            titulo: 'Ferramentas Turbo',
-            itens: ['E-mail profissional', 'Instalador WordPress 1Click', 'Plugins premium originais grátis'],
-          },
-        ],
+        grupos: gruposContainer('8 vCPU e 12GB RAM DDR4', '25 domínios Blindagem Turbo', '100GB SSD NVMe Pro'),
         href: loja('container-especial/special-container-8v100-545'),
       },
       {
         nome: 'Container 16v100',
         persona: 'Para operação com dezenas de sites e uso pesado de CPU.',
         precoMensal: 1200.0,
-        grupos: [
-          {
-            titulo: 'Infraestrutura',
-            itens: [
-              '16 vCPU e 16GB RAM DDR4',
-              '50 domínios Blindagem Turbo',
-              '100GB SSD NVMe',
-              'Tráfego ilimitado',
-              'Rede de 1GB Ethernet',
-            ],
-          },
-          {
-            titulo: 'Segurança e performance',
-            itens: [
-              'Ambiente isolado',
-              'Acelerador LiteSpeed Web',
-              'Backup de 12 em 12 horas',
-              'Certificado SSL grátis',
-              'AntiSpam Pro',
-            ],
-          },
-          {
-            titulo: 'Ferramentas Turbo',
-            itens: ['E-mail profissional', 'Instalador WordPress 1Click', 'Plugins premium originais grátis'],
-          },
-        ],
+        grupos: gruposContainer('16 vCPU e 16GB RAM DDR4', '50 domínios Blindagem Turbo', '100GB SSD NVMe'),
         href: loja('container-especial/container-especial-16v100'),
+      },
+      {
+        nome: 'Container 24v100',
+        persona: 'Para o maior porte: 100 domínios e 24 vCPU dedicados ao seu projeto.',
+        precoMensal: 1950.0,
+        grupos: gruposContainer('24 vCPU e 24GB RAM DDR4', '100 domínios Blindagem Turbo', '100GB SSD NVMe'),
+        href: loja('container-especial/24v100'),
       },
     ],
   },
@@ -789,6 +873,7 @@ export const abasPlanos: AbaPlanos[] = [
     id: 'vps',
     familia: 'vps',
     label: 'Cloud / VPS',
+    labelCurto: 'VPS',
     descricao: 'Acesso root, NVMe 4.0 em RAID10 e servidores na Ascenty em São Paulo.',
     nota: 'VPS e bare metal ainda não têm backup automático — ele está disponível nos planos de hospedagem, revenda e Container. Plugins premium também não entram no VPS.',
     planos: [
@@ -796,22 +881,21 @@ export const abasPlanos: AbaPlanos[] = [
         nome: 'VPS NVMe Linux',
         persona: 'Para quem quer o servidor do próprio jeito, com root total.',
         precoMensal: 49.9,
+        grupos: gruposVpsPadrao('Ubuntu, Debian, AlmaLinux, CentOS e mais'),
+        href: loja('cloud-vps/vps-nvme-linux'),
+      },
+      {
+        nome: 'VPS NVMe Windows Server',
+        persona: 'Para quem precisa de Windows Server com acesso root total.',
+        precoMensal: 92.4,
         grupos: [
+          ...gruposVps('Sistema operacional Windows Server'),
           {
-            titulo: 'Infraestrutura',
-            itens: [
-              'Acesso ROOT completo',
-              'Ubuntu, Debian, AlmaLinux, CentOS e mais',
-              'NVMe 4.0 em RAID10',
-              'Servidores na Ascenty em São Paulo',
-            ],
-          },
-          {
-            titulo: 'Segurança e performance',
-            itens: ['Recursos dedicados', 'Monitoramento 24h', 'Escalabilidade sob demanda'],
+            titulo: 'Licença',
+            itens: ['Licença do Windows não inclusa', 'Instalado por padrão em versão TRIAL'],
           },
         ],
-        href: loja('cloud-vps/vps-nvme-linux'),
+        href: loja('cloud-vps/vps-nvme-windows-server'),
       },
       {
         nome: 'VPS com cPanel',
@@ -820,15 +904,7 @@ export const abasPlanos: AbaPlanos[] = [
         destaque: true,
         selo: 'RECOMENDADO',
         grupos: [
-          {
-            titulo: 'Infraestrutura',
-            itens: [
-              'Acesso ROOT completo',
-              'cPanel TurboCloud pré-configurado',
-              'NVMe 4.0 em RAID10',
-              'Servidores na Ascenty em São Paulo',
-            ],
-          },
+          ...gruposVps('cPanel TurboCloud pré-configurado'),
           {
             titulo: 'Já vem instalado',
             itens: ['Firewall', 'NGINX', 'MariaDB', 'WordPress Toolkit'],
@@ -840,47 +916,35 @@ export const abasPlanos: AbaPlanos[] = [
         nome: 'VPS com CloudPanel',
         persona: 'Para quem prefere um painel leve e gratuito.',
         precoMensal: 67.4,
-        grupos: [
-          {
-            titulo: 'Infraestrutura',
-            itens: [
-              'Acesso ROOT completo',
-              'CloudPanel pré-instalado',
-              'NVMe 4.0 em RAID10',
-              'Servidores na Ascenty em São Paulo',
-            ],
-          },
-          {
-            titulo: 'Segurança e performance',
-            itens: ['Recursos dedicados', 'Monitoramento 24h', 'Escalabilidade sob demanda'],
-          },
-        ],
+        grupos: gruposVpsPadrao('CloudPanel pré-instalado'),
         href: loja('cloud-vps/vps-nvme-com-cloudpanel'),
       },
       {
-        nome: 'VPS com Cloudron ou EasyPanel',
+        nome: 'VPS com Cloudron',
         persona: 'Para automação: n8n, Typebot, Chatwoot e Mautic em 1 clique.',
         precoMensal: 82.4,
-        grupos: [
-          {
-            titulo: 'Infraestrutura',
-            itens: [
-              'Acesso ROOT completo',
-              'Instalador automático Cloudron ou EasyPanel',
-              'NVMe 4.0 em RAID10',
-              'Servidores na Ascenty em São Paulo',
-            ],
-          },
-          {
-            titulo: 'Apps em 1 clique',
-            itens: ['n8n', 'Typebot', 'Chatwoot', 'Mautic', '+50 aplicações'],
-          },
-        ],
-        href: loja('cloud-vps'),
+        grupos: [...gruposVps('Instalador automático Cloudron'), gruposApps],
+        href: loja('cloud-vps/vps-nvme-com-instalador-automatico-cloudron'),
+      },
+      {
+        nome: 'VPS com EasyPanel',
+        persona: 'Para automação: n8n, Typebot, Chatwoot e Mautic em 1 clique.',
+        precoMensal: 82.4,
+        grupos: [...gruposVps('Instalador automático EasyPanel'), gruposApps],
+        /* "eazypanel" é o slug que existe no WHMCS do site atual (sic). */
+        href: loja('cloud-vps/vps-nvme-com-instalador-automatico-eazypanel'),
       },
     ],
   },
 ]
+
+/** Menor preço mensal de uma família de planos — o "a partir de" das páginas. */
+export const menorPreco = (familia: AbaPlanos['familia']) =>
+  Math.min(
+    ...abasPlanos
+      .filter((aba) => aba.familia === familia)
+      .flatMap((aba) => aba.planos.map((p) => p.precoMensal)),
+  )
 
 /** Cabeçalho da seção de planos (padrão do print). */
 export const planosCabecalho = {
@@ -889,7 +953,7 @@ export const planosCabecalho = {
   titulo2a: 'e suporte que',
   titulo2b: 'fazem a diferença.',
   texto:
-    'Preço em real, sem surpresa de câmbio. A migração é feita pela nossa equipe e você tem 7 dias de teste.',
+    'Preço em real, sem surpresa de câmbio. A migração é feita pela nossa equipe e, na hospedagem de sites e revenda, você tem 7 dias de teste.',
 } as const
 
 export type Garantia = {
@@ -917,7 +981,7 @@ export const garantiasVps: readonly Garantia[] = garantiasPlanos.filter(
 )
 
 export const notaPlanos =
-  'Valores mensais vigentes em turbocloud.com.br. No ciclo anual há 8% de desconto e a cobrança é única. Aceitamos PIX, boleto e cartão.'
+  'Valores mensais vigentes. Na hospedagem de sites (servidor Brasil) o ciclo anual tem desconto e a cobrança é única. Aceitamos PIX, boleto e cartão.'
 
 /* ------------------------------------------------------------------ */
 /* S11 · CTA final                                                     */

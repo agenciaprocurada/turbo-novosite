@@ -42,6 +42,17 @@ const ICONES_GARANTIAS = {
 const garantiasDaAba = (aba: AbaPlanos) => (aba.familia === 'vps' ? garantiasVps : garantiasPlanos)
 
 const comAbas = abas.length > 1
+
+/** Só há ciclo anual onde TODOS os planos da aba têm preço anual. Container,
+ *  VPS e as abas de EUA/Europa não têm — o seletor some nelas. */
+const temAnual = (aba: AbaPlanos) =>
+  aba.planos.every((p) => p.precoAnualMes != null && p.precoAnualTotal != null)
+const algumAnual = abas.some(temAnual)
+
+/** 4 cards cabem em 4 colunas; 5, 6 e 9 (revendas) ficam em 3, sem órfão de linha. */
+const colunas = (aba: AbaPlanos) => (aba.planos.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3')
+const iconePlano = (aba: AbaPlanos, j: number) =>
+  aba.familia === 'hospedagem' ? (ICONES_PLANOS[j] ?? 'grupo') : 'servidor'
 const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font-bold">$2</strong>') : ''
 ---
 
@@ -71,7 +82,8 @@ const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font
       </p>
     </div>
 
-    <div class="reveal mt-8 flex flex-col gap-3 sm:flex-row sm:items-center" data-planos>
+    {(comAbas || algumAnual) && (
+    <div class="reveal mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center" data-planos>
       {
         comAbas && (
           <div
@@ -96,10 +108,15 @@ const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font
         )
       }
 
+      {/* Seletor de ciclo: só existe onde há preço anual de verdade. O script
+          o esconde ao trocar para uma aba sem anual (Container, VPS, EUA, Europa). */}
+      {algumAnual && (
       <div
         class="mx-auto flex gap-1 self-center rounded-btn border border-line bg-surface p-1 sm:mx-0 sm:ml-auto sm:self-auto"
         role="group"
         aria-label="Ciclo de cobrança"
+        data-ciclo-grupo
+        hidden={!temAnual(abas[0]!)}
       >
         <button
           type="button"
@@ -117,15 +134,17 @@ const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font
           Anual
           <span
             class="rounded-full bg-green/15 px-2 py-0.5 text-[10.5px] text-green-deep group-aria-pressed:bg-green group-aria-pressed:text-purple-950"
-            >8% off</span
+            >economize</span
           >
         </button>
       </div>
+      )}
     </div>
+    )}
 
     {
       abas.map((aba, i) => (
-        <div id={`planos-${aba.id}`} data-painel-plano={aba.id} hidden={i !== 0}>
+        <div id={`planos-${aba.id}`} data-painel-plano={aba.id} data-tem-anual={temAnual(aba) ? '' : undefined} hidden={i !== 0}>
           {aba.nota && (
             <p class="mt-6 flex items-start gap-2 rounded-[14px] border border-line bg-surface px-4 py-3 text-[13.5px] leading-snug text-ink-soft">
               <span aria-hidden="true" class="text-green-deep">
@@ -137,7 +156,7 @@ const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font
           {/* pt/pb generosos: o overflow-x do carrossel também corta na vertical,
               e o card em destaque tem brilho e sombra que passam da borda.
               No desktop não há scroll, então o overflow volta a ser visível. */}
-          <div class="reveal plans-grid mt-6 -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pt-5 pb-10 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0 lg:pt-4 lg:pb-4">
+          <div class:list={['reveal plans-grid mt-6 -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pt-5 pb-10 lg:mx-0 lg:grid lg:overflow-visible lg:px-0 lg:pt-4 lg:pb-4', colunas(aba)]}>
             {aba.planos.map((plano, j) => (
               <div
                 class:list={[
@@ -145,7 +164,7 @@ const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font
                   plano.destaque === true && 'plan-glow',
                 ]}
               >
-                <PricingCard plano={plano} icone={aba.id === 'hospedagem' ? ICONES_PLANOS[j] : 'servidor'} />
+                <PricingCard plano={plano} icone={iconePlano(aba, j)} />
               </div>
             ))}
           </div>
@@ -232,10 +251,24 @@ const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font
     const abas = [...barra.querySelectorAll<HTMLButtonElement>('[data-aba-plano]')]
     const paineis = [...document.querySelectorAll<HTMLElement>('[data-painel-plano]')]
 
+    const grupoCiclo = barra.querySelector<HTMLElement>('[data-ciclo-grupo]')
+    const botoesCiclo = [...barra.querySelectorAll<HTMLButtonElement>('[data-ciclo]')]
+
+    const definirCiclo = (anual: boolean) => {
+      botoesCiclo.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.ciclo === 'anual') === anual)))
+      document.querySelectorAll<HTMLElement>('[data-ciclo-mensal]').forEach((el) => (el.hidden = anual))
+      document.querySelectorAll<HTMLElement>('[data-ciclo-anual]').forEach((el) => (el.hidden = !anual))
+    }
+
     abas.forEach((aba) => {
       aba.addEventListener('click', () => {
         const id = aba.dataset.abaPlano
         abas.forEach((a) => a.setAttribute('aria-selected', String(a === aba)))
+        // Aba sem preço anual: some o seletor e volta ao mensal
+        const painelAtual = paineis.find((p) => p.dataset.painelPlano === id)
+        const anualDisponivel = painelAtual?.hasAttribute('data-tem-anual') ?? false
+        if (grupoCiclo) grupoCiclo.hidden = !anualDisponivel
+        if (!anualDisponivel) definirCiclo(false)
         paineis.forEach((p) => {
           p.hidden = p.dataset.painelPlano !== id
           if (!p.hidden) {
@@ -250,15 +283,8 @@ const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font
       })
     })
 
-    const botoesCiclo = [...barra.querySelectorAll<HTMLButtonElement>('[data-ciclo]')]
-
     botoesCiclo.forEach((botao) => {
-      botao.addEventListener('click', () => {
-        const anual = botao.dataset.ciclo === 'anual'
-        botoesCiclo.forEach((b) => b.setAttribute('aria-pressed', String(b === botao)))
-        document.querySelectorAll<HTMLElement>('[data-ciclo-mensal]').forEach((el) => (el.hidden = anual))
-        document.querySelectorAll<HTMLElement>('[data-ciclo-anual]').forEach((el) => (el.hidden = !anual))
-      })
+      botao.addEventListener('click', () => definirCiclo(botao.dataset.ciclo === 'anual'))
     })
   }
 </script>

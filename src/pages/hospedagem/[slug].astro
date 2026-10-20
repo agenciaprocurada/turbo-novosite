@@ -52,7 +52,7 @@ const artesHero: Partial<Record<string, ImageMetadata>> = {
   'servidor-para-e-mail': astroServidorEmail,
 }
 
-const abas = produto.abaPlanos ? abasPlanos.filter((aba) => aba.id === produto.abaPlanos) : []
+const abas = produto.abaPlanos ? abasPlanos.filter((aba) => aba.familia === produto.abaPlanos) : []
 
 const trilha = [
   { label: 'Home', href: '/' },

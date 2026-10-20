@@ -16,7 +16,7 @@
  *     desta lista que NÃO veio do site. Está marcado com TEXTO NOVO.
  */
 
-import { provas } from './site'
+import { provas, menorPreco } from './site'
 import type { Faq } from './site'
 
 export type Beneficio = {
@@ -60,8 +60,9 @@ export type Produto = {
   lead: string
   /** selos ao lado do CTA — só o que a Turbo entrega de fato */
   badges: readonly string[]
+  /** menor preço mensal real dos planos — calculado, nunca digitado */
   aPartirDe: number
-  /** id da aba em `abasPlanos` que esta página mostra */
+  /** família das abas de `abasPlanos` que esta página mostra */
   abaPlanos: 'hospedagem' | 'container' | 'vps' | null
   planosTitulo1: string
   planosTitulo2a: string
@@ -137,6 +138,27 @@ const benefEscalar: Beneficio = {
 }
 
 /* --------------------------------------------------------------------- */
+/* Planos de e-mail — grade própria, não cabe no card de 4 colunas        */
+/* --------------------------------------------------------------------- */
+/*  Preços e links conferidos em /hospedagem/servidor-para-e-mail/.
+ *  O slug do plano de 150GB é mesmo `email-130gb-3` no WHMCS — é assim que
+ *  o site atual linka. Não é erro de digitação daqui. */
+
+const LOJA_EMAIL = 'https://app.turbocloud.com.br/store/servidor-de-email'
+
+export const planosEmail = [
+  { gb: 20, preco: 20, slug: 'email-20gb' },
+  { gb: 30, preco: 30, slug: 'email-30gb' },
+  { gb: 50, preco: 50, slug: 'email-50gb' },
+  { gb: 75, preco: 75, slug: 'email-75gb', destaque: true },
+  { gb: 100, preco: 100, slug: 'email-100gb' },
+  { gb: 130, preco: 130, slug: 'email-130gb' },
+  { gb: 150, preco: 150, slug: 'email-130gb-3' },
+  { gb: 200, preco: 200, slug: 'email-200gb' },
+  { gb: 320, preco: 320, slug: 'email-320gb' },
+].map((p) => ({ ...p, href: `${LOJA_EMAIL}/${p.slug}` }))
+
+/* --------------------------------------------------------------------- */
 /* Os seis produtos                                                       */
 /* --------------------------------------------------------------------- */
 
@@ -152,7 +174,7 @@ export const produtos: readonly Produto[] = [
     h1Verde: 'para o seu site institucional.',
     lead: 'Transforme a presença online da sua empresa com uma hospedagem otimizada para sites institucionais. A Turbo Cloud entrega alta performance, suporte dedicado e segurança de nível empresarial para projetos que não podem parar.',
     badges: ['Migração grátis', 'Otimizada para WordPress', '7 dias de teste'],
-    aPartirDe: 35.9,
+    aPartirDe: menorPreco('hospedagem'),
     abaPlanos: 'hospedagem',
     planosTitulo1: 'Planos otimizados',
     planosTitulo2a: 'para sites',
@@ -223,7 +245,7 @@ export const produtos: readonly Produto[] = [
     h1Verde: 'crescer sem travar no pico.',
     lead: 'WooCommerce é uma loja e um banco de dados rodando ao mesmo tempo. Com CPU e memória dedicadas, o carrinho e o checkout continuam respondendo mesmo quando a campanha dá certo.',
     badges: ['Migração grátis', 'Otimizada para WooCommerce', '7 dias de teste'],
-    aPartirDe: 35.9,
+    aPartirDe: menorPreco('hospedagem'),
     abaPlanos: 'hospedagem',
     planosTitulo1: 'Planos otimizados',
     planosTitulo2a: 'para',
@@ -300,7 +322,7 @@ export const produtos: readonly Produto[] = [
     h1Verde: 'para o seu blog ou portal.',
     lead: 'Conteúdo só rende quando abre rápido. Servidores no Brasil, cache LiteSpeed e disco NVMe para segurar pico de acesso sem derrubar a leitura.',
     badges: ['Migração grátis', 'SEO otimizado', '7 dias de teste'],
-    aPartirDe: 35.9,
+    aPartirDe: menorPreco('hospedagem'),
     abaPlanos: 'hospedagem',
     planosTitulo1: 'Planos otimizados',
     planosTitulo2a: 'para blogs',
@@ -379,7 +401,7 @@ export const produtos: readonly Produto[] = [
     h1Verde: 'para o seu projeto.',
     lead: 'Cada container roda sozinho: o consumo de outro cliente não chega até você. Recursos exclusivos, ambiente customizável e a mesma estrutura TIER III.',
     badges: ['Ambiente isolado', 'Recursos dedicados', 'Migração grátis'],
-    aPartirDe: 200,
+    aPartirDe: menorPreco('container'),
     abaPlanos: 'container',
     planosTitulo1: 'Planos de Container',
     planosTitulo2a: 'para o seu',
@@ -466,7 +488,7 @@ export const produtos: readonly Produto[] = [
     h1Verde: 'para projetos de alta demanda.',
     lead: 'Acesso root, ambiente isolado e recursos garantidos. Você monta o servidor do jeito que o projeto pede, sem dividir CPU com ninguém.',
     badges: ['Acesso root', 'Recursos dedicados', 'Monitoramento contínuo'],
-    aPartirDe: 200,
+    aPartirDe: menorPreco('vps'),
     abaPlanos: 'vps',
     planosTitulo1: 'Planos VPS',
     planosTitulo2a: 'para a sua',
@@ -555,7 +577,7 @@ export const produtos: readonly Produto[] = [
     h1Verde: 'para seus e-mails corporativos.',
     lead: 'E-mail separado do site: se a hospedagem cair ou o site for atacado, a comunicação da empresa continua de pé. Contas ilimitadas e SMTP profissional em todos os planos.',
     badges: ['Contas ilimitadas', 'Servidor exclusivo', 'Migração grátis'],
-    aPartirDe: 20,
+    aPartirDe: Math.min(...planosEmail.map((plano) => plano.preco)),
     abaPlanos: null,
     planosTitulo1: 'Planos de e-mail',
     planosTitulo2a: 'para a sua',
@@ -612,27 +634,6 @@ export const produtos: readonly Produto[] = [
       'Serviço dedicado para a comunicação da empresa. Alta entregabilidade, proteção contra spam e contas ilimitadas, sem depender do servidor do site.',
   },
 ] as const
-
-/* --------------------------------------------------------------------- */
-/* Planos de e-mail — grade própria, não cabe no card de 4 colunas        */
-/* --------------------------------------------------------------------- */
-/*  Preços e links conferidos em /hospedagem/servidor-para-e-mail/.
- *  O slug do plano de 150GB é mesmo `email-130gb-3` no WHMCS — é assim que
- *  o site atual linka. Não é erro de digitação daqui. */
-
-const LOJA_EMAIL = 'https://app.turbocloud.com.br/store/servidor-de-email'
-
-export const planosEmail = [
-  { gb: 20, preco: 20, slug: 'email-20gb' },
-  { gb: 30, preco: 30, slug: 'email-30gb' },
-  { gb: 50, preco: 50, slug: 'email-50gb' },
-  { gb: 75, preco: 75, slug: 'email-75gb', destaque: true },
-  { gb: 100, preco: 100, slug: 'email-100gb' },
-  { gb: 130, preco: 130, slug: 'email-130gb' },
-  { gb: 150, preco: 150, slug: 'email-130gb-3' },
-  { gb: 200, preco: 200, slug: 'email-200gb' },
-  { gb: 320, preco: 320, slug: 'email-320gb' },
-].map((p) => ({ ...p, href: `${LOJA_EMAIL}/${p.slug}` }))
 
 export const recursosEmail = [
   'Servidor exclusivo para e-mails',

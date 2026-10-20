@@ -33,6 +33,12 @@ const icones = {
   servidor: 'M4 5h16v6H4zM4 13h16v6H4zM7 8h.01M7 16h.01',
 } as const
 
+/** Desconto do anual calculado dos preços reais do plano (não é um número fixo:
+ *  One/Three/Elite ficam perto de 8%, o Duo é bem maior). */
+const desconto = plano.precoAnualTotal
+  ? Math.round((1 - plano.precoAnualTotal / (plano.precoMensal * 12)) * 100)
+  : 0
+
 const preco = (inteiro: string, centavos: string) => ({ inteiro, centavos })
 const mensal = preco(inteiroMes!, centavosMes!)
 const anual = inteiroAno ? preco(inteiroAno, centavosAno!) : mensal
@@ -115,7 +121,7 @@ const anual = inteiroAno ? preco(inteiroAno, centavosAno!) : mensal
             {ciclo === 'mensal'
               ? 'cobrança mensal'
               : inteiroAno
-                ? `1× de R$ ${brl(plano.precoAnualTotal ?? 0)} no ano`
+                ? `1× de R$ ${brl(plano.precoAnualTotal ?? 0)} no ano${desconto > 0 ? ` · ${desconto}% off` : ''}`
                 : 'sem desconto anual nesta linha'}
           </p>
         </div>
