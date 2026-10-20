@@ -590,12 +590,12 @@ type LocalHospedagem = 'brasil' | 'eua' | 'europa'
 const planosHospedagemBase = [
   {
     chave: 'one',
+    anualTotalForaBrasil: 394.90,
     nome: 'One',
     persona: 'Para quem está colocando o primeiro site no ar.',
     mensal: 35.9,
     anualMes: 32.9,
     anualTotal: 394.9,
-    anualForaBrasil: 32.9,
     dominios: '1 domínio Blindagem Turbo',
     disco: '15GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4',
@@ -603,6 +603,7 @@ const planosHospedagemBase = [
   },
   {
     chave: 'three',
+    anualTotalForaBrasil: 548.90,
     nome: 'Three',
     persona: 'Para agência e freela que toca mais de um cliente no mesmo painel.',
     mensal: 49.9,
@@ -616,66 +617,67 @@ const planosHospedagemBase = [
   },
   {
     chave: 'duo',
+    anualTotalForaBrasil: 650.00,
     nome: 'Duo',
     persona: 'Para quem investe em tráfego pago e precisa de CPU reservada em cada domínio.',
     mensal: 64.9,
     anualMes: 54.0,
     anualTotal: 648.0,
-    anualForaBrasil: 54.0,
     dominios: '2 domínios Blindagem Turbo',
     disco: '20GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
   },
   {
     chave: 'elite-5',
+    anualTotalForaBrasil: 1100.00,
     nome: 'Revenda Elite 5',
     persona: 'Para quem hospeda os sites dos próprios clientes e quer margem.',
     mensal: 100.0,
     anualMes: 91.67,
     anualTotal: 1100.04,
-    anualForaBrasil: 91.6,
     dominios: '5 domínios Blindagem Turbo',
     disco: '50GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
   },
   {
     chave: 'elite-10',
+    anualTotalForaBrasil: 1650.00,
     nome: 'Revenda Elite 10',
     persona: 'Revenda com 10 domínios, cada um com a sua reserva de CPU e memória.',
     mensal: 150.0,
     anualMes: 137.5,
     anualTotal: 1650.0,
-    anualForaBrasil: 137.5,
     dominios: '10 domínios Blindagem Turbo',
     disco: '75GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
   },
   {
     chave: 'elite-15',
+    anualTotalForaBrasil: 2090.00,
     nome: 'Revenda Elite 15',
     persona: 'Revenda com 15 domínios, cada um com a sua reserva de CPU e memória.',
     mensal: 190.0,
     anualMes: 174.0,
     anualTotal: 2088.0,
-    anualForaBrasil: 174.0,
     dominios: '15 domínios Blindagem Turbo',
     disco: '100GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
   },
   {
     chave: 'elite-20',
+    anualTotalForaBrasil: 3080.00,
     nome: 'Revenda Elite 20',
     persona: 'Revenda com 20 domínios, cada um com a sua reserva de CPU e memória.',
     mensal: 280.0,
     anualMes: 256.0,
     anualTotal: 3072.0,
-    anualForaBrasil: 256.0,
     dominios: '20 domínios Blindagem Turbo',
     disco: '150GB SSD NVMe',
     cpu: '2 vCPU e 5GB DDR4 por domínio',
   },
   {
     chave: 'elite-30',
+    anualTotalForaBrasil: 4536.00,
     nome: 'Revenda Elite 30',
     persona: 'Revenda com 30 domínios, cada um com a sua reserva de CPU e memória.',
     mensal: 420.0,
@@ -689,6 +691,7 @@ const planosHospedagemBase = [
   },
   {
     chave: 'elite-50',
+    anualTotalForaBrasil: 5940.00,
     nome: 'Revenda Elite 50',
     persona: 'Revenda com 50 domínios, cada um com a sua reserva de CPU e memória.',
     mensal: 550.0,
@@ -736,10 +739,9 @@ const slugsHospedagem: Record<LocalHospedagem, Record<string, string>> = {
   },
 }
 
-/** Brasil leva o preço anual e o total do ano. EUA e Europa levam o preço anual
- *  por mês copiado do site atual (`anualForaBrasil`), que traz só Duo, One e
- *  Revenda Elite 5, 10, 15 e 20 — sem o total do ano, sem Three, Elite 30 e 50.
- *  Esses ficam sem preço anual e o card manda consultar a equipe. O link de
+/** Brasil leva o preço anual e o total do ano do site atual. EUA e Europa levam o
+ *  total anual cobrado na loja (feed de preços do WHMCS, conferido em 20/10/2026,
+ *  produtos 118-123/164/186 e 177-185); o valor por mês é o total ÷ 12. O link de
  *  checkout do anual é o mesmo do mensal (igual ao site atual). */
 const planosHospedagem = (local: LocalHospedagem): Plano[] =>
   planosHospedagemBase.map((d) => ({
@@ -748,9 +750,10 @@ const planosHospedagem = (local: LocalHospedagem): Plano[] =>
     precoMensal: d.mensal,
     ...(local === 'brasil'
       ? { precoAnualMes: d.anualMes, precoAnualTotal: d.anualTotal }
-      : 'anualForaBrasil' in d
-        ? { precoAnualMes: d.anualForaBrasil }
-        : {}),
+      : {
+          precoAnualMes: Math.round((d.anualTotalForaBrasil / 12) * 100) / 100,
+          precoAnualTotal: d.anualTotalForaBrasil,
+        }),
     ...('destaque' in d ? { destaque: d.destaque, selo: d.selo } : {}),
     grupos: gruposHospedagem(
       d.dominios,
@@ -998,7 +1001,7 @@ export const garantiasVps: readonly Garantia[] = [
 ]
 
 export const notaPlanos =
-  'Valores mensais vigentes. Na hospedagem de sites o ciclo anual tem desconto e a cobrança é única; nos servidores EUA e Europa o anual existe só nos planos que mostram o valor, e nos demais a equipe informa. Aceitamos PIX, boleto e cartão.'
+  'Valores mensais vigentes. Na hospedagem de sites o ciclo anual tem desconto e a cobrança é única (Brasil, EUA e Europa). Aceitamos PIX, boleto e cartão.'
 
 /* ------------------------------------------------------------------ */
 /* S11 · CTA final                                                     */
