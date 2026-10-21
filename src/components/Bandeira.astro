@@ -1,0 +1,58 @@
+---
+/**
+ * Bandeira redonda em SVG inline (sem emoji: o Windows não desenha bandeira
+ * em emoji, só as letras do país). Simplificada — serve para 20–24px.
+ */
+interface Props {
+  pais: 'br' | 'us' | 'eu'
+  class?: string
+}
+
+const { pais, class: cls = 'size-5' } = Astro.props
+
+// 12 estrelas da UE em círculo
+const estrelas = Array.from({ length: 12 }, (_, i) => {
+  const a = (i / 12) * Math.PI * 2
+  return { x: 12 + Math.sin(a) * 6.6, y: 12 - Math.cos(a) * 6.6 }
+})
+// 7 listras vermelhas da bandeira dos EUA (13 faixas)
+const listras = Array.from({ length: 7 }, (_, i) => i * 2 * (24 / 13))
+---
+
+<svg
+  viewBox="0 0 24 24"
+  class:list={['shrink-0 overflow-hidden rounded-full ring-1 ring-black/10', cls]}
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    pais === 'br' && (
+      <>
+        <rect width="24" height="24" fill="#009c3b" />
+        <path d="M12 3.5 21.5 12 12 20.5 2.5 12Z" fill="#ffdf00" />
+        <circle cx="12" cy="12" r="4.4" fill="#002776" />
+      </>
+    )
+  }
+  {
+    pais === 'us' && (
+      <>
+        <rect width="24" height="24" fill="#fff" />
+        {listras.map((y) => (
+          <rect x="0" y={y} width="24" height={24 / 13} fill="#b22234" />
+        ))}
+        <rect width="11" height={(24 / 13) * 7} fill="#3c3b6e" />
+      </>
+    )
+  }
+  {
+    pais === 'eu' && (
+      <>
+        <rect width="24" height="24" fill="#003399" />
+        {estrelas.map((e) => (
+          <circle cx={e.x} cy={e.y} r="1.15" fill="#ffcc00" />
+        ))}
+      </>
+    )
+  }
+</svg>

@@ -1,7 +1,9 @@
 ---
-/** S10 · Planos — abas de categoria × ciclo mensal/anual.
- *  A home mostra as três abas; cada página de produto mostra só a sua,
- *  e nesse caso a barra de abas some (não há o que alternar). */
+/** S10 · Planos — produto (controle segmentado) × localização (dropdown, só
+ *  Hospedagem) × ciclo mensal/anual (interruptor).
+ *  A home mostra os três produtos; cada página de produto mostra só o seu,
+ *  e nesse caso o controle segmentado some (não há o que alternar). */
+import Bandeira from '../Bandeira.astro'
 import PricingCard from '../PricingCard.astro'
 import { abasPlanos, planosCabecalho, garantiasPlanos, garantiasVps, notaPlanos } from '../../data/site'
 import type { AbaPlanos } from '../../data/site'
@@ -42,13 +44,35 @@ const ICONES_GARANTIAS = {
 
 const garantiasDaAba = (aba: AbaPlanos) => (aba.familia === 'vps' ? garantiasVps : garantiasPlanos)
 
-const comAbas = abas.length > 1
+/** Produtos presentes (na ordem das abas) e o rótulo de cada um no controle segmentado. */
+const ROTULO_FAMILIA = { hospedagem: 'Hospedagem', container: 'Container', vps: 'Cloud / VPS' } as const
+const familias = [...new Set(abas.map((a) => a.familia))]
+const comProdutos = familias.length > 1
+const abasDaFamilia = (f: AbaPlanos['familia']) => abas.filter((a) => a.familia === f)
+
+/** Localização de cada aba de hospedagem: o dropdown só aparece onde a família tem mais de uma aba.
+ *  Cidade só onde a TurboCloud informa (Brasil = Ascenty, São Paulo); EUA e Europa ficam sem cidade. */
+const LOCAIS: Record<string, { pais: 'br' | 'us' | 'eu'; nome: string; sub: string }> = {
+  hospedagem: { pais: 'br', nome: 'Brasil', sub: 'São Paulo' },
+  'hospedagem-eua': { pais: 'us', nome: 'Estados Unidos', sub: 'Servidores nos EUA' },
+  'hospedagem-europa': { pais: 'eu', nome: 'Europa', sub: 'Servidores na Europa' },
+}
+const localDe = (aba: AbaPlanos) => LOCAIS[aba.id] ?? { pais: 'br' as const, nome: aba.label, sub: '' }
 
 /** Há ciclo anual onde ALGUM plano da aba tem preço anual: Brasil (todos) e
  *  EUA/Europa (só alguns — os demais cards mandam consultar a equipe).
- *  Container e VPS não têm — o seletor some nelas. */
+ *  Container e VPS não têm — o interruptor some nelas. */
 const temAnual = (aba: AbaPlanos) => aba.planos.some((p) => p.precoAnualMes != null)
 const algumAnual = abas.some(temAnual)
+/** Maior desconto anual da aba, calculado dos preços reais (alimenta o chip "até X% off"). */
+const descontoMax = (aba: AbaPlanos) =>
+  Math.max(
+    0,
+    ...aba.planos.map((p) =>
+      p.precoAnualTotal ? Math.round((1 - p.precoAnualTotal / (p.precoMensal * 12)) * 100) : 0,
+    ),
+  )
+const comToolbar = comProdutos || algumAnual || abas.length > 1
 
 /** 4 cards cabem em 4 colunas; 5, 6 e 9 (revendas) ficam em 3, sem órfão de linha. */
 const colunas = (aba: AbaPlanos) => (aba.planos.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3')
@@ -83,69 +107,149 @@ const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font
       </p>
     </div>
 
-    {(comAbas || algumAnual) && (
-    <div class="reveal mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center" data-planos>
+    {comToolbar && (
+    <div class="reveal relative z-20 mt-9 flex flex-col items-center gap-4" data-planos>
       {
-        comAbas && (
+        comProdutos && (
           <div
-            class="flex w-full gap-1 rounded-btn border border-line bg-surface p-1 sm:w-auto"
+            class="grid w-full max-w-[460px] grid-flow-col auto-cols-fr gap-1 rounded-[18px] bg-[#efedf2] p-1"
             role="tablist"
-            aria-label="Categorias de plano"
+            aria-label="Produto"
           >
-            {abas.map((aba, i) => (
+            {familias.map((f, i) => (
               <button
                 type="button"
                 role="tab"
-                data-aba-plano={aba.id}
+                data-familia-btn={f}
                 aria-selected={i === 0 ? 'true' : 'false'}
-                aria-controls={`planos-${aba.id}`}
-                class="flex-1 rounded-btn px-2 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink-soft transition-colors aria-selected:bg-purple-logo aria-selected:text-white sm:flex-none sm:px-4 sm:text-[14px]"
+                class="min-h-[48px] rounded-[14px] px-2 py-2 text-center text-[13.5px] leading-tight font-semibold text-ink-soft transition-colors hover:text-ink aria-selected:bg-white aria-selected:font-bold aria-selected:text-ink aria-selected:shadow-soft sm:text-[15px]"
               >
-                <span class="sm:hidden">{aba.labelCurto ?? aba.label}</span>
-                <span class="hidden sm:inline">{aba.label}</span>
+                {ROTULO_FAMILIA[f]}
               </button>
             ))}
           </div>
         )
       }
 
-      {/* Seletor de ciclo: só existe onde há preço anual de verdade. O script
-          o esconde ao trocar para uma aba sem anual (Container, VPS). */}
-      {algumAnual && (
-      <div
-        class="mx-auto flex gap-1 self-center rounded-btn border border-line bg-surface p-1 sm:mx-0 sm:ml-auto sm:self-auto"
-        role="group"
-        aria-label="Ciclo de cobrança"
-        data-ciclo-grupo
-        hidden={!temAnual(abas[0]!)}
-      >
-        <button
-          type="button"
-          data-ciclo="mensal"
-          aria-pressed="true"
-          class="rounded-btn px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
-          >Mensal</button
+      <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+        {/* Localização: dropdown, só para produto com mais de uma aba (Hospedagem). */}
+        {
+          familias
+            .filter((f) => abasDaFamilia(f).length > 1)
+            .map((f) => {
+              const doProduto = abasDaFamilia(f)
+              const primeira = localDe(doProduto[0]!)
+              return (
+                <div class="relative" data-local-wrap data-familia={f} hidden={f !== abas[0]!.familia}>
+                  <button
+                    type="button"
+                    data-local-botao
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-label="Localização do servidor"
+                    class="group inline-flex min-h-[44px] items-center gap-2 rounded-full border border-line bg-surface py-1.5 pr-3 pl-2.5 text-[14px] font-bold text-ink shadow-soft transition-colors hover:border-purple-logo/40"
+                  >
+                    <span data-local-flag class="grid">
+                      <Bandeira pais={primeira.pais} />
+                    </span>
+                    <span data-local-nome>{primeira.nome}</span>
+                    <svg
+                      viewBox="0 0 20 20"
+                      class="size-4 text-ink-soft transition-transform duration-200 group-aria-expanded:rotate-180"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                      data-local-seta
+                    >
+                      <path d="m5 7.5 5 5 5-5" />
+                    </svg>
+                  </button>
+                  <ul
+                    role="listbox"
+                    data-local-menu
+                    aria-label="Localização do servidor"
+                    hidden
+                    class="menu-local absolute top-full left-1/2 z-30 mt-2 w-[min(300px,calc(100vw-2.5rem))] -translate-x-1/2 rounded-[18px] border border-line bg-surface p-1.5 shadow-lift"
+                  >
+                    {doProduto.map((aba, k) => {
+                      const l = localDe(aba)
+                      return (
+                        <li
+                          role="option"
+                          tabindex="-1"
+                          data-local-opcao={aba.id}
+                          aria-selected={k === 0 ? 'true' : 'false'}
+                          class="group flex cursor-pointer items-center gap-3 rounded-[13px] px-3 py-2.5 text-left outline-none transition-colors hover:bg-purple-logo/5 focus-visible:ring-2 focus-visible:ring-purple-logo/50 aria-selected:bg-purple-logo/10"
+                        >
+                          <span data-local-flag class="grid">
+                            <Bandeira pais={l.pais} class="size-6" />
+                          </span>
+                          <span class="min-w-0 flex-1 leading-tight">
+                            <span data-local-nome class="block text-[14.5px] font-bold text-ink group-aria-selected:text-purple-logo">
+                              {l.nome}
+                            </span>
+                            <span class="mt-0.5 block text-[12.5px] text-ink-soft">{l.sub}</span>
+                          </span>
+                          <svg
+                            viewBox="0 0 20 20"
+                            class="size-4 shrink-0 text-purple-logo opacity-0 group-aria-selected:opacity-100"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="m4.5 10.5 3.5 3.5 7.5-8" />
+                          </svg>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              )
+            })
+        }
+
+        {/* Ciclo: interruptor Mensal/Anual. Só existe onde há preço anual de verdade;
+            o script o esconde ao trocar para uma aba sem anual (Container, VPS). */}
+        {algumAnual && (
+        <div
+          class="flex items-center gap-3"
+          role="group"
+          aria-label="Ciclo de cobrança"
+          data-ciclo-grupo
+          hidden={!temAnual(abas[0]!)}
         >
-        <button
-          type="button"
-          data-ciclo="anual"
-          aria-pressed="false"
-          class="group flex items-center gap-2 rounded-btn px-4 py-2.5 font-mono text-[12px] font-semibold tracking-[0.06em] text-ink-soft uppercase transition-colors aria-pressed:bg-purple-logo aria-pressed:text-white"
-        >
-          Anual
-          <span
-            class="rounded-full bg-green/15 px-2 py-0.5 text-[10.5px] text-green-deep group-aria-pressed:bg-green group-aria-pressed:text-purple-950"
-            >economize</span
+          <button type="button" data-ciclo-rotulo="mensal" class="min-h-[44px] text-[15px] font-semibold text-ink-soft transition-colors aria-[current=true]:font-bold aria-[current=true]:text-ink" aria-current="true">Mensal</button>
+          <button
+            type="button"
+            role="switch"
+            aria-checked="false"
+            aria-label="Cobrança anual"
+            data-ciclo-switch
+            class="group relative inline-flex h-[28px] w-[50px] shrink-0 items-center rounded-full bg-[#cfc9d6] p-[3px] transition-colors aria-checked:bg-purple-logo"
           >
-        </button>
+            <span class="block size-[22px] rounded-full bg-white shadow-[0_1px_3px_rgb(0_0_0/0.3)] transition-transform duration-200 group-aria-checked:translate-x-[22px]"></span>
+          </button>
+          <button type="button" data-ciclo-rotulo="anual" class="min-h-[44px] text-[15px] font-semibold text-ink-soft transition-colors aria-[current=true]:font-bold aria-[current=true]:text-ink">Anual</button>
+          <span
+            data-ciclo-chip
+            class="rounded-full bg-green/20 px-2.5 py-1 text-[12px] font-bold whitespace-nowrap text-green-deep"
+            hidden={descontoMax(abas[0]!) <= 0}>até {descontoMax(abas[0]!)}% off</span
+          >
+        </div>
+        )}
       </div>
-      )}
     </div>
     )}
 
     {
       abas.map((aba, i) => (
-        <div id={`planos-${aba.id}`} data-painel-plano={aba.id} data-tem-anual={temAnual(aba) ? '' : undefined} hidden={i !== 0}>
+        <div id={`planos-${aba.id}`} data-painel-plano={aba.id} data-familia={aba.familia} data-tem-anual={temAnual(aba) ? '' : undefined} data-desconto-max={descontoMax(aba)} hidden={i !== 0}>
           {aba.nota && (
             <p class="mt-6 flex items-start gap-2 rounded-[14px] border border-line bg-surface px-4 py-3 text-[13.5px] leading-snug text-ink-soft">
               <span aria-hidden="true" class="text-green-deep">
@@ -245,47 +349,187 @@ const seloHtml = selo ? selo.replace(/^(.*?\.)\s*(.*)$/, '$1 <strong class="font
     })
   })
 
-  // Abas de categoria e ciclo de cobrança
+  // Produto (segmented), localização (dropdown) e ciclo de cobrança (interruptor)
   const barra = document.querySelector<HTMLElement>('[data-planos]')
+  const paineis = [...document.querySelectorAll<HTMLElement>('[data-painel-plano]')]
 
-  if (barra) {
-    const abas = [...barra.querySelectorAll<HTMLButtonElement>('[data-aba-plano]')]
-    const paineis = [...document.querySelectorAll<HTMLElement>('[data-painel-plano]')]
-
+  if (barra && paineis.length) {
+    const botoesFamilia = [...barra.querySelectorAll<HTMLButtonElement>('[data-familia-btn]')]
+    const dropdowns = [...barra.querySelectorAll<HTMLElement>('[data-local-wrap]')]
     const grupoCiclo = barra.querySelector<HTMLElement>('[data-ciclo-grupo]')
-    const botoesCiclo = [...barra.querySelectorAll<HTMLButtonElement>('[data-ciclo]')]
+    const chave = barra.querySelector<HTMLButtonElement>('[data-ciclo-switch]')
+    const rotulos = [...barra.querySelectorAll<HTMLButtonElement>('[data-ciclo-rotulo]')]
+    const chip = barra.querySelector<HTMLElement>('[data-ciclo-chip]')
 
-    const definirCiclo = (anual: boolean) => {
-      botoesCiclo.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.ciclo === 'anual') === anual)))
+    let familia = paineis[0]!.dataset.familia!
+    let anual = false
+    // Última localização escolhida em cada produto (a primeira aba dele por padrão)
+    const localDaFamilia: Record<string, string> = {}
+    paineis.forEach((p) => {
+      if (!(p.dataset.familia! in localDaFamilia)) localDaFamilia[p.dataset.familia!] = p.dataset.painelPlano!
+    })
+
+    const aplicarCiclo = () => {
+      chave?.setAttribute('aria-checked', String(anual))
+      rotulos.forEach((r) => r.setAttribute('aria-current', String((r.dataset.cicloRotulo === 'anual') === anual)))
       document.querySelectorAll<HTMLElement>('[data-ciclo-mensal]').forEach((el) => (el.hidden = anual))
       document.querySelectorAll<HTMLElement>('[data-ciclo-anual]').forEach((el) => (el.hidden = !anual))
     }
 
-    abas.forEach((aba) => {
-      aba.addEventListener('click', () => {
-        const id = aba.dataset.abaPlano
-        abas.forEach((a) => a.setAttribute('aria-selected', String(a === aba)))
-        // Aba sem preço anual (Container, VPS): some o seletor e volta ao mensal
-        const painelAtual = paineis.find((p) => p.dataset.painelPlano === id)
-        const anualDisponivel = painelAtual?.hasAttribute('data-tem-anual') ?? false
-        if (grupoCiclo) grupoCiclo.hidden = !anualDisponivel
-        if (!anualDisponivel) definirCiclo(false)
-        paineis.forEach((p) => {
-          p.hidden = p.dataset.painelPlano !== id
-          if (!p.hidden) {
-            const grade = p.querySelector<HTMLElement>('.plans-grid')
-            if (grade) {
-              grade.classList.remove('is-in')
-              void grade.offsetWidth
-              grade.classList.add('is-in')
-            }
+    const mostrar = (animar: boolean) => {
+      const id = localDaFamilia[familia]
+      botoesFamilia.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.familiaBtn === familia)))
+
+      dropdowns.forEach((dd) => {
+        dd.hidden = dd.dataset.familia !== familia
+        const opcoes = [...dd.querySelectorAll<HTMLElement>('[data-local-opcao]')]
+        opcoes.forEach((o) => o.setAttribute('aria-selected', String(o.dataset.localOpcao === id)))
+        const atual = opcoes.find((o) => o.dataset.localOpcao === id)
+        const botao = dd.querySelector<HTMLElement>('[data-local-botao]')
+        if (atual && botao) {
+          botao.querySelector('[data-local-flag]')!.innerHTML = atual.querySelector('[data-local-flag]')!.innerHTML
+          botao.querySelector('[data-local-nome]')!.textContent = atual.querySelector('[data-local-nome]')!.textContent
+        }
+      })
+
+      const painelAtual = paineis.find((p) => p.dataset.painelPlano === id)
+      // Aba sem preço anual (Container, VPS): some o interruptor e volta ao mensal
+      const anualDisponivel = painelAtual?.hasAttribute('data-tem-anual') ?? false
+      if (grupoCiclo) grupoCiclo.hidden = !anualDisponivel
+      if (!anualDisponivel) {
+        anual = false
+        aplicarCiclo()
+      }
+      if (chip) {
+        const max = Number(painelAtual?.dataset.descontoMax ?? 0)
+        chip.hidden = max <= 0
+        if (max > 0) chip.textContent = `até ${max}% off`
+      }
+
+      paineis.forEach((p) => {
+        p.hidden = p.dataset.painelPlano !== id
+        if (!p.hidden && animar) {
+          const grade = p.querySelector<HTMLElement>('.plans-grid')
+          if (grade) {
+            grade.classList.remove('is-in')
+            void grade.offsetWidth
+            grade.classList.add('is-in')
           }
-        })
+        }
+      })
+    }
+
+    // --- Localização (dropdown acessível: listbox/option, teclado, Esc e clique fora)
+    const fechar = (dd: HTMLElement, voltarFoco = false) => {
+      const menu = dd.querySelector<HTMLElement>('[data-local-menu]')!
+      const botao = dd.querySelector<HTMLElement>('[data-local-botao]')!
+      menu.hidden = true
+      botao.setAttribute('aria-expanded', 'false')
+      if (voltarFoco) botao.focus()
+    }
+    const fecharTodos = () => dropdowns.forEach((dd) => fechar(dd))
+
+    // --- Produto
+    botoesFamilia.forEach((botao, i) => {
+      botao.addEventListener('click', () => {
+        fecharTodos()
+        familia = botao.dataset.familiaBtn!
+        mostrar(true)
+      })
+      botao.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
+        e.preventDefault()
+        const prox = botoesFamilia[(i + (e.key === 'ArrowRight' ? 1 : -1) + botoesFamilia.length) % botoesFamilia.length]!
+        prox.focus()
+        prox.click()
       })
     })
 
-    botoesCiclo.forEach((botao) => {
-      botao.addEventListener('click', () => definirCiclo(botao.dataset.ciclo === 'anual'))
+    dropdowns.forEach((dd) => {
+      const botao = dd.querySelector<HTMLButtonElement>('[data-local-botao]')!
+      const menu = dd.querySelector<HTMLElement>('[data-local-menu]')!
+      const opcoes = [...menu.querySelectorAll<HTMLElement>('[data-local-opcao]')]
+
+      const abrir = () => {
+        menu.hidden = false
+        botao.setAttribute('aria-expanded', 'true')
+        const sel = opcoes.find((o) => o.getAttribute('aria-selected') === 'true') ?? opcoes[0]
+        sel?.focus()
+      }
+      const escolher = (o: HTMLElement) => {
+        localDaFamilia[dd.dataset.familia!] = o.dataset.localOpcao!
+        fechar(dd, true)
+        mostrar(true)
+      }
+
+      botao.addEventListener('click', () => (menu.hidden ? abrir() : fechar(dd)))
+      botao.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault()
+          if (menu.hidden) abrir()
+        }
+      })
+      opcoes.forEach((o, i) => {
+        o.addEventListener('click', () => escolher(o))
+        o.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown') opcoes[(i + 1) % opcoes.length]!.focus()
+          else if (e.key === 'ArrowUp') opcoes[(i - 1 + opcoes.length) % opcoes.length]!.focus()
+          else if (e.key === 'Home') opcoes[0]!.focus()
+          else if (e.key === 'End') opcoes[opcoes.length - 1]!.focus()
+          else if (e.key === 'Enter' || e.key === ' ') escolher(o)
+          else if (e.key === 'Escape') fechar(dd, true)
+          else if (e.key === 'Tab') fechar(dd)
+          else return
+          e.preventDefault()
+        })
+      })
     })
+    document.addEventListener('pointerdown', (e) => {
+      dropdowns.forEach((dd) => {
+        if (!dd.contains(e.target as Node)) fechar(dd)
+      })
+    })
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') fecharTodos()
+    })
+
+    // --- Ciclo
+    chave?.addEventListener('click', () => {
+      anual = !anual
+      aplicarCiclo()
+    })
+    rotulos.forEach((r) =>
+      r.addEventListener('click', () => {
+        anual = r.dataset.cicloRotulo === 'anual'
+        aplicarCiclo()
+      }),
+    )
+
+    // Link com âncora #planos-<id> (ex.: #planos-container, #planos-hospedagem-eua) abre essa aba
+    const doHash = paineis.find((p) => `#planos-${p.dataset.painelPlano}` === location.hash)
+    if (doHash) {
+      familia = doHash.dataset.familia!
+      localDaFamilia[familia] = doHash.dataset.painelPlano!
+      mostrar(false)
+    }
   }
 </script>
+
+<style>
+  /* Menu da localização: entra com um fade curto (sem animação se o usuário pede menos movimento) */
+  @media (prefers-reduced-motion: no-preference) {
+    .menu-local:not([hidden]) {
+      animation: menu-local-in 0.16s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes menu-local-in {
+      from {
+        opacity: 0;
+        scale: 0.97;
+      }
+      to {
+        opacity: 1;
+        scale: 1;
+      }
+    }
+  }
+</style>
