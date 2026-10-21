@@ -94,6 +94,7 @@ export const links = {
     containers: '/hospedagem/containers/',
     cloudVps: '/hospedagem/cloud-vps/',
     email: '/hospedagem/servidor-para-e-mail/',
+    /** Página oculta (noindex), fora de menu, rodapé e sitemap. Produto descontinuado. */
     openclaw: '/hospedagem/openclaw/',
   },
   ferramentasIa: {
@@ -1050,7 +1051,7 @@ export const ctaFinal = {
 } as const
 
 /** Fechamento sem promessa de teste ou devolução — para as páginas que não são
- *  de hospedagem de sites (hub, contato, OpenClaw, ferramentas). */
+ *  de hospedagem de sites (hub, contato, ferramentas). */
 export const ctaFinalGeral = {
   texto: 'Contrate em minutos ou fale com a nossa equipe: a gente ajuda a escolher o plano certo.',
 } as const
@@ -1070,7 +1071,7 @@ export const footer = {
         { label: 'Container', href: links.produtos.containers },
         { label: 'Cloud / VPS', href: links.produtos.cloudVps },
         { label: 'Servidor de e-mail', href: links.produtos.email },
-        { label: 'OpenClaw VPS', href: links.produtos.openclaw },
+        // OpenClaw VPS oculto: o produto não vai mais existir (página mantida com noindex).
       ],
     },
     // Ferramentas IA ocultas até o lançamento.

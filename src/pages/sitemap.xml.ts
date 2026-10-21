@@ -16,7 +16,6 @@ const caminhos: string[] = [
   '/',
   links.hospedagem,
   ...produtos.map((produto) => urlProduto(produto.slug)),
-  links.produtos.openclaw,
   links.estrutura,
   links.calculadora,
   links.afiliados,
