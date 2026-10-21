@@ -112,8 +112,8 @@ export const atendimento = {
 /* ------------------------------------------------------------------ */
 
 export const provas = {
-  /* 18 ms é o TTFB que o site atual publica. O 5 ms que estava aqui não tinha fonte. */
-  ttfb: '18 ms',
+  /* Decisão da equipe (21/10/2026): o site novo usa 5 ms (o atual publica 18 ms). */
+  ttfb: '5 ms',
   uptimeTier3: '99,982%',
   backup: '12/12h',
   notaGoogle: '5,0',
