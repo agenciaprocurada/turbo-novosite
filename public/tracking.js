@@ -239,11 +239,17 @@
   function categoriaAtual() {
     var aba = document.querySelector('[data-aba-plano][aria-selected="true"]');
     if (aba && aba.getAttribute('data-aba-plano')) return aba.getAttribute('data-aba-plano');
+    /* seção de planos nova: produto + local viram um painel visível só */
+    var painel = document.querySelector('[data-painel-plano]:not([hidden])');
+    if (painel && painel.getAttribute('data-painel-plano')) return painel.getAttribute('data-painel-plano');
     return PAGINA.categoria || '';
   }
   function cicloAtual() {
     var b = document.querySelector('[data-ciclo][aria-pressed="true"]');
-    return b && b.getAttribute('data-ciclo') === 'anual' ? 'anual' : 'mensal';
+    if (b) return b.getAttribute('data-ciclo') === 'anual' ? 'anual' : 'mensal';
+    /* seção de planos nova: interruptor Mensal/Anual */
+    var sw = document.querySelector('[data-ciclo-switch]');
+    return sw && sw.getAttribute('aria-checked') === 'true' ? 'anual' : 'mensal';
   }
 
   function viewContent(categoria) {
@@ -334,8 +340,9 @@
       return;
     }
 
-    /* WhatsApp: Lead, com o contexto de onde a pessoa clicou */
-    if (/wa\.me|api\.whatsapp\.com|whatsapp:/i.test(href)) {
+    /* WhatsApp ou "Falar com a equipe" (abre o chat TurboBot): Lead, com o
+       contexto de onde a pessoa clicou */
+    if (/wa\.me|api\.whatsapp\.com|whatsapp:|#falar-com-a-equipe$/i.test(href) || link.hasAttribute('data-abrir-chat')) {
       /* contexto do clique: id da seção, ou o título dela, ou "pagina" */
       var secao = link.closest('section, footer, header');
       var titulo = secao && secao.querySelector('h1, h2');
