@@ -9,9 +9,15 @@ interface Props {
   class?: string
   /** altura em px */
   height?: number
+  /** Entrada animada, como o logo do site antigo (turbo-logo-animate.svg,
+   *  turbocloud.com.br, jun/2025): o wordmark sobe com fade em 1s e o foguete
+   *  entra na diagonal (de baixo-esquerda, desfocado) em 1s e depois flutua
+   *  10 unidades do viewBox para baixo e para cima, em ciclos de 2s. É só CSS
+   *  (keyframes abaixo), sem Lottie nem JS. Desliga com prefers-reduced-motion. */
+  animado?: boolean
 }
 
-const { class: className = '', height = 28 } = Astro.props
+const { class: className = '', height = 28, animado = false } = Astro.props
 // viewBox 1093.7 × 200 → largura proporcional. Safari precisa de width E height explícitos
 // (o CSS base aplica height:auto em svg e, sem width, o Safari renderiza 0px).
 const width = Math.round((height * 1093.7) / 200)
@@ -22,7 +28,7 @@ const width = Math.round((height * 1093.7) / 200)
   width={width}
   height={height}
   style={`width:${width}px;height:${height}px`}
-  class={className}
+  class:list={[className, animado && 'tc-logo-animado']}
   role="img"
   aria-label="Turbo Cloud"
   fill="none"
@@ -36,7 +42,7 @@ const width = Math.round((height * 1093.7) / 200)
   </defs>
 
   {/* Wordmark — herda a cor do contexto */}
-  <g fill="currentColor">
+  <g fill="currentColor" class="tc-palavra">
     <path
       d="M62.4 143.3v2.9c-.2 8.8-5.2 14.5-13 14.5s-12.8-5.9-12.8-14.5V70.7H15.7C7.6 70.5 2.6 66 2.6 58.9s5.2-11.8 13.1-11.8h67.6c7.9.2 13.2 4.7 13.2 11.8s-5.4 11.8-13.2 11.8H62.4v72.7Zm62.7-23.9c0 6.7.3 8.8 1.5 11.5 2.3 4.8 7 7.8 12.3 7.9 7.8 0 13.6-6.4 13.6-14.5V91.1c.2-7.6 4.6-12.5 11.3-12.5s11.1 5.1 11.1 12.5v30.8c0 11-2.4 18.7-7.9 25.6a36.1 36.1 0 0 1-28 13.7 37.6 37.6 0 0 1-31.5-17.9c-3.2-5.2-4.9-13.2-4.9-21.9V91.1c.2-7.6 4.4-12.5 11.1-12.5S125 83.7 125 91.1v28.3Zm105-41.3c7.9 0 14.5 6.2 14.5 13.8 0 7.4-6 13.4-13.4 13.3-3.2 0-3.7-.3-8.1-2.9a8.6 8.6 0 0 0-4.4-1.5c-3.5 0-4.9 2.9-4.9 10.3v37.1c-.2 7.6-4.4 12.5-11.1 12.5s-11.3-5.1-11.3-12.5V94.9c0-6.6.2-8.1 1.5-10.4 1.8-3.6 5.5-5.9 9.6-5.9 4.6 0 8.1 2.4 10.3 6.6 5.2-4.6 11.3-7.1 17.4-7.1Zm66.1 0c21.9 0 38.4 17.9 38.4 41.5s-16.5 41.6-38.9 41.6-15.7-2.4-22.9-8.6c-1.9 5.6-5.2 8.1-10.6 8.1s-7.6-1.9-9.1-4.9c-1.4-2.4-1.7-4.4-1.7-9.8V59.6c.2-7.6 4.6-12.5 11.3-12.5s11.1 5 11.1 12.5v26.3c6.3-5.2 14.3-8 22.4-7.8m-22.9 41.5a19 19 0 0 0 18.9 19.1c10.5 0 19.1-8.4 19.1-18.9s-8.4-19.1-18.9-19.1h-.3c-10.4 0-18.9 8.5-18.9 18.9Zm150.8.3c0 22.6-18.9 41.3-41.8 41.3s-42-18.5-42-40.8a41.8 41.8 0 0 1 41-42.7c23.1-.5 42.3 17.9 42.7 41v1.2Zm-60.8.1c0 9.9 8.6 18.4 19 18.4 10.5.7 19.5-7.2 20.3-17.6.7-10.5-7.2-19.5-17.6-20.3h-2.5c-10.9 0-19.2 8.5-19.2 19.6Zm322.1-74.6c13.7 0 25.8 4.5 36.7 13.5 6.6 5.4 9.1 9.3 9.1 14.3 0 6.9-5.6 12.5-12.5 12.5h-.1c-3.5 0-6.2-1.2-9.4-4l-2.7-2.5a32.15 32.15 0 0 0-45.4 3.1 32.15 32.15 0 0 0 3.1 45.4c5.9 5.2 13.5 8 21.4 7.9 7.1 0 15.5-2.9 19.9-6.9l4.5-4.2c2.5-2.6 6-4 9.6-4 7 0 12.6 5.7 12.6 12.6 0 3.9-1.8 7.2-6.1 11.5a59 59 0 0 1-40.6 16.6c-31.9 0-58.2-26.3-58.2-58 .1-31.9 26-57.8 57.9-57.8Zm55.7 16.7v-2.5c.2-7.6 4.5-12.5 11.3-12.5s11.1 5.1 11.1 12.5v87.6c.2 8.4-4 13.5-11.1 13.5s-11.3-5.1-11.3-12.5zm117.5 57.8c0 22.6-18.9 41.3-41.8 41.3s-42-18.5-42-40.8a41.8 41.8 0 0 1 41-42.7c23.1-.5 42.3 17.9 42.7 41v1.2Zm-60.8.1c0 9.9 8.6 18.4 19 18.4a19 19 0 0 0 .2-37.9c-10.9 0-19.2 8.5-19.2 19.6Zm94-.6c0 6.7.3 8.8 1.5 11.5 2.3 4.8 7 7.8 12.3 7.9 7.8 0 13.7-6.4 13.7-14.5V91.1c.2-7.6 4.5-12.5 11.3-12.5s11.1 5.1 11.1 12.5v30.8c0 11-2.4 18.7-7.9 25.6a35.7 35.7 0 0 1-28 13.6 37.6 37.6 0 0 1-31.5-17.9c-3.2-5.2-4.9-13.2-4.9-21.9V91c.2-7.6 4.4-12.5 11.1-12.5s11.3 5.1 11.3 12.5v28.3Z"
     ></path>
@@ -52,7 +58,7 @@ const width = Math.round((height * 1093.7) / 200)
   </g>
 
   {/* Foguete/astronauta — sempre verde */}
-  <g fill="url(#tcGreen)">
+  <g fill="url(#tcGreen)" class="tc-foguete">
     <path
       d="M430.2 189.4c.9-1.5 1.9-2.9 3.1-4.2 14.5-14.5 29-28.9 43.6-43.4 1.5-1.5 3.1-2.5 5.3-2.3a5.63 5.63 0 0 1 3.9 9c-.5.6-1 1.1-1.5 1.6-14.3 14.2-28.5 28.4-42.8 42.6-1.4 1.2-2.8 2.4-4.3 3.5h-3a8 8 0 0 1-4.1-4.5v-2.3Z"
     ></path>
@@ -70,3 +76,58 @@ const width = Math.round((height * 1093.7) / 200)
     ></path>
   </g>
 </svg>
+
+<style>
+  /* Só o logo marcado com `animado` se mexe (cabeçalho); o do rodapé fica parado.
+     Os valores vêm do SVG do site antigo; translate em % usa o viewBox
+     (1093,7 × 200) porque o foguete é um grupo SVG sem caixa de layout. */
+  .tc-logo-animado .tc-palavra {
+    animation: tc-logo-sobe 1s forwards;
+  }
+  .tc-logo-animado .tc-foguete {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation:
+      tc-logo-diagonal 1s forwards,
+      tc-logo-flutua 2s infinite 1s;
+  }
+
+  @keyframes tc-logo-sobe {
+    0% {
+      transform: translateY(20%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes tc-logo-diagonal {
+    0% {
+      transform: translate(-10%, 80%) scale(0.8);
+      opacity: 0;
+      filter: blur(10px);
+    }
+    to {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+  @keyframes tc-logo-flutua {
+    0%,
+    to {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(10px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tc-logo-animado .tc-palavra,
+    .tc-logo-animado .tc-foguete {
+      animation: none;
+    }
+  }
+</style>
