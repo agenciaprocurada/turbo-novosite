@@ -18,3 +18,8 @@ Thumbs.db
 
 # ferramentas locais
 .impeccable/
+
+# rastreamento: token do CAPI e cache do wrangler nunca entram no git
+worker/.dev.vars
+worker/.wrangler/
+worker/node_modules/

@@ -72,6 +72,49 @@ npm run check   # astro check — deve fechar com 0 erros
 Nenhum preço ou número está escrito direto no HTML. Trocar a tabela de planos é
 editar um arquivo só.
 
+## Rastreamento (Meta Pixel + CAPI e GA4)
+
+Herdado do projeto `sapabap` (Framework FOP, validado em produção) e adaptado
+a um **site de hospedagem**: várias páginas, vários produtos e checkout na loja
+WHMCS — não é LP de infoproduto. Sem GTM, sem banner de cookies (decisão do
+cliente em 21/10/2026).
+
+| Onde | O quê |
+| --- | --- |
+| `src/data/site.ts` → `rastreio` | IDs: Pixel `647050360453621` (o das campanhas; o da loja, `1854967581716648`, só recebe PageView) e os dois GA4 que o turbocloud.com.br já alimenta (`G-FMWH32YCMN`, `G-7R7B72CT1P`, conferidos no navegador) |
+| `src/layouts/Base.astro` | só a configuração (`window.TC_TRACK`) + `<script src="/tracking.js">` no topo do `<head>`, **sem defer** |
+| `public/tracking.js` | toda a lógica: origem da visita, `_fbp`/`_fbc`, Pixel, GA4, eventos, CAPI, links da loja |
+| `worker/` | Cloudflare Worker do CAPI (`capi-turbocloud`), README com publicação e teste |
+
+**Funil:** `PageView` (toda página) → `ViewContent`/`view_item` (página de
+produto, ou seção `#planos` visível) → `AddToCart`/`add_to_cart` (clique em
+"Quero contratar": plano, categoria, ciclo, valor) → `Lead`/`generate_lead`
+(clique em WhatsApp). `InitiateCheckout` e `Purchase` são da loja WHMCS, não
+daqui — hoje a loja só dispara `PageView` (pendência, ver `PENDENTE`).
+
+**Como o botão de plano vira evento:** `PricingCard` envolve o botão num
+`[data-plano]` com preço mensal/anual; os cards de e-mail levam os mesmos
+atributos no próprio link. O `tracking.js` lê a aba selecionada
+(`[data-aba-plano][aria-selected]`) como categoria e o seletor
+(`[data-ciclo][aria-pressed]`) como ciclo. Página de produto passa
+`rastreio={{ categoria, nome }}` ao `Base`.
+
+**Atribuição:** `utm_*`, `fbclid`, `gclid`, `gbraid` e `wbraid` do primeiro
+acesso ficam 90 dias em cookie + localStorage e vão colados em todo link da
+loja (`app.turbocloud.com.br`), mais `tc_uid` (id anônimo do visitante).
+
+**Regras que não se quebram:** `autoConfig` do Pixel desligado (evita PageView
+extra sem `event_id`); `_fbp` gerado antes do `init`; mesmo `event_id` no
+Pixel e no CAPI; `value` + `currency` onde há valor; token do CAPI nunca no
+repositório (`worker/.dev.vars`, ignorado, e secret no Cloudflare). O Worker
+devolve **424** quando o Meta recusa de vez, para o navegador não repetir.
+
+**Validar:** `npm run build` + preview e o script de navegador real (cookies,
+`event_id` casando, `AddToCart` com plano/ciclo/valor, link da loja com a
+origem). O Pixel do navegador **não dispara em headless** (nem na loja): a
+conferência dele é no Gerenciador de Eventos → Testar eventos, com
+`TEST_EVENT_CODE` no Worker — e apagar o código depois.
+
 ## Regras do projeto
 
 ### 1. Só entra o que existe

@@ -1,0 +1,13 @@
+name = "capi-turbocloud"
+main = "capi.js"
+compatibility_date = "2025-06-01"
+
+[vars]
+PIXEL_ID = "647050360453621"
+GRAPH_VERSION = "v21.0"
+ALLOWED_ORIGINS = "https://turbocloud.com.br,https://www.turbocloud.com.br,https://turbocloud-novo-site.up.turbo.cloud,http://localhost:4321,http://localhost:4322,http://localhost:4323"
+
+# CAPI_TOKEN e TEST_EVENT_CODE são SECRETS — nunca neste arquivo.
+#   npx wrangler secret put CAPI_TOKEN
+#   npx wrangler secret put TEST_EVENT_CODE   (só enquanto estiver testando)
+# Localmente o token vive em .dev.vars (ignorado pelo git).

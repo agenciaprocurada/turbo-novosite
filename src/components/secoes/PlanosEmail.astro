@@ -79,6 +79,10 @@ const {
                 href={plano.href}
                 target="_blank"
                 rel="noopener"
+                data-plano={`E-mail ${plano.gb} GB`}
+                data-categoria="email"
+                data-preco-mensal={plano.preco}
+                data-moeda="BRL"
                 class:list={[
                   'group flex h-full flex-col justify-between gap-4 rounded-card border p-5 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:shadow-lift',
                   'destaque' in plano && plano.destaque

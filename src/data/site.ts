@@ -99,6 +99,19 @@ export const links = {
  *  Cloudron e EasyPanel são dois produtos, cada um com o seu slug. */
 export const loja = (caminho: string) => `https://app.turbocloud.com.br/store/${caminho}`
 
+/** IDs de rastreamento. Pixel: o mesmo da loja WHMCS. GA4: as duas
+ *  propriedades que o turbocloud.com.br já alimenta (conferido no navegador
+ *  em 21/10/2026). A lógica vive em `public/tracking.js`; o CAPI, em `worker/`. */
+export const rastreio = {
+  /** Recebe os eventos do funil e o CAPI. Tem que ser o mesmo PIXEL_ID do
+   *  worker/wrangler.toml e o pixel que as campanhas otimizam. */
+  pixel: '647050360453621',
+  /** Recebem só o PageView (continuidade de público), nunca o funil. O da
+   *  loja WHMCS entra aqui para o público dela continuar sendo alimentado. */
+  pixelsExtra: ['1854967581716648'] as string[],
+  ga4: ['G-FMWH32YCMN', 'G-7R7B72CT1P'],
+}
+
 /** Janela real de atendimento. O site atual se contradiz (diz "24/7" em banner e
  *  "8h às 1h" no FAQ). Aqui vale o FAQ — honestidade vende melhor que 24/7 genérico. */
 export const atendimento = {

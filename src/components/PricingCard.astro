@@ -140,12 +140,17 @@ const anual = inteiroAno ? preco(inteiroAno, centavosAno!) : mensal
     }
   </div>
 
-  <Button
-    href={plano.href}
-    variant={d ? 'green' : 'outline-purple'}
-    fullWidth
-    class="mt-5">Quero contratar</Button
+  {/* O invólucro leva os dados do plano para o tracking.js: no clique vira
+      AddToCart (Meta) e add_to_cart (GA4) com plano, ciclo e valor. */}
+  <div
+    class="mt-5"
+    data-plano={plano.nome}
+    data-preco-mensal={plano.precoMensal}
+    data-preco-anual-total={plano.precoAnualTotal}
+    data-moeda="BRL"
   >
+    <Button href={plano.href} variant={d ? 'green' : 'outline-purple'} fullWidth>Quero contratar</Button>
+  </div>
   {
     plano.cupom && (
       <p class:list={['mt-2.5 text-center font-mono text-[11px] font-semibold tracking-[0.06em] uppercase', d ? 'text-green' : 'text-green-deep']}>

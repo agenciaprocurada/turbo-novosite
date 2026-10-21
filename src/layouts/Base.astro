@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css'
-import { marca, links, abasPlanos } from '../data/site'
+import { marca, links, abasPlanos, rastreio as rastreio_ids } from '../data/site'
 import type { Faq } from '../data/site'
 import AtendimentoTurboChat from '../components/AtendimentoTurboChat.astro'
 
@@ -20,9 +20,13 @@ interface Props {
   trilha?: readonly { label: string; href: string }[]
   /** Tira a página do índice. Só o 404 usa — URL de erro não indexa. */
   noindex?: boolean
+  /** Conteúdo da página para o rastreamento (ViewContent / view_item): as
+   *  páginas de produto passam categoria e nome. A home não passa nada — lá o
+   *  tracking.js lê a aba de planos selecionada. */
+  rastreio?: { categoria: string; nome: string }
 }
 
-const { titulo, descricao, faq, comProduto = false, produto, trilha, noindex = false } = Astro.props
+const { titulo, descricao, faq, comProduto = false, produto, trilha, noindex = false, rastreio } = Astro.props
 
 const produtoSchema =
   produto ??
@@ -99,6 +103,11 @@ const schema = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <script is:inline>document.documentElement.classList.replace('no-js', 'js')</script>
+    {/* Rastreamento (Meta Pixel + CAPI e GA4): só a configuração fica aqui; a
+        lógica vive em /tracking.js. Sem defer e antes de tudo, de propósito —
+        em tráfego pago, atrasar o pixel perde o PageView de quem entra e sai. */}
+    <script is:inline define:vars={{ tc: { pixel: rastreio_ids.pixel, pixelsExtra: rastreio_ids.pixelsExtra, ga4: rastreio_ids.ga4, pagina: rastreio ?? {} } }}>window.TC_TRACK = tc</script>
+    <script is:inline src="/tracking.js"></script>
     <title>{titulo}</title>
     <meta name="description" content={descricao} />
     <link rel="canonical" href={canonical} />

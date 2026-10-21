@@ -91,6 +91,7 @@ const SECAO = 'py-[clamp(72px,9vw,132px)]'
   faq={produto.faq}
   trilha={trilha}
   produto={{ nome: produto.schemaNome, descricao: produto.descricao, ofertas: ofertasSchema }}
+  rastreio={{ categoria: produto.abaPlanos ?? 'email', nome: produto.nome }}
 >
   <TopBar />
   <HeaderPill ctaPlanos="#planos" />
