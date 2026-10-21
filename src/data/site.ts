@@ -38,7 +38,6 @@ export const marca = {
   cnpj: '19.262.676/0001-81',
   endereco: 'Av. Carlos Gomes, 700, 5º Andar, Bela Vista, Porto Alegre – RS',
   email: 'ola@turbocloud.com.br',
-  telefone: '(11) 94860-0000',
   versiculo: {
     texto: 'A Deus seja toda a Honra e Glória! Amém.',
     referencia: 'Romanos 11:36',
@@ -51,13 +50,13 @@ export const links = {
    *  `TurboChat.open()`. Qualquer <a>/<button> com `data-abrir-chat`, ou com
    *  href terminando em `#falar-com-a-equipe`, abre o chat. */
   equipe: '/contato/#falar-com-a-equipe',
-  /** Telefone para discagem direta (E.164). Número em `marca.telefone`. */
-  telefone: 'tel:+5511948600000',
   /** Só as páginas ocultas/experimentais (Turbo Builder/Deploy, /v2/, home-astra,
    *  home-n2, teste-nuvens) ainda apontam para cá. O site público usa `equipe`. */
   whatsapp: 'https://wa.me/5511948600000',
   areaCliente: 'https://app.turbocloud.com.br/login',
   faturas: 'https://app.turbocloud.com.br/clientarea.php?action=invoices',
+  /** 2ª via de boleto/PIX pelo e-mail cadastrado, sem entrar na conta (conferido em 21/10/2026). */
+  segundaVia: 'https://app.turbocloud.com.br/segundavia.php',
   ajuda: 'https://app.turbocloud.com.br/knowledgebase',
   ticket: 'https://app.turbocloud.com.br/submitticket.php',
   status: 'https://status.turbocloud.com.br/',
@@ -1089,11 +1088,11 @@ export const footer = {
     {
       titulo: 'Suporte',
       itens: [
-        { label: 'Abrir ticket', href: links.ticket },
+        // "Abrir ticket" saiu: o atendimento é um só, "Falar com a equipe" (abre o chat).
         { label: 'Falar com a equipe', href: links.equipe },
-        { label: 'Faturas', href: links.faturas },
         { label: 'Central de ajuda', href: links.ajuda },
         { label: 'Status dos serviços', href: links.status },
+        { label: 'Faturas', href: links.faturas },
       ],
     },
   ],
