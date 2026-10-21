@@ -41,7 +41,7 @@ const precoFmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigit
       trilha={trilha}
       astronauta={astronautaHospedagem}
       ctaPrimario={{ label: 'Ver as soluções', href: '#solucoes' }}
-      ctaSecundario={{ label: 'Falar no WhatsApp', href: links.whatsapp }}
+      ctaSecundario={{ label: 'Falar com a equipe', href: links.equipe }}
     />
     </div>
 
@@ -90,14 +90,13 @@ const precoFmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigit
         </div>
 
         <p class="reveal mx-auto mt-10 max-w-[62ch] rounded-card border border-line bg-surface px-6 py-5 text-center text-[14.5px] leading-relaxed text-ink-soft shadow-soft">
-          Não sabe qual escolher? Conte o que o projeto precisa no WhatsApp — em geral dá para
+          Não sabe qual escolher? Conte para a equipe o que o projeto precisa — em geral dá para
           responder em dois minutos, sem proposta comercial no meio.{' '}
           <a
-            href={links.whatsapp}
-            target="_blank"
-            rel="noopener"
+            href={links.equipe}
+            data-abrir-chat
             class="font-bold text-green-deep underline decoration-green-deep/40 underline-offset-4 transition-colors hover:decoration-green-deep"
-            >Chamar no WhatsApp →</a
+            >Falar com a equipe →</a
           >
         </p>
       </div>

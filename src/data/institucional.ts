@@ -28,7 +28,7 @@ export const estrutura = {
   eyebrow: 'Estrutura',
   h1: 'Chega de site lento,',
   h1Verde: 'somos a Turbo Cloud.',
-  lead: 'Não somos apenas rápidos. Servidores no Brasil, em datacenter TIER III, com recursos dedicados e um time que atende no WhatsApp. Seu site merece a velocidade Turbo.',
+  lead: 'Não somos apenas rápidos. Servidores no Brasil, em datacenter TIER III, com recursos dedicados e um time que atende de verdade. Seu site merece a velocidade Turbo.',
   badges: [`Desde ${marca.desde}`, 'Datacenter TIER III', 'Servidores no Brasil'],
 
   proposito: {
@@ -72,7 +72,7 @@ export const estrutura = {
       icone: 'suporte',
       titulo: 'Suporte premium',
       texto:
-        'Time de especialistas no WhatsApp das 8h à 1h, de segunda a sábado, e por ticket todos os dias. Atendimento humano, sem robô no meio.',
+        'Time de especialistas das 8h à 1h, de segunda a sábado, e por ticket todos os dias. Atendimento humano pela equipe.',
     },
     {
       icone: 'seo',
@@ -199,8 +199,8 @@ export const legal = {
 
   rodape: {
     titulo: 'Dúvida sobre algum documento?',
-    texto: 'Fale com a gente antes de contratar — a resposta vem de gente, não de robô.',
-    cta: { label: 'Chamar no WhatsApp', href: links.whatsapp },
+    texto: 'Fale com a gente antes de contratar — a resposta vem da equipe.',
+    cta: { label: 'Falar com a equipe', href: links.equipe },
   },
 } as const
 

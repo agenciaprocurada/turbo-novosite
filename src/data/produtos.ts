@@ -4,7 +4,7 @@
 /*  Todo o texto daqui saiu das páginas atuais de turbocloud.com.br
  *  (coleta de 31/08/2026), com três correções deliberadas:
  *
- *  1. "Suporte 24/7" virou a janela real: 8h–1h no WhatsApp, seg–sáb,
+ *  1. "Suporte 24/7" virou a janela real: 8h–1h com a equipe (chat), seg–sáb,
  *     + ticket. O site atual se contradiz; vale o FAQ. Ver regra 1 do
  *     CLAUDE.md.
  *  2. "uptime garantido de 99,99%" saiu. O número que a Turbo publica e
@@ -100,7 +100,7 @@ const faqTier3: Faq = {
 }
 const faqSuporte: Faq = {
   p: 'A TurboCloud oferece suporte técnico?',
-  r: 'Sim. O suporte atende das 8h à 1h pelo WhatsApp, de segunda a sábado. Aos domingos e fora desse horário, por ticket.',
+  r: 'Sim. O atendimento humano pela equipe funciona das 8h à 1h, de segunda a sábado. Aos domingos e fora desse horário, por ticket.',
 }
 const faqTecnologias: Faq = {
   p: 'Quais tecnologias estão disponíveis em todos os planos?',
@@ -193,7 +193,7 @@ export type Seguranca = { texto: string; itens: readonly Beneficio[] }
 
 const segurancaHospedagem = {
   texto:
-    'Cansado de lidar com invasão, vírus e dor de cabeça? Aqui a história é outra: além do suporte por WhatsApp e ticket, você conta com proteção em várias camadas e um time que resolve o problema em vez de abrir chamado.',
+    'Cansado de lidar com invasão, vírus e dor de cabeça? Aqui a história é outra: além do atendimento humano pela equipe e por ticket, você conta com proteção em várias camadas e um time que resolve o problema em vez de abrir chamado.',
   itens: [
     {
       icone: 'escudo',
@@ -271,23 +271,23 @@ const fechamentoHospedagem: FechamentoProduto = {
   texto:
     'Contrate em minutos ou deixe a migração com a gente. São 7 dias de teste e garantia de devolução — se não gostar, você não fica no prejuízo.',
   primario: { label: 'Comece agora', href: '#planos' },
-  secundario: { label: 'Migrar grátis', href: links.whatsapp },
+  secundario: { label: 'Migrar grátis', href: links.equipe },
 }
 const fechamentoContainer: FechamentoProduto = {
   texto: 'Escolha o plano de Container ou chame o nosso time para montar o ambiente sob medida do seu projeto.',
   primario: { label: 'Ver planos', href: '#planos' },
-  secundario: { label: 'Falar com especialista', href: links.whatsapp },
+  secundario: { label: 'Falar com a equipe', href: links.equipe },
 }
 const fechamentoVps: FechamentoProduto = {
   texto:
-    'Escolha o plano de VPS e monte o servidor do seu jeito, com acesso root. Você tem 7 dias de garantia (exceto custos de terceiros, como licenças). Na dúvida, o nosso time ajuda no WhatsApp.',
+    'Escolha o plano de VPS e monte o servidor do seu jeito, com acesso root. Você tem 7 dias de garantia (exceto custos de terceiros, como licenças). Na dúvida, o nosso time ajuda pelo chat.',
   primario: { label: 'Ver planos', href: '#planos' },
-  secundario: { label: 'Falar com especialista', href: links.whatsapp },
+  secundario: { label: 'Falar com a equipe', href: links.equipe },
 }
 const fechamentoEmail: FechamentoProduto = {
   texto: 'Escolha o plano de e-mail e deixe a comunicação da empresa em um servidor exclusivo. A migração das suas contas é gratuita.',
   primario: { label: 'Ver planos', href: '#planos' },
-  secundario: { label: 'Migrar meus e-mails', href: links.whatsapp },
+  secundario: { label: 'Migrar meus e-mails', href: links.equipe },
 }
 
 /* --------------------------------------------------------------------- */
@@ -300,7 +300,7 @@ export const produtos: readonly Produto[] = [
     nome: 'Sites institucionais',
     titulo: 'Hospedagem para sites institucionais em WordPress — Turbo Cloud',
     descricao:
-      'Hospedagem otimizada para sites institucionais em WordPress: CPU e memória dedicadas, servidores no Brasil, backup a cada 12 horas e suporte por WhatsApp. A partir de R$ 35,90/mês.',
+      'Hospedagem otimizada para sites institucionais em WordPress: CPU e memória dedicadas, servidores no Brasil, backup a cada 12 horas e atendimento humano pela equipe. A partir de R$ 35,90/mês.',
     eyebrow: 'Sites institucionais',
     h1: 'Estabilidade, segurança e desempenho',
     h1Verde: 'para o seu site institucional.',
@@ -336,7 +336,7 @@ export const produtos: readonly Produto[] = [
       },
       {
         icone: 'suporte',
-        titulo: 'Suporte via WhatsApp',
+        titulo: 'Atendimento humano pela equipe',
         texto: 'Atendimento rápido e direto com quem entende do servidor, das 8h à 1h, de segunda a sábado.',
       },
     ],
@@ -415,7 +415,7 @@ export const produtos: readonly Produto[] = [
       },
       {
         icone: 'suporte',
-        titulo: 'Suporte via WhatsApp',
+        titulo: 'Atendimento humano pela equipe',
         texto: 'Loja parada é venda perdida. O atendimento é humano e direto, das 8h à 1h, de segunda a sábado.',
       },
     ],
@@ -675,7 +675,7 @@ export const produtos: readonly Produto[] = [
       {
         icone: 'suporte',
         titulo: 'Suporte especializado',
-        texto: 'Disponível no WhatsApp das 8h à 1h, de segunda a sábado, e por ticket nos demais horários.',
+        texto: 'Atendimento humano pela equipe das 8h à 1h, de segunda a sábado, e por ticket nos demais horários.',
       },
     ],
     beneficios: [

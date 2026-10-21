@@ -34,7 +34,7 @@ const produtoSchema =
     ? {
         nome: 'Hospedagem de sites Turbo Cloud',
         descricao:
-          'Hospedagem WordPress e WooCommerce com recursos dedicados, servidores no Brasil, backup a cada 12 horas e suporte humano por WhatsApp.',
+          'Hospedagem WordPress e WooCommerce com recursos dedicados, servidores no Brasil, backup a cada 12 horas e atendimento humano pela equipe.',
         ofertas: abasPlanos
           .find((aba) => aba.id === 'hospedagem')!
           .planos.map((plano) => ({ nome: `Plano ${plano.nome}`, preco: plano.precoMensal, url: plano.href })),
@@ -135,6 +135,23 @@ const schema = {
     <slot />
 
     <slot name="whatsapp"><AtendimentoTurboChat /></slot>
+
+    {/* Abrir o chat: qualquer <a>/<button> com `data-abrir-chat` (ou <a> cujo href
+        termina em `#falar-com-a-equipe`, que é o `links.equipe` dos dados) chama
+        `TurboChat.open()`. Sem o widget (bloqueador, rede, script que falhou), o
+        clique segue o href original — a página de contato. */}
+    <script is:inline>
+      document.addEventListener('click', (evento) => {
+        if (evento.defaultPrevented || evento.button !== 0 || evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey) return
+        const alvo = evento.target instanceof Element ? evento.target.closest('[data-abrir-chat], a[href$="#falar-com-a-equipe"]') : null
+        if (!alvo) return
+        const chat = window.TurboChat
+        if (!chat || window.__turboChatFalhou) return // fallback: segue o href
+        evento.preventDefault()
+        if (typeof chat.open === 'function') chat.open()
+        else if (typeof chat.init === 'function') chat.init({ open: true }) // widget ainda carregando: entra na fila
+      })
+    </script>
 
     <script>
       const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches

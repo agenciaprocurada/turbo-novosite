@@ -46,6 +46,15 @@ export const marca = {
 } as const
 
 export const links = {
+  /** Atendimento pelo TurboBot Livechat. O href é o fallback sem JS (página de
+   *  contato); com JS, o script do Base.astro intercepta o clique e chama
+   *  `TurboChat.open()`. Qualquer <a>/<button> com `data-abrir-chat`, ou com
+   *  href terminando em `#falar-com-a-equipe`, abre o chat. */
+  equipe: '/contato/#falar-com-a-equipe',
+  /** Telefone para discagem direta (E.164). Número em `marca.telefone`. */
+  telefone: 'tel:+5511948600000',
+  /** Só as páginas ocultas/experimentais (Turbo Builder/Deploy, /v2/, home-astra,
+   *  home-n2, teste-nuvens) ainda apontam para cá. O site público usa `equipe`. */
   whatsapp: 'https://wa.me/5511948600000',
   areaCliente: 'https://app.turbocloud.com.br/login',
   faturas: 'https://app.turbocloud.com.br/clientarea.php?action=invoices',
@@ -114,10 +123,15 @@ export const rastreio = {
 
 /** Janela real de atendimento. O site atual se contradiz (diz "24/7" em banner e
  *  "8h às 1h" no FAQ). Aqui vale o FAQ — honestidade vende melhor que 24/7 genérico. */
+/** A chave `whatsapp` é herdada (as páginas experimentais ainda a leem); o texto
+ *  descreve o horário do chat com a equipe. */
 export const atendimento = {
   whatsapp: 'Segunda a sábado, das 8h à 1h',
   ticket: 'Domingo e fora do horário, via ticket',
-  resumo: 'WhatsApp 8h–1h (seg–sáb) · ticket todos os dias',
+  resumo: 'Atendimento 8h–1h (seg–sáb) · ticket todos os dias',
+  /** Pedaços do resumo, para quem monta a linha sozinho (rodapé). */
+  horario: '8h–1h (seg–sáb)',
+  ticketDiario: 'ticket todos os dias',
 } as const
 
 /* ------------------------------------------------------------------ */
@@ -279,7 +293,7 @@ export const hero = {
   subLead: 'Sua próxima ideia, em modo TURBO:',
   sub: 'sites, apps e automações em uma infraestrutura rápida, estável e pronta para crescer. Você cria o próximo projeto. A Turbo cuida da base para ele ir mais longe.',
   ctaPrimario: { label: 'Ver planos', href: '#planos' },
-  ctaSecundario: { label: 'Falar com especialista', href: links.whatsapp },
+  ctaSecundario: { label: 'Falar com a equipe', href: links.equipe },
   /** Selos abaixo dos botões. "Suporte 24h" não entra — o horário real é 8h–1h. */
   beneficios: [`Uptime ${provas.uptimeTier3}`, 'Suporte humano', 'Migração grátis'],
   /** Barra de números do painel flutuante — só dado real de `provas`. */
@@ -457,7 +471,7 @@ export const porque = [
   {
     icone: 'suporte',
     titulo: 'Suporte especializado',
-    texto: 'Atendimento humano no WhatsApp, de segunda a sábado, das 8h à 1h.',
+    texto: 'Atendimento humano pela equipe, de segunda a sábado, das 8h à 1h.',
   },
   {
     icone: 'preco',
@@ -489,7 +503,7 @@ export const migracao = {
     { label: 'A gente copia e testa', desc: 'site sobe em ambiente de teste primeiro' },
     { label: 'Você aprova e o DNS vira', desc: 'sem downtime perceptível' },
   ],
-  cta: { label: 'Quero migrar agora', href: links.whatsapp },
+  cta: { label: 'Quero migrar agora', href: links.equipe },
   origens: ['cPanel', 'WordPress', 'WooCommerce', 'Plesk', 'E-mail'],
 } as const
 
@@ -502,10 +516,10 @@ export const suporte = {
   titulo1: 'Time brasileiro que resolve',
   titulo2: 'junto com você.',
   texto:
-    'Sem script, sem fila de ticket que morre no vácuo, sem "abra um chamado e aguarde 48h". Você chama no WhatsApp e fala com quem tem acesso ao servidor.',
-  ctaWhats: { label: 'Chamar no WhatsApp', href: links.whatsapp },
+    'Sem script, sem fila de ticket que morre no vácuo, sem "abra um chamado e aguarde 48h". Você chama a equipe e fala com quem tem acesso ao servidor.',
+  ctaWhats: { label: 'Falar com a equipe', href: links.equipe },
   ctaTicket: { label: 'Abrir ticket', href: links.ticket },
-  /** Conversa ilustrativa — o formato é real (WhatsApp), o diálogo é uma
+  /** Conversa ilustrativa — o formato é o de um chat, o diálogo é uma
    *  representação do fluxo de atendimento, não a transcrição de um cliente. */
   conversa: [
     { de: 'cliente', texto: 'Oi! Minha loja tá dando erro no checkout desde agora de manhã 😩', hora: '09:12' },
@@ -1002,7 +1016,7 @@ export const garantiasPlanos: readonly Garantia[] = [
   { icone: 'uptime', linha1: `${provas.uptimeTier3} de uptime`, linha2: 'no datacenter TIER III' },
   { icone: 'backup', linha1: 'Backups automáticos', linha2: 'a cada 12 horas' },
   { icone: 'ssl', linha1: 'SSL grátis', linha2: 'em todos os planos' },
-  { icone: 'suporte', linha1: 'Suporte humano', linha2: 'WhatsApp e ticket' },
+  { icone: 'suporte', linha1: 'Suporte humano', linha2: 'chat com a equipe e ticket' },
 ]
 
 /** A faixa depende da família da aba: VPS não tem backup automático e nenhum
@@ -1032,13 +1046,13 @@ export const ctaFinal = {
      em /contato/ e /hospedagem/, que não têm seção de planos. Âncora que não
      existe é botão morto. */
   primario: { label: 'Comece agora', href: links.planos },
-  secundario: { label: 'Migrar grátis', href: links.whatsapp },
+  secundario: { label: 'Migrar grátis', href: links.equipe },
 } as const
 
 /** Fechamento sem promessa de teste ou devolução — para as páginas que não são
  *  de hospedagem de sites (hub, contato, OpenClaw, ferramentas). */
 export const ctaFinalGeral = {
-  texto: 'Contrate em minutos ou fale com a nossa equipe pelo WhatsApp: a gente ajuda a escolher o plano certo.',
+  texto: 'Contrate em minutos ou fale com a nossa equipe: a gente ajuda a escolher o plano certo.',
 } as const
 
 /* ------------------------------------------------------------------ */
@@ -1075,7 +1089,7 @@ export const footer = {
       titulo: 'Suporte',
       itens: [
         { label: 'Abrir ticket', href: links.ticket },
-        { label: 'WhatsApp', href: links.whatsapp },
+        { label: 'Falar com a equipe', href: links.equipe },
         { label: 'Faturas', href: links.faturas },
         { label: 'Central de ajuda', href: links.ajuda },
         { label: 'Status dos serviços', href: links.status },
@@ -1098,7 +1112,7 @@ export const faq = [
   },
   {
     p: 'Qual o horário do suporte?',
-    r: 'O suporte por WhatsApp atende de segunda a sábado, das 8h à 1h. Aos domingos e fora desse horário, o atendimento é por ticket.',
+    r: 'O atendimento humano pela equipe funciona de segunda a sábado, das 8h à 1h. Aos domingos e fora desse horário, o atendimento é por ticket.',
   },
   {
     p: 'Como funciona a migração gratuita?',
@@ -1126,13 +1140,13 @@ export const paginaErro = {
   titulo: 'Página não encontrada — Turbo Cloud',
   /** noindex no 404: essa URL não deve entrar em índice nenhum. */
   descricao:
-    'Essa página não existe ou mudou de endereço. Veja os caminhos mais usados do site ou fale com a gente no WhatsApp.',
+    'Essa página não existe ou mudou de endereço. Veja os caminhos mais usados do site ou fale com a nossa equipe.',
   eyebrow: 'Erro 404',
   h1: 'Essa página',
   h1Verde: 'se perdeu no espaço.',
   lead: 'O endereço não existe, mudou de lugar ou tem um erro de digitação. O que você procura provavelmente está num dos caminhos abaixo.',
   ctaPrimario: { label: 'Voltar para a home', href: '/' },
-  ctaSecundario: { label: 'Falar no WhatsApp', href: links.whatsapp },
+  ctaSecundario: { label: 'Falar com a equipe', href: links.equipe },
   atalhosTitulo: 'Talvez você procurasse',
   atalhos: [
     { label: 'Planos e preços', desc: 'Hospedagem, Container, VPS e e-mail', href: links.planos },
@@ -1140,7 +1154,7 @@ export const paginaErro = {
     { label: 'Sites institucionais', desc: 'WordPress com recursos dedicados', href: links.produtos.institucionais },
     { label: 'Lojas virtuais', desc: 'WooCommerce sem travar no pico', href: links.produtos.woocommerce },
     { label: 'Cloud / VPS', desc: 'Acesso root e recursos garantidos', href: links.produtos.cloudVps },
-    { label: 'Contato', desc: 'WhatsApp, ticket e e-mail', href: links.contato },
+    { label: 'Contato', desc: 'Chat com a equipe, ticket e e-mail', href: links.contato },
   ],
   ajudaTitulo: 'Já é cliente?',
   ajuda: [

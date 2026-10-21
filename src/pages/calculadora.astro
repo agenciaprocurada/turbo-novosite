@@ -75,7 +75,7 @@ const trilha = [{ label: 'Home', href: '/' }, { label: 'Calculadora', href: '/ca
 
         <details class="methodology"><summary>{copy.metodologia}<span aria-hidden="true">+</span></summary><div><p>{copy.formula}</p><p>{copy.ressalva}</p></div></details>
         <div class="next-steps">{copy.passos.map((passo, i) => <article><span class="step-label">0{i + 1}</span><h2>{passo.titulo}</h2><p>{passo.texto}</p></article>)}</div>
-        <aside class="calculator-cta"><div><h2>{copy.ctaTitulo}</h2><p>{copy.ctaTexto}</p></div><Button href={links.whatsapp}>{copy.cta}<span aria-hidden="true">↗</span></Button></aside>
+        <aside class="calculator-cta"><div><h2>{copy.ctaTitulo}</h2><p>{copy.ctaTexto}</p></div><Button href={links.equipe}>{copy.cta}</Button></aside>
       </div>
     </section>
   </main>

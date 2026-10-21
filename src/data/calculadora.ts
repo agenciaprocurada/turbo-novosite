@@ -34,7 +34,7 @@ export const calculadora = {
   ],
   ctaTitulo: 'Mais velocidade para o seu próximo clique.',
   ctaTexto: 'Converse com a Turbo sobre a performance do seu site e a migração gratuita para nossa hospedagem.',
-  cta: 'Falar com um especialista',
+  cta: 'Falar com a equipe',
   erroTempo: 'Informe um tempo válido, igual ou maior que zero. Ex.: 3,5.',
   erroInvestimento: 'Informe um investimento maior que zero. Ex.: 1000 ou 1.000,00.',
   atualizado: 'Valores alterados. Calcule novamente para atualizar o resultado.',
