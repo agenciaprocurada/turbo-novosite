@@ -58,7 +58,7 @@ Branco sobre `purple-logo` dá ~10,5:1 — seguro para texto.
 | `--color-line` | `#E8E5EC` | borda e divisor |
 | `--color-star` | `#F5B301` | estrela de avaliação — **decorativo, nunca texto** |
 | `--color-amber-deep` | `#B45309` | status fora do operacional (4,9:1 no bg) |
-| `--color-promo` / `--color-promo-ink` | `#FFD400` / `#111111` | chip de desconto do plano anual (amarelo com texto preto bold) — só esse uso |
+| `--color-promo` / `--color-promo-ink` | `#2F6B00` / `#FFFFFF` | chip de desconto do plano anual (verde com texto branco bold, 6.4:1) — só esse uso |
 
 ---
 

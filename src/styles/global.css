@@ -61,9 +61,9 @@
   /* Aviso — status do rodapé quando algo não está operacional. 4.9:1 no #FBFBFA. */
   --color-amber-deep: #b45309;
 
-  /* Chip de desconto do plano anual — amarelo com texto preto (~14:1) */
-  --color-promo: #ffd400;
-  --color-promo-ink: #111111;
+  /* Chip de desconto do plano anual — verde escuro da marca com texto branco (6.4:1) */
+  --color-promo: #2f6b00;
+  --color-promo-ink: #ffffff;
 
   /* Neutros */
   --color-bg: #fbfbfa;
