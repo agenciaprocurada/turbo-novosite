@@ -149,41 +149,52 @@ export const estrutura = {
 /* --------------------------------------------------------------------- */
 /* /legal/                                                                */
 /* --------------------------------------------------------------------- */
-/*  Os documentos NÃO são copiados para cá de propósito. Eles vivem no
- *  WHMCS, que é onde o time mantém. Duplicar texto jurídico em dois
- *  sistemas é como surgiram as DUAS políticas de privacidade diferentes que
- *  estavam no ar: a do WordPress (genérica, sem citar LGPD, citando Google
- *  AdSense) e a do WHMCS (que cita LGPD). Uma fonte só, sempre. */
+/*  Os textos dos dez documentos vivem em `src/data/legal/<slug>.html` e a página
+ *  /legal/ os renderiza inteiros. Origem: Central de Ajuda (WHMCS), categoria
+ *  "Contratos TurboCloud" — https://app.turbocloud.com.br/knowledgebase/17/Contratos-TurboCloud
+ *  Copiados literalmente em 21/10/2026 por `scripts/importa-legal.mjs` (que
+ *  documenta o que muda na marcação). Para atualizar um texto, rodar o script
+ *  e conferir o `git diff` — a fonte oficial continua sendo o WHMCS, e cada
+ *  documento na página traz o link para ela.
+ *
+ *  Por que a política de privacidade é a do WHMCS e não a do WordPress: havia
+ *  DUAS no ar. A do WordPress (turbocloud.com.br/politica-de-privacidade/, de
+ *  17/07/2025) é genérica, não cita LGPD e fala de Google AdSense/DoubleClick,
+ *  que este site não usa. A do WHMCS cita a LGPD, os direitos do titular e o
+ *  canal de privacidade. Esta página mostra só a do WHMCS. */
 
 const KB = 'https://app.turbocloud.com.br/knowledgebase'
+
+/** Data da cópia dos textos (mostrada na página). */
+export const legalCopiadoEm = '21/10/2026'
 
 export const legal = {
   titulo: 'Documentos e políticas — Turbo Cloud',
   descricao:
-    'Termos de serviço, política de privacidade, tratamento de dados, cookies e demais documentos da Turbo Cloud, na versão oficial e sempre atualizada.',
+    'Termos de serviço, política de privacidade, tratamento de dados, cookies e demais documentos da Turbo Cloud, com o texto completo.',
   eyebrow: 'Documentos',
   h1: 'Termos, políticas',
   h1Verde: 'e tratamento de dados.',
-  lead: 'Todo documento abaixo abre a versão oficial, mantida na Central de Ajuda. É uma fonte só — assim nenhuma versão fica para trás.',
+  lead: 'O texto completo de cada documento está nesta página, com índice. Cada um traz o link da versão oficial na Central de Ajuda.',
 
   grupos: [
     {
       titulo: 'Contrato e uso do serviço',
       itens: [
-        { label: 'Termos de Serviços', href: `${KB}/54/Termos-de-Servicos.html` },
-        { label: 'Política de Utilização', href: `${KB}/52/Politica-de-Utilizacao.html` },
-        { label: 'Conteúdo Ilegal', href: `${KB}/50/Conteudo-Ilegal.html` },
-        { label: 'Política de E-mail e Spam', href: `${KB}/51/Politica-de-E-Mail-Spam.html` },
-        { label: 'Termo de Ativação de Plugins', href: `${KB}/58/Termo-de-Ativacao-de-Plugins.html` },
+        { label: 'Termos de Serviços', slug: 'termos-de-servicos', fonte: `${KB}/54/Termos-de-Servicos.html` },
+        { label: 'Política de Utilização', slug: 'politica-de-utilizacao', fonte: `${KB}/52/Politica-de-Utilizacao.html` },
+        { label: 'Conteúdo Ilegal', slug: 'conteudo-ilegal', fonte: `${KB}/50/Conteudo-Ilegal.html` },
+        { label: 'Política de E-mail e Spam', slug: 'politica-de-email-e-spam', fonte: `${KB}/51/Politica-de-E-Mail-Spam.html` },
+        { label: 'Termo de Ativação de Plugins', slug: 'termo-de-ativacao-de-plugins', fonte: `${KB}/58/Termo-de-Ativacao-de-Plugins.html` },
       ],
     },
     {
       titulo: 'Privacidade e dados',
       itens: [
-        { label: 'Política de Privacidade', href: `${KB}/56/Politica-de-Privacidade.html` },
-        { label: 'Tratamento de Dados', href: `${KB}/55/Tratamento-de-Dados.html` },
-        { label: 'Política de Cookies', href: `${KB}/53/Politica-de-Cookies.html` },
-        { label: 'Termo de Confidencialidade', href: `${KB}/57/Termo-de-Confidencialidade.html` },
+        { label: 'Política de Privacidade', slug: 'politica-de-privacidade', fonte: `${KB}/56/Politica-de-Privacidade.html` },
+        { label: 'Tratamento de Dados', slug: 'tratamento-de-dados', fonte: `${KB}/55/Tratamento-de-Dados.html` },
+        { label: 'Política de Cookies', slug: 'politica-de-cookies', fonte: `${KB}/53/Politica-de-Cookies.html` },
+        { label: 'Termo de Confidencialidade', slug: 'termo-de-confidencialidade', fonte: `${KB}/57/Termo-de-Confidencialidade.html` },
       ],
     },
     {
@@ -191,7 +202,8 @@ export const legal = {
       itens: [
         {
           label: 'Termos de Serviços do Programa de Afiliados',
-          href: `${KB}/72/Termos-de-Servicos-do-Programa-de-Afiliados.html`,
+          slug: 'termos-do-programa-de-afiliados',
+          fonte: `${KB}/72/Termos-de-Servicos-do-Programa-de-Afiliados.html`,
         },
       ],
     },

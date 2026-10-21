@@ -323,7 +323,7 @@ estão no `Base.astro`, porque valem para toda página.
 | `/404` | `src/pages/404.astro` + `src/components/PaginaErro.astro` |
 | `/estrutura/` | `src/pages/estrutura.astro` |
 | `/afiliados/` | `src/pages/afiliados.astro` + `src/data/afiliados.ts` |
-| `/legal/` | `src/pages/legal.astro` — índice, não guarda texto |
+| `/legal/` | `src/pages/legal.astro` — índice + texto dos 10 documentos (`src/data/legal/`) |
 | `/hospedagem/openclaw/` | `src/pages/hospedagem/openclaw.astro` — rota própria, ver abaixo |
 | `/ferramentas-ia/turbo-builder/` | `src/pages/ferramentas-ia/turbo-builder.astro` + `src/data/turbobuilder.ts` — ver abaixo |
 | `/ferramentas-ia/turbo-deploy/` | `src/pages/ferramentas-ia/turbo-deploy.astro` + `src/data/turbodeploy.ts` — ver abaixo |
@@ -415,13 +415,13 @@ Yoast). O sitemap e o robots.txt são gerados no build, em
 `src/pages/sitemap.xml.ts` e `src/pages/robots.txt.ts`; página nova indexável
 entra na lista do sitemap.
 
-**A `/legal/` não guarda texto jurídico.** Ela lista os dez documentos e
-manda para a versão oficial no WHMCS, que é onde o time mantém. O motivo é
-concreto: existiam **duas políticas de privacidade diferentes** publicadas ao
-mesmo tempo — a do WordPress, genérica, sem citar LGPD e citando Google
-AdSense, e a do WHMCS, que cita LGPD. Duplicar texto jurídico em dois sistemas
-é como isso acontece. Uma fonte só. A antiga `/politica-de-privacidade/`
-redireciona para cá, via `redirects` do `astro.config.mjs`.
+**A `/legal/` guarda o texto dos dez documentos legais** (copiados da Central de
+Ajuda/WHMCS em 21/10/2026, em `src/data/legal/*.html`, gerados por
+`scripts/importa-legal.mjs`). Cada documento traz o link da versão oficial; para
+atualizar um texto, rodar o script e conferir o `git diff`. A política de
+privacidade é a do WHMCS (cita LGPD): a do WordPress era genérica e citava
+Google AdSense, que este site não usa — por isso não foi copiada. A antiga
+`/politica-de-privacidade/` redireciona para `/legal/#politica-de-privacidade`.
 
 **A OpenClaw tem rota própria, fora do `[slug].astro`.** O template de produto
 argumenta "por que escolher → planos → benefícios → segurança → FAQ"; a página
