@@ -14,11 +14,8 @@
  *
  *  Duas coisas mantidas como estão publicadas, mesmo parecendo estranhas:
  *
- *  1. "Plano Elite 40" aparece na tabela de comissões E na resposta sobre
- *     produtos elegíveis. Não existe Elite 40 na tabela de planos (são 5,
- *     10, 15, 20, 30 e 50). Como aparece duas vezes na mesma página, não é
- *     erro de digitação solto — pode ser nome interno do programa. Está no
- *     PENDENTE.
+ *  1. O site atual publica "Plano Elite 40", que não existe. A equipe confirmou
+ *     (21/10/2026) que é o Elite 30 (comissão R$ 40,00).
  *  2. "30x mais rápido que um HD comum" não contradiz o "até 6x maior que
  *     SSDs tradicionais" das páginas de produto: a base de comparação é
  *     outra (HD comum × SSD). Os dois podem ser verdade.
@@ -53,7 +50,7 @@ export const afiliados = {
       { plano: 'Elite 10', valor: 25 },
       { plano: 'Elite 15', valor: 30 },
       { plano: 'Elite 20', valor: 35 },
-      { plano: 'Elite 40', valor: 40 },
+      { plano: 'Elite 30', valor: 40 },
       { plano: 'Elite 50', valor: 45 },
     ],
     nota: 'Valores por venda, por mês, vigentes em turbocloud.com.br.',
@@ -165,7 +162,7 @@ export const afiliados = {
     },
     {
       p: 'Quais produtos da Turbo Cloud são elegíveis no programa?',
-      r: 'Os planos de hospedagem One, Elite 5, Elite 10, Elite 15, Elite 20, Elite 40 e Elite 50. A compra apenas de produtos adicionais, ou de outros serviços não citados acima, não gera comissão.',
+      r: 'Os planos de hospedagem One, Elite 5, Elite 10, Elite 15, Elite 20, Elite 30 e Elite 50. A compra apenas de produtos adicionais, ou de outros serviços não citados acima, não gera comissão.',
     },
   ],
 

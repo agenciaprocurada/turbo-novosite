@@ -1151,7 +1151,6 @@ export const PENDENTE = [
   'Número total de sites/clientes hospedados — o site não publica esse dado.',
   'Confirmar se o desconto de 8% no ciclo anual segue vigente (a página /planos/ é sazonal).',
   'Definir se a conversa da seção de suporte vira transcrição de um caso real (hoje é representação do fluxo).',
-  'Programa de afiliados: a tabela de comissões publicada lista "Plano Elite 40", que não existe na tabela de planos (são 5, 10, 15, 20, 30 e 50). Confirmar se é o Elite 30 ou o Elite 50 — o valor foi mantido como está publicado.',
   'Sincronizar o package-lock: falta @emnapi/runtime e @emnapi/core no topo, e por isso npm ci quebra no Linux. O deploy usa npm install e não sente, mas qualquer CI com npm ci vai falhar. Precisa ser regenerado num Linux — regenerar no Windows não resolve.',
   'Turbo Deploy (/ferramentas-ia/turbo-deploy/): confirmar a URL pública de cadastro/login da plataforma. Enquanto isso, os CTAs levam ao WhatsApp para contratar e ativar o plano. O domínio técnico da plataforma não aparece no site de propósito.',
   'Turbo Deploy: confirmar checkout/cadastro, condições contratuais e horário de suporte. Oferta Start/Pro/Business e preços mensais adaptados da HAD Deploy a pedido do cliente em 10/09/2026. CTAs de contratação via WhatsApp.',
