@@ -155,26 +155,13 @@ const selos: readonly {
           }
         </dl>
 
-        {/* Nasce neutro: só afirma que está tudo operacional depois de confirmar
-            na status page. Se o fetch não acontecer, fica neste estado. */}
-        <a
-          href={links.status}
-          rel="noopener"
-          data-status-pill
-          data-status-url={links.statusApi}
-          class="rounded-btn border-line bg-surface text-ink-soft hover:border-ink/20 hover:text-ink mt-7 inline-flex items-center gap-2 border px-4 py-2 font-mono text-[11.5px] transition-colors"
-          style="--pulse-color: var(--color-ink-soft)"
-        >
-          <span class="pulse-dot" data-pulse="off" aria-hidden="true"></span>
-          <span data-status-texto>status dos serviços</span>
-        </a>
-        <div class="mt-5"><SeloReclameAqui /></div>
+        <div class="mt-7"><SeloReclameAqui /></div>
       </div>
 
       <div class="lg:border-line grid grid-cols-2 gap-x-6 gap-y-9 sm:grid-cols-3 lg:border-l lg:pl-12">
         {
           footer.colunas.map((coluna) => (
-            <nav aria-label={coluna.titulo}>
+            <nav aria-label={coluna.titulo} class:list={[coluna.titulo === 'Suporte' && 'max-sm:col-span-2']}>
               <h2 class="text-purple-logo flex items-center gap-2 text-[15px] font-bold tracking-[-0.01em]">
                 <span class="bg-green size-[5px] shrink-0 rounded-full" aria-hidden="true" />
                 {coluna.titulo}
@@ -204,6 +191,22 @@ const selos: readonly {
                   </li>
                 ))}
               </ul>
+              {/* A pílula de status fecha a coluna Suporte, logo abaixo dos links.
+                  Nasce neutra: só afirma que está tudo operacional depois de
+                  confirmar na status page. Se o fetch não acontecer, fica assim. */}
+              {coluna.titulo === 'Suporte' && (
+                <a
+                  href={links.status}
+                  rel="noopener"
+                  data-status-pill
+                  data-status-url={links.statusApi}
+                  class="rounded-btn border-line bg-surface text-ink-soft hover:border-ink/20 hover:text-ink mt-4 inline-flex items-center gap-2 border px-4 py-2 font-mono text-[11.5px] whitespace-nowrap transition-colors"
+                  style="--pulse-color: var(--color-ink-soft)"
+                >
+                  <span class="pulse-dot" data-pulse="off" aria-hidden="true"></span>
+                  <span data-status-texto>status dos serviços</span>
+                </a>
+              )}
             </nav>
           ))
         }
