@@ -1,0 +1,37 @@
+{
+  "ferramenta": "image_gen integrada",
+  "transparent_background": true,
+  "referencias": [
+    "src/assets/imagens/empresa-de-hospedagem-de-site-astronauta-cloud-vps.webp",
+    "src/assets/imagens/empresa-de-hospedagem-de-site-astronauta-servidor-email.webp",
+    "src/assets/imagens/empresa-de-hospedagem-de-site-astronauta-containers-isolados.webp"
+  ],
+  "prompt_base": "Use case: stylized-concept, matching illustration-series variant. Input images 1, 2 and 3 are STYLE AND CHARACTER REFERENCES: preserve the distinctive Turbo Cloud astronaut design and rendering while changing the thematic props and pose. Create one new production-ready website hero CUTOUT. Highly detailed premium 3D white textile spacesuit, fine seams, backpack, realistic gloves and boots, subtle rocket shoulder emblem, opaque glossy deep purple visor hiding the face, purple #5C1F85 details and green #6BDD12 accents. Lavender studio lighting, convincing materials and realistic human proportions, friendly weightless posture. Same visual family, not a cartoon or flat drawing.\nLandscape 3:2 composition with a large FULL-BODY astronaut and a small coherent group of 3D themed interface objects. Clear silhouette at 725px wide. Keep all limbs and objects inside frame with 5% transparent breathing room. Actual transparent alpha background, including open gaps between objects. NO checkerboard or gray pattern, no background rectangle, no ground shadow, no sky or starfield, NO CLOUDS: clouds are supplied independently by the website. Avoid halos, broad glows or luminous trails bleeding into the background. White/lavender opaque surfaces, purple framing, restrained lime accents. No glass cubes or translucent panels. Simple symbols and abstract interface lines, no dense tiny text. No promotional wording, prices, percentages, numbers, uptime promises, 24/7 claims, third-party logos, watermark or NASA branding. Output only the isolated illustration, not a website screenshot.",
+  "artes": {
+    "estrutura": {
+      "pagina": "/estrutura/",
+      "origem": "_uploads-turbonovosite/astronauta-estrutura-gerado.png",
+      "arquivo": "src/assets/imagens/empresa-de-hospedagem-de-site-astronauta-estrutura-datacenter.webp",
+      "prompt_tema": "Theme: hosting company's physical infrastructure, datacenter, resilience and connectivity. Full-body astronaut floats diagonally on the LEFT, facing RIGHT and gently operating a small network-control panel beside two elegant server racks on the RIGHT. The racks have lavender-white enclosures, deep purple front doors, clear modular server trays and tiny lime status lights, arranged at different heights for depth. One floating shield/check tile above them and one modest network topology tile near the lower-right suggest protection and connectivity. No scene of a room or floor; all objects form a compact isolated composition. The only heading, if any, is exactly \"ESTRUTURA\"."
+    },
+    "contato": {
+      "pagina": "/contato/",
+      "origem": "_uploads-turbonovosite/astronauta-contato-gerado.png",
+      "arquivo": "src/assets/imagens/empresa-de-hospedagem-de-site-astronauta-atendimento-chat.webp",
+      "prompt_tema": "Theme: friendly direct conversation with the human Turbo Cloud support team. Full-body astronaut floats on the RIGHT, facing LEFT, one hand reaching toward a floating conversation panel on the LEFT and the other raised in a relaxed welcoming gesture. Main panel has a white/lavender surface, a deep purple header with a simple chat icon, two or three alternating green and lavender message bubbles and an abstract tiny profile avatar. A smaller rounded speech bubble with three purple dots and a modest check/help tile float nearby. Communicate attentive technical assistance through online CHAT, not telephone or WhatsApp: no phone handset, no WhatsApp logo, no robot face, no email envelopes. Keep original helmet intact. The only heading, if any, is exactly \"FALE COM A TURBO\"."
+    },
+    "afiliados": {
+      "pagina": "/afiliados/",
+      "origem": "_uploads-turbonovosite/astronauta-afiliados-gerado.png",
+      "arquivo": "src/assets/imagens/empresa-de-hospedagem-de-site-astronauta-programa-afiliados.webp",
+      "prompt_tema": "Theme: Turbo Cloud affiliate referral program with recurring commissions. Full-body astronaut floats diagonally on the LEFT, facing RIGHT, interacting with a floating affiliate-control panel on the RIGHT. On the white/lavender panel place a purple chain-link symbol for the referral link, three simple customer avatar tiles linked directly to one central referral node, and a small recurring circular-arrow symbol with one discreet green coin/token. Subtle purple/lime icons show referrals and repeat commission, with no monetary amounts or percentage claims. Compact balanced premium 3D composition, not a pyramid or multilevel network, no stacks of cash, no exaggerated growth charts. A small handshake/partnership tile floats above the panel. The only heading, if any, is exactly \"AFILIADOS\"."
+    }
+  },
+  "tratamento": {
+    "script": "scripts/gera-astronautas-institucionais.mjs",
+    "largura_maxima": 725,
+    "webp_quality": 85,
+    "alpha_quality": 60,
+    "transparencia": "Canal alfa nativo preservado; somente corte da margem e otimização."
+  }
+}

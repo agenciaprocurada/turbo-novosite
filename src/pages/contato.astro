@@ -14,6 +14,7 @@ import HeaderPill from '../components/HeaderPill.astro'
 import FooterMega from '../components/FooterMega.astro'
 
 import HeroProduto from '../components/HeroProduto.astro'
+import astroContato from '../assets/imagens/empresa-de-hospedagem-de-site-astronauta-atendimento-chat.webp'
 import SectionEyebrow from '../components/SectionEyebrow.astro'
 import Button from '../components/Button.astro'
 import CtaFinal from '../components/secoes/CtaFinal.astro'
@@ -84,6 +85,7 @@ const autoatendimento: readonly {
       tituloVerde="a Turbo."
       lead="Suporte humano, feito por quem mexe no servidor. Um canal só: o chat com a equipe."
       badges={[atendimento.resumo]}
+      astronauta={astroContato}
       trilha={trilha}
       ctaPrimario={{ label: 'Falar com a equipe', href: links.equipe }}
       ctaSecundario={{ label: 'Resolver sozinho', href: '#autoatendimento' }}
