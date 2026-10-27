@@ -50,8 +50,8 @@ export const links = {
    *  `TurboChat.open()`. Qualquer <a>/<button> com `data-abrir-chat`, ou com
    *  href terminando em `#falar-com-a-equipe`, abre o chat. */
   equipe: '/contato/#falar-com-a-equipe',
-  /** Só as páginas ocultas (Turbo Builder/Deploy) e a OpenClaw ainda apontam
-   *  para cá. O site público usa `equipe`. */
+  /** Só as páginas ocultas (Turbo Builder/Deploy) ainda apontam para cá. O
+   *  site público usa `equipe`. */
   whatsapp: 'https://wa.me/5511948600000',
   areaCliente: 'https://app.turbocloud.com.br/login',
   faturas: 'https://app.turbocloud.com.br/clientarea.php?action=invoices',
@@ -93,8 +93,6 @@ export const links = {
     containers: '/hospedagem/containers/',
     cloudVps: '/hospedagem/cloud-vps/',
     email: '/hospedagem/servidor-para-e-mail/',
-    /** Página oculta (noindex), fora de menu, rodapé e sitemap. Produto descontinuado. */
-    openclaw: '/hospedagem/openclaw/',
   },
   ferramentasIa: {
     turboBuilder: '/ferramentas-ia/turbo-builder/',
@@ -1073,7 +1071,6 @@ export const footer = {
         { label: 'Container', href: links.produtos.containers },
         { label: 'Cloud / VPS', href: links.produtos.cloudVps },
         { label: 'Servidor de e-mail', href: links.produtos.email },
-        // OpenClaw VPS oculto: o produto não vai mais existir (página mantida com noindex).
       ],
     },
     // Ferramentas IA ocultas até o lançamento.

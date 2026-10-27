@@ -3,8 +3,7 @@
 /* ====================================================================== */
 /*  Turbo Builder: site criado por IA, publicado direto na hospedagem da
  *  Turbo Cloud. Rota própria, fora de `produtos.ts` e do `[slug].astro`,
- *  pelo mesmo motivo do OpenClaw — narrativa de produto específico, não o
- *  molde "por que escolher → planos → benefícios → segurança → FAQ".
+ *  porque é narrativa de produto específico, não o molde "por que escolher → planos → benefícios → segurança → FAQ".
  *
  *  Conteúdo e ordem das seções seguem a página do produto em produção
  *  (demo em apps-turbo-pages.uzj3vo.easypanel.host); só o visual muda para

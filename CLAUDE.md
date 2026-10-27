@@ -57,7 +57,7 @@ npm run check   # astro check — deve fechar com 0 erros
 | **padrão de design (o que usar e quando)** | `docs/DESIGN-SYSTEM.md` |
 | preço, plano, texto, link, depoimento, número | `src/data/site.ts` |
 | texto das 6 páginas de produto e do hub | `src/data/produtos.ts` |
-| texto de estrutura, afiliados, legal e OpenClaw | `src/data/institucional.ts` |
+| texto de estrutura, afiliados e legal | `src/data/institucional.ts` |
 | cor, fonte, raio, sombra | bloco `@theme` em `src/styles/global.css` |
 | ordem das seções da home | `src/pages/index.astro` |
 | uma seção usada em várias páginas | `src/components/secoes/` |
@@ -324,7 +324,6 @@ estão no `Base.astro`, porque valem para toda página.
 | `/estrutura/` | `src/pages/estrutura.astro` |
 | `/afiliados/` | `src/pages/afiliados.astro` + `src/data/afiliados.ts` |
 | `/legal/` | `src/pages/legal.astro` — índice + texto dos 10 documentos (`src/data/legal/`) |
-| `/hospedagem/openclaw/` | `src/pages/hospedagem/openclaw.astro` — rota própria, ver abaixo |
 | `/ferramentas-ia/turbo-builder/` | `src/pages/ferramentas-ia/turbo-builder.astro` + `src/data/turbobuilder.ts` — ver abaixo |
 | `/ferramentas-ia/turbo-deploy/` | `src/pages/ferramentas-ia/turbo-deploy.astro` + `src/data/turbodeploy.ts` — ver abaixo |
 
@@ -423,11 +422,8 @@ privacidade é a do WHMCS (cita LGPD): a do WordPress era genérica e citava
 Google AdSense, que este site não usa — por isso não foi copiada. A antiga
 `/politica-de-privacidade/` redireciona para `/legal/#politica-de-privacidade`.
 
-**A OpenClaw tem rota própria, fora do `[slug].astro`.** O template de produto
-argumenta "por que escolher → planos → benefícios → segurança → FAQ"; a página
-dela explica o que é o OpenClaw, mostra por que VPS genérica falha e só então
-apresenta o plano. Forçar no molde estragaria o texto, que é o melhor do site
-atual.
+**A OpenClaw saiu do site (27/10/2026).** Produto descontinuado; a URL do
+site antigo, `/hospedagem/openclaw/`, redireciona para `/hospedagem/cloud-vps/`.
 
 **O Turbo Builder (`/ferramentas-ia/turbo-builder/`) espelha a página do
 produto, não o molde.** Categoria "Ferramentas IA" no menu e no rodapé. A

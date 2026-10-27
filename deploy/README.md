@@ -16,6 +16,7 @@ aplicação (não substitui o `try_files $uri $uri/ =404` nem o
 | `/blog/` | `/hospedagem/blogs-e-portais-de-conteudo/` |
 | `/rd25/` | `/` |
 | `/hospedagem/opencloud-ps/` | `/hospedagem/cloud-vps/` |
+| `/hospedagem/openclaw/` | `/hospedagem/cloud-vps/` (produto descontinuado) |
 | `/planos/` | `/#planos` |
 | `/calculadora-perda-de-trafego/` | `/calculadora/` |
 | `/politica-de-privacidade/` | `/legal/` |

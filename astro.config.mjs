@@ -28,6 +28,8 @@ export default defineConfig({
     '/blog': '/hospedagem/blogs-e-portais-de-conteudo/',
     '/rd25': '/',
     '/hospedagem/opencloud-ps': '/hospedagem/cloud-vps/',
+    /* OpenClaw VPS descontinuado (27/10/2026). */
+    '/hospedagem/openclaw': '/hospedagem/cloud-vps/',
 
     /* Sitemaps do Yoast. O novo é /sitemap.xml (src/pages/sitemap.xml.ts). */
     '/sitemap_index.xml': '/sitemap.xml',
