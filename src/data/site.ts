@@ -50,8 +50,8 @@ export const links = {
    *  `TurboChat.open()`. Qualquer <a>/<button> com `data-abrir-chat`, ou com
    *  href terminando em `#falar-com-a-equipe`, abre o chat. */
   equipe: '/contato/#falar-com-a-equipe',
-  /** Só as páginas ocultas/experimentais (Turbo Builder/Deploy, /v2/, home-astra,
-   *  home-n2, teste-nuvens) ainda apontam para cá. O site público usa `equipe`. */
+  /** Só as páginas ocultas (Turbo Builder/Deploy) e a OpenClaw ainda apontam
+   *  para cá. O site público usa `equipe`. */
   whatsapp: 'https://wa.me/5511948600000',
   areaCliente: 'https://app.turbocloud.com.br/login',
   faturas: 'https://app.turbocloud.com.br/clientarea.php?action=invoices',
@@ -119,6 +119,9 @@ export const rastreio = {
    *  loja WHMCS entra aqui para o público dela continuar sendo alimentado. */
   pixelsExtra: ['1854967581716648'] as string[],
   ga4: ['G-FMWH32YCMN', 'G-7R7B72CT1P'],
+  /** Microsoft Clarity (mapa de calor e gravação de sessão). Mesmo projeto do
+   *  site antigo, para o histórico continuar no mesmo painel. */
+  clarity: 'v5y1j64915',
 }
 
 /** Janela real de atendimento. O site atual se contradiz (diz "24/7" em banner e
