@@ -6,9 +6,8 @@ import { links } from '../data/site'
 /**
  * /sitemap.xml — escrito à mão, sem @astrojs/sitemap (o projeto não depende
  * dele). A lista é explícita de propósito: o que NÃO entra é tão importante
- * quanto o que entra — as rotas experimentais (/v2/, /home-astra/, /home-n2/,
- * /teste-nuvens/), o 404 e as páginas de redirect (/planos/, /whats/, /blog/…)
- * ficam de fora.
+ * quanto o que entra — as páginas ocultas (/ferramentas-ia/…), o 404 e as
+ * páginas de redirect (/planos/, /whats/, /blog/…) ficam de fora.
  *
  * Ao criar uma página nova indexável, acrescente-a aqui.
  */

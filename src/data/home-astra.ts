@@ -1,7 +1,7 @@
 import { abasPlanos, links, provas } from './site'
 import { planosEmail } from './produtos'
 
-/** Conteúdo exclusivo da proposta /home-astra. Valores vêm do catálogo atual. */
+/** Conteúdo dos blocos da proposta Astra usados na home. Valores vêm do catálogo atual. */
 const menorPreco = (categoria: string) =>
   Math.min(...abasPlanos.find((aba) => aba.id === categoria)!.planos.map((plano) => plano.precoMensal))
 

@@ -60,31 +60,6 @@ Branco sobre `purple-logo` dá ~10,5:1 — seguro para texto.
 | `--color-amber-deep` | `#B45309` | status fora do operacional (4,9:1 no bg) |
 | `--color-promo` / `--color-promo-ink` | `#2F6B00` / `#FFFFFF` | chip de desconto do plano anual (verde com texto branco bold, 6.4:1) — só esse uso |
 
----
-
-### Aplicação da marca na proposta `/home-astra/`
-
-A proposta segue o bloco **“Cores da marca”** da referência fornecida em
-08/09/2026: roxo institucional `#5C1F85` e verde institucional `#6BDD12`.
-As cores principais do painel interno (`#8D4FC4` e `#B7E8B5`) não substituem
-as cores institucionais no site.
-
-| Elemento | Aplicação na nova home |
-| --- | --- |
-| Títulos em fundo claro, links e ícones | Roxo institucional `#5C1F85` |
-| Faixa superior, infraestrutura, plano em destaque e chamada final | Fundo roxo institucional |
-| Botões principais e WhatsApp | Fundo verde institucional com texto/ícone roxo institucional |
-| Títulos e acentos sobre roxo | Verde institucional; texto de apoio branco ou `#F5EFFA` |
-| Fundos de apoio | Branco, `#FAFBFD` e o tom claro de roxo `#F5EFFA` |
-
-O verde vivo fica em fundos de controles ou sobre roxo. Títulos, links e
-rótulos em fundo claro usam o roxo institucional para manter contraste.
-O hover dos botões clareia discretamente o próprio verde institucional.
-
-Esses ajustes ficam limitados à rota em `src/pages/home-astra.astro` e ao
-componente `src/components/home-astra/PlanosAstra.astro`. Os tokens globais
-e a aparência das demais páginas permanecem com o padrão descrito acima.
-
 ## 2. Tipografia
 
 **Nunito** (sans, marca) + **JetBrains Mono** (dados técnicos). O contraste
@@ -204,8 +179,6 @@ Tamanhos: `md` (44px, texto 13px) e `lg` (52px, texto 14px).
 | --- | --- |
 | `SectionEyebrow` | rótulo mono acima do título; `tone="dark"` dentro de bloco escuro |
 | `HeadingDuo` | título em duas cores |
-| `Badge` | selo pequeno (`green`, `soft`, `status`, contornos) |
-| `ServiceCard` | card de produto: ícone, título, itens com check, barra roxa no rodapé |
 | `PricingCard` | card de plano, com variante em destaque |
 | `StatBlock` | número + rótulo |
 | `Avatar` | foto ou monograma |
