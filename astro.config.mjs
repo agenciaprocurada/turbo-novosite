@@ -23,7 +23,8 @@ export default defineConfig({
     /* URLs do site antigo (WordPress) que ainda circulam em anúncios, QR code,
        bio de rede social e índice do Google. Aqui o redirect é meta refresh
        (HTTP 200); o 301 de verdade está em deploy/README.md, para o Nginx. */
-    '/whats': 'https://wa.me/5511948600000',
+    /* O atendimento saiu do WhatsApp (27/10/2026): /whats leva ao chat. */
+    '/whats': '/contato/#falar-com-a-equipe',
     '/blog': '/hospedagem/blogs-e-portais-de-conteudo/',
     '/rd25': '/',
     '/hospedagem/opencloud-ps': '/hospedagem/cloud-vps/',
